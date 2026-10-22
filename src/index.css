@@ -1,0 +1,277 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand-primary: #172554;
+  /* Deep Navy Blue — overridden at runtime by ThemeProvider */
+  --color-brand-secondary: #1e40af;
+  /* Strong Executive Blue */
+  --color-brand-accent: #3b82f6;
+  /* Elegant Brand Blue */
+  --color-brand-primary-rgb: 23, 37, 84;
+  /* RGB components for rgba() usage */
+  --color-luxury-gold: #c5a059;
+  --color-luxury-gold-light: #e5cc98;
+  --color-luxury-dark: #0a0a0a;
+  --color-luxury-surface: #121212;
+  --color-luxury-charcoal: #1a1a1a;
+  --color-light-bg: #fcfcfc;
+  --font-outfit: 'Poppins', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+
+  /* User Premium Theme Colors */
+  --color-user-bg: #fdfdfc;
+  --color-user-accent: #1a1a1a;
+  --color-user-accent-soft: rgba(0, 0, 0, 0.05);
+  --color-user-gold: #c5a059;
+  --color-user-text-main: #1a1a1a;
+  --color-user-text-muted: #666666;
+
+  /* Dark mode surface colors */
+  --color-dark-bg: #0f172a;
+  --color-dark-surface: #1e293b;
+  --color-dark-card: #334155;
+  --color-dark-border: #475569;
+}
+
+/* Dynamic primary color tint for active sidebar items */
+.sidebar-active-item {
+  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, transparent);
+  color: var(--color-brand-primary);
+}
+.dark .sidebar-active-item {
+  background-color: color-mix(in srgb, var(--color-brand-primary) 20%, transparent);
+  color: #ffffff;
+}
+.sidebar-active-indicator {
+  background-color: var(--color-brand-primary);
+}
+.sidebar-active-icon {
+  color: var(--color-brand-primary);
+}
+.dark .sidebar-active-icon {
+  color: #ffffff;
+}
+
+/* Utility: any element that should use primary color */
+.text-primary-dynamic {
+  color: var(--color-brand-primary);
+}
+.bg-primary-dynamic {
+  background-color: var(--color-brand-primary);
+}
+.border-primary-dynamic {
+  border-color: var(--color-brand-primary);
+}
+.bg-primary-tint {
+  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, transparent);
+}
+
+.dark body {
+  @apply bg-dark-bg text-gray-100;
+}
+
+@layer components {
+  /* Medizintek-style utilities */
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/5 border border-white/10;
+  }
+
+  .btn-premium {
+    @apply w-full relative overflow-hidden py-3.5 px-4 bg-brand-primary hover:bg-brand-secondary text-white font-bold rounded-xl shadow-lg shadow-blue-900/20 transition-all duration-300 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-400;
+  }
+
+  .input-premium {
+    @apply w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent disabled:bg-gray-100 disabled:cursor-not-allowed transition-all duration-200;
+  }
+}
+
+.dark .input-premium {
+  @apply bg-dark-surface border-dark-border text-gray-100;
+}
+
+/* Custom Animations */
+@keyframes shift-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: shift-gradient 15s ease infinite;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Utility to hide scrollbar but keep functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Mobile icon-only: hide text spans, make buttons square icon buttons */
+.mobile-icon-only button > span:not([class*="w-1"]):not([class*="h-1"]):not([class*="rounded-full"]) {
+  display: none !important;
+}
+.mobile-icon-only button {
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  justify-content: center !important;
+}
+
+/* Google Translate Customization - Aggressive Removal */
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+/* Hide the top banner */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+.skiptranslate iframe,
+iframe[id^=":"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+}
+
+/* Hide the toolbar that appears after translation */
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Hide tooltips */
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+/* Remove highlight effects */
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Hide original text popup */
+font {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Additional safety for body shift */
+body > .skiptranslate {
+  display: none !important;
+}
+
+/* Ensure the wrapper doesn't take space */
+#google_translate_element {
+  display: none !important;
+  height: 0 !important;
+  overflow: hidden;
+}
+
+/* Aggressively hide all Google Translate Widget Elements */
+.goog-te-gadget,
+.goog-te-gadget-simple,
+.goog-te-gadget-icon,
+.goog-te-menu-value,
+.goog-te-menu-frame,
+.goog-logo-link,
+img.goog-te-gadget-icon {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hide the floating language selector if present */
+#google_translate_element,
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-gadget,
+.goog-te-gadget-simple,
+.goog-te-gadget-icon,
+.goog-te-menu-value,
+.goog-te-menu-frame,
+.goog-logo-link,
+img.goog-te-gadget-icon {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -9999 !important;
+}
+
+/* Specific fix for the blue G icon usually unrelated to the container */
+.goog-te-gadget-icon {
+  background: none !important;
+  display: none !important;
+}
+
+/* Hide any google translate iframes that might be injected */
+iframe[className*="goog-te-banner"],
+iframe[id*=":"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  @apply bg-[#f8f8f8] text-gray-900 min-h-screen antialiased;
+  font-family: "Poppins", sans-serif;
+  scrollbar-gutter: stable;
+}

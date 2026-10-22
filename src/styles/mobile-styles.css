@@ -1,0 +1,441 @@
+/* =========================================================================
+   MOBILE UI LAYOUT (EXACT REPLICA)
+   ========================================================================= */
+
+.mobile-home-container {
+  display: block;
+  background-color: #ffffff;
+  min-height: 100vh;
+  padding-bottom: 80px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.desktop-home-container {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .mobile-home-container {
+    display: none !important;
+  }
+  .desktop-home-container {
+    display: block !important;
+  }
+}
+
+/* 1. Location Header */
+.mobile-location-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background-color: #ffffff;
+}
+
+.mobile-location-header svg {
+  color: #6366f1; /* purple-ish pin */
+  fill: #6366f1;
+}
+
+.mobile-location-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* 2. Search Section */
+.mobile-search-section {
+  padding: 18px 20px 16px;
+  background-color: #ffffff;
+}
+
+.mobile-search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 6px 6px 6px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-search-placeholder {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: #1a1a1a;
+  margin-left: 10px;
+}
+
+.mobile-search-placeholder::placeholder {
+  color: #6b7280;
+}
+
+.mobile-search-btn {
+  background-color: #111827;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+}
+
+/* 3. Category Grid */
+.mobile-category-grid {
+  padding: 10px 20px 24px;
+  background-color: #ffffff;
+}
+
+.mobile-category-scroll {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: 76px;
+  gap: 16px 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+}
+
+.mobile-category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  scroll-snap-align: start;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.mobile-category-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px; /* Squircle */
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  transition: all 0.2s ease;
+}
+
+.mobile-category-item.active .mobile-category-icon {
+  border-color: #1a1a1a;
+  border-width: 2px;
+}
+
+.mobile-category-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #1a1a1a;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* 4. Sections (Book again, Favourites, Recommended) */
+.mobile-section {
+  padding: 24px 0;
+  background-color: #f9fafb; /* Light gray background */
+}
+
+.mobile-section:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.mobile-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px 16px;
+}
+
+.mobile-section-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 0 20px 16px;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mobile-section-header .mobile-section-title {
+  padding: 0;
+}
+
+.mobile-see-all {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.mobile-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 0 20px 8px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 20px;
+}
+
+.mobile-horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 5. Book Again Card */
+.mobile-book-again-list {
+  padding: 0 20px;
+}
+
+.mobile-book-again-card {
+  background-color: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.mobile-book-again-image {
+  position: relative;
+  width: 100%;
+  height: 160px;
+}
+
+.mobile-book-again-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mobile-book-again-no-img {
+  width: 100%;
+  height: 100%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 800;
+  color: #9ca3af;
+}
+
+.mobile-book-again-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background-color: #4338ca; /* Deep purple */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-book-again-info {
+  padding: 16px;
+}
+
+.mobile-book-again-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.mobile-book-again-meta {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-book-again-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+  padding: 10px;
+  background-color: #f3f4f6;
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* 6. List Card (Favourites, Recommended, etc) */
+.mobile-venue-list-card {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+}
+
+.mobile-venue-list-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.mobile-venue-list-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mobile-venue-list-no-img {
+  width: 100%;
+  height: 100%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 800;
+  color: #9ca3af;
+}
+
+.mobile-venue-list-fav {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  padding: 6px;
+  color: #1a1a1a;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s ease;
+}
+
+.mobile-venue-list-fav:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.mobile-venue-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.mobile-venue-list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-venue-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.mobile-venue-list-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.mobile-venue-list-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mobile-venue-list-location {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-venue-list-meta {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+/* Dark mode adjustments for mobile container */
+.dark .mobile-home-container {
+  background-color: #0b0f19;
+}
+.dark .mobile-location-header {
+  background-color: #0b0f19;
+}
+.dark .mobile-search-section {
+  background-color: #0b0f19;
+}
+.dark .mobile-search-bar {
+  background-color: #131926;
+  border-color: rgba(255,255,255,0.1);
+}
+.dark .mobile-search-placeholder {
+  color: #ffffff;
+}
+.dark .mobile-search-btn {
+  background-color: #c5a059;
+}
+.dark .mobile-category-grid {
+  background-color: #0b0f19;
+}
+.dark .mobile-category-icon {
+  background-color: #131926;
+  border-color: rgba(255,255,255,0.1);
+  color: #ffffff;
+}
+.dark .mobile-category-label {
+  color: #ffffff;
+}
+.dark .mobile-section {
+  background-color: #111622;
+}
+.dark .mobile-section:nth-child(even) {
+  background-color: #0b0f19;
+}
+.dark .mobile-section-title, .dark .mobile-see-all, .dark .mobile-venue-list-name, .dark .mobile-book-again-name {
+  color: #ffffff;
+}
+.dark .mobile-book-again-card {
+  background-color: #131926;
+  border-color: rgba(255,255,255,0.05);
+}
+.dark .mobile-book-again-btn {
+  background-color: #1f2937;
+  color: #ffffff;
+}
