@@ -80,23 +80,23 @@ export const AVAILABLE_PERMISSIONS = [
 
     {
         key: 'crm',
-        label: 'CRM',
+        label: 'Buyer',
         icon: Users,
-        description: 'Customer Relationship Management',
+        description: 'Buyer Management',
         modules: [
             {
                 key: 'customers',
-                label: 'Customers',
+                label: 'Buyers',
                 actions: [
-                    { key: 'view', label: 'View Customers' },
-                    { key: 'add', label: 'Add Customer' },
-                    { key: 'edit', label: 'Edit Customer' },
-                    { key: 'delete', label: 'Delete Customer' }
+                    { key: 'view', label: 'View Buyers' },
+                    { key: 'add', label: 'Add Buyer' },
+                    { key: 'edit', label: 'Edit Buyer' },
+                    { key: 'delete', label: 'Delete Buyer' }
                 ]
             },
             {
                 key: 'customer_group',
-                label: 'Customer Group',
+                label: 'Buyer Group',
                 actions: [
                     { key: 'view', label: 'View Groups' },
                     { key: 'add', label: 'Add Group' },
@@ -202,9 +202,9 @@ export const AVAILABLE_PERMISSIONS = [
     },
     {
         key: 'hrm',
-        label: 'HRM',
+        label: 'Staff',
         icon: UserCog,
-        description: 'Human Resource Management and staff',
+        description: 'Staff Management and payroll',
         modules: [
             {
                 key: 'staff',
@@ -466,29 +466,29 @@ export const AVAILABLE_PERMISSIONS = [
             },
             {
                 key: 'customer',
-                label: 'Customer Reports',
+                label: 'Buyer Reports',
                 modules: [
                     {
                         key: 'customer_report',
-                        label: 'Customer Report',
+                        label: 'Buyer Report',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' },
-                            { key: 'call', label: 'Call Customer' }
+                            { key: 'call', label: 'Call Buyer' }
                         ]
                     },
                     {
                         key: 'customer_ledger',
-                        label: 'Customer Invoice Report',
+                        label: 'Buyer Invoice Report',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' },
-                            { key: 'call', label: 'Call Customer' }
+                            { key: 'call', label: 'Call Buyer' }
                         ]
                     },
                     {
                         key: 'customer_statement',
-                        label: 'Customer Statement',
+                        label: 'Buyer Statement',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' },
@@ -497,7 +497,7 @@ export const AVAILABLE_PERMISSIONS = [
                     },
                     {
                         key: 'customer_credit_report',
-                        label: 'Customer Credit Report',
+                        label: 'Buyer Credit Report',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' }
@@ -505,7 +505,7 @@ export const AVAILABLE_PERMISSIONS = [
                     },
                     {
                         key: 'valuable_customer_report',
-                        label: 'Valuable Customer Report',
+                        label: 'Valuable Buyer Report',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' }
@@ -513,7 +513,7 @@ export const AVAILABLE_PERMISSIONS = [
                     },
                     {
                         key: 'regular_customer_report',
-                        label: 'Regular Customer Report',
+                        label: 'Regular Buyer Report',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' }

@@ -400,8 +400,8 @@ const CustomerInvoiceReport = () => {
 
   return (
     <ReportLayout
-      title="Customer Invoice Report"
-      subtitle="Deep dive into customer payment history"
+      title="Buyer Invoice Report"
+      subtitle="Deep dive into buyer payment history"
     >
       <ReportSummaryCard
         title="Invoice Summary"

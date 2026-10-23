@@ -98,13 +98,6 @@ const ReportsPage = () => {
           permission: "reports:sales:trash_invoices"
         },
         {
-          id: "service-profit-report",
-          label: "Service Profit",
-          icon: DollarSign,
-          path: getDynamicPortalPath("/admin/reports/service-profit-report"),
-          permission: "reports:sales:service_profit_report"
-        },
-        {
           id: "item-profit-report",
           label: "Item Profit",
           icon: Boxes,

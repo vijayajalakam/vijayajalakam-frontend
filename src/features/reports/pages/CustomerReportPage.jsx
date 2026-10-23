@@ -156,11 +156,11 @@ const CustomerReportPage = () => {
 
   return (
     <ReportLayout
-      title="Customer Report"
-      subtitle="Analyze your growing client base"
+      title="Buyer Report"
+      subtitle="Analyze your growing buyer base"
     >
       <ReportSummaryCard
-        title="Customers"
+        title="Buyers"
         totalValue={summaryData.total}
         totalCount={summaryData.total}
         segments={summaryData.segments}
@@ -175,7 +175,7 @@ const CustomerReportPage = () => {
         onRefresh={fetchCustomers}
         isRefreshing={loading}
         onExport={hasPermission('reports:customer:customer_report:export') ? handleExport : undefined}
-        emptyMessage="No customers found."
+        emptyMessage="No buyers found."
         searchQuery={searchTerm}
         onSearchChange={setSearchTerm}
         pagination={{

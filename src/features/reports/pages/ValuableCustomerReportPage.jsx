@@ -84,16 +84,16 @@ const ValuableCustomerReportPage = () => {
 
   return (
     <ReportLayout
-      title="Valuable Customer Report"
-      subtitle="Customers ranked by highest total sales amount"
+      title="Valuable Buyer Report"
+      subtitle="Buyers ranked by highest total sales amount"
     >
       <ReportSummaryCard
-        title="Valuable Customers"
+        title="Valuable Buyers"
         totalValue={summary?.totalSalesAmount || 0}
         totalCount={summary?.total || 0}
         segments={[
           {
-            label: "Total Customers",
+            label: "Total Buyers",
             count: summary?.total || 0,
             value: summary?.total || 0,
             color: "#f59e0b",
@@ -115,7 +115,7 @@ const ValuableCustomerReportPage = () => {
             ? () => Promise.resolve(filteredData)
             : undefined
         }
-        emptyMessage="No customer sales data found."
+        emptyMessage="No buyer sales data found."
         searchQuery={searchTerm}
         onSearchChange={setSearchTerm}
         startDate={startDate}

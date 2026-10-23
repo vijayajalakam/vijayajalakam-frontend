@@ -208,7 +208,7 @@ const CustomerGroupManager = () => {
         <div className="p-4 border-b border-gray-100 dark:border-dark-border">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <UsersRound size={20} className="text-brand-primary dark:text-blue-400" />
-            Customer Groups
+            Buyer Groups
           </h2>
         </div>
 
@@ -326,10 +326,10 @@ const CustomerGroupManager = () => {
         <div className="p-4 md:p-6 border-b border-gray-100 dark:border-dark-border flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-0 bg-white dark:bg-dark-bg z-10">
           <div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              Customers List
+              Buyers List
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Select a group from the dropdown next to a customer to automatically save.
+              Select a group from the dropdown next to a buyer to automatically save.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -353,7 +353,7 @@ const CustomerGroupManager = () => {
           ) : filteredCustomers.length === 0 ? (
             <div className="text-center p-12 text-gray-500 dark:text-gray-400">
               <UsersRound size={48} className="mx-auto text-gray-300 mb-4" />
-              <p>No customers found.</p>
+              <p>No buyers found.</p>
             </div>
           ) : (
             <>

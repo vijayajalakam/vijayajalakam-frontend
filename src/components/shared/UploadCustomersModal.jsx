@@ -358,7 +358,7 @@ const UploadCustomersModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Bulk Upload Customers"
+      title="Bulk Upload Buyers"
       size="xl"
       footer={footer}
     >

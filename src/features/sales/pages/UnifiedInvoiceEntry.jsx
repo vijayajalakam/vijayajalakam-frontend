@@ -3952,7 +3952,7 @@ const UnifiedInvoiceEntry = () => {
                     <div className="relative">
                       <CustomTextField
                         variant="compact"
-                        placeholder="Find Customer..."
+                        placeholder="Find Buyer..."
                         icon={SearchIcon}
                         value={customerSearch}
                         onChange={(e) => {
@@ -3964,7 +3964,7 @@ const UnifiedInvoiceEntry = () => {
                       <button
                         onClick={() => setIsCustModalOpen(true)}
                         className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 rounded-lg text-brand-primary dark:text-blue-400 transition-colors"
-                        title="Add New Customer"
+                        title="Add New Buyer"
                       >
                         <Plus size={14} />
                       </button>
@@ -4346,7 +4346,7 @@ const UnifiedInvoiceEntry = () => {
         <Modal
           isOpen={isCustModalOpen}
           onClose={() => setIsCustModalOpen(false)}
-          title="Add New Customer"
+          title="Add New Buyer"
           maxWidth="max-w-md"
           footer={
             <div className="flex gap-3">
@@ -4362,7 +4362,7 @@ const UnifiedInvoiceEntry = () => {
                 form="create-customer-form"
                 className="flex-1 py-2.5 bg-brand-primary text-white rounded-xl hover:bg-brand-secondary font-bold text-sm shadow-lg shadow-brand-primary/20 transition-colors"
               >
-                Create Customer
+                Create Buyer
               </button>
             </div>
           }
@@ -4872,7 +4872,7 @@ const UnifiedInvoiceEntry = () => {
                   <div className="relative">
                     <div className="relative">
                       <CustomTextField
-                        placeholder="Find Customer..."
+                        placeholder="Find Buyer..."
                         icon={SearchIcon}
                         value={customerSearch}
                         onChange={(e) => {
@@ -4884,7 +4884,7 @@ const UnifiedInvoiceEntry = () => {
                       <button
                         onClick={() => setIsCustModalOpen(true)}
                         className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-brand-primary/10 hover:bg-brand-primary/20 rounded-lg text-brand-primary dark:text-blue-400 transition-colors"
-                        title="Add New Customer"
+                        title="Add New Buyer"
                       >
                         <Plus size={14} />
                       </button>

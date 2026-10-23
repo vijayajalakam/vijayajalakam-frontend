@@ -454,7 +454,7 @@ const CustomerManager = () => {
 
   const stats = [
     {
-      label: "Total Clients",
+      label: "Total Buyers",
       value: statsData.total || customers.length,
       icon: Users,
       color: "bg-blue-50 text-blue-600",

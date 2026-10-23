@@ -82,16 +82,16 @@ const RegularCustomerReportPage = () => {
 
   return (
     <ReportLayout
-      title="Regular Customer Report"
-      subtitle="Customers ranked by highest number of visits/purchases"
+      title="Regular Buyer Report"
+      subtitle="Buyers ranked by highest number of visits/purchases"
     >
       <ReportSummaryCard
-        title="Regular Customers"
+        title="Regular Buyers"
         totalValue={summary?.totalVisits || 0}
         totalCount={summary?.total || 0}
         segments={[
           {
-            label: "Total Customers",
+            label: "Total Buyers",
             count: summary?.total || 0,
             value: summary?.total || 0,
             color: "#3b82f6",
@@ -113,7 +113,7 @@ const RegularCustomerReportPage = () => {
             ? () => Promise.resolve(filteredData)
             : undefined
         }
-        emptyMessage="No customer sales data found."
+        emptyMessage="No buyer sales data found."
         searchQuery={searchTerm}
         onSearchChange={setSearchTerm}
         startDate={startDate}

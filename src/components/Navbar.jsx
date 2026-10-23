@@ -36,13 +36,13 @@ const Navbar = () => {
                             {user.role === 'admin' && (
                                 <>
                                     <Link to={`${basePath}/admin/dashboard`} className="hover:text-gray-300">Dashboard</Link>
-                                    <Link to={`${basePath}/admin/hrm`} className="hover:text-gray-300">HRM</Link>
-                                    <Link to={`${basePath}/admin/services`} className="hover:text-gray-300">Services</Link>
+                                    <Link to={`${basePath}/admin/invoice`} className="hover:text-gray-300">Invoice</Link>
+                                    <Link to={`${basePath}/admin/hrm`} className="hover:text-gray-300">Staff</Link>
+                                    <Link to={`${basePath}/admin/crm`} className="hover:text-gray-300">Buyer</Link>
                                 </>
                             )}
                             {user.role === 'staff' && (
                                 <>
-                                    <Link to={`${basePath}/staff/bookings`} className="hover:text-gray-300">Bookings</Link>
                                     <Link to={`${basePath}/staff/invoice`} className="hover:text-gray-300">Invoice</Link>
                                 </>
                             )}

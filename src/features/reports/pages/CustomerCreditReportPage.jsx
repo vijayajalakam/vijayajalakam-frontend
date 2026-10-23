@@ -137,8 +137,8 @@ const CustomerCreditReportPage = () => {
 
   return (
     <ReportLayout
-      title="Customer Credit Report"
-      subtitle="Outstanding due and credit balances across all customers"
+      title="Buyer Credit Report"
+      subtitle="Outstanding due and credit balances across all buyers"
     >
       {summaryData && (
         <ReportSummaryCard
@@ -146,7 +146,7 @@ const CustomerCreditReportPage = () => {
           totalValue={summaryData.total}
           totalCount={summaryData.count}
           totalLabel="Total Due"
-          countLabel="Customers"
+          countLabel="Buyers"
           segments={summaryData.segments}
           loading={loading}
           currencySymbol={currencySymbol}
@@ -166,7 +166,7 @@ const CustomerCreditReportPage = () => {
             ? handleExport
             : undefined
         }
-        emptyMessage="No customer balance data found."
+        emptyMessage="No buyer balance data found."
         searchQuery={searchTerm}
         onSearchChange={setSearchTerm}
         startDate={startDate}

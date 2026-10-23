@@ -336,8 +336,8 @@ const CustomerStatementPage = () => {
 
   return (
     <ReportLayout
-      title="Customer Statement"
-      subtitle="Full financial history of selected customer"
+      title="Buyer Statement"
+      subtitle="Full financial history of selected buyer"
     >
       <Snackbar
         message={snack.message}
@@ -346,7 +346,7 @@ const CustomerStatementPage = () => {
       />
       {summaryData && (
         <ReportSummaryCard
-          title={summary.customerName || "Customer Statement"}
+          title={summary.customerName || "Buyer Statement"}
           totalValue={summaryData.total}
           totalCount={summaryData.count}
           totalLabel={summaryData.label}
