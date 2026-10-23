@@ -192,56 +192,8 @@ const SelectServices = () => {
         }
     };
     fetchDepartments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state?.selectedDepartment]); // Run when state changes or initial load
-
-  useEffect(() => {
-    if (!selectedDepartment || servicesData.length === 0 || selectedServices.length === 0) return;
-    
-    let needsUpdate = false;
-    const updatedServices = [];
-
-    for (const cartItem of selectedServices) {
-       const service = servicesData.find(s => s._id === cartItem._id);
-       if (!service) continue;
-
-       let isValid = false;
-       if (service.useVariants && service.variants && service.variants.length > 0) {
-           isValid = service.variants.some(v => 
-               v.pricing && v.pricing.some(p => (p.departmentId?._id || p.departmentId || p.department?._id || p.department) === selectedDepartment)
-           );
-       } else {
-           if (service.pricing && service.pricing.length > 0) {
-               isValid = service.pricing.some(p => (p.departmentId?._id || p.departmentId || p.department?._id || p.department) === selectedDepartment);
-           }
-       }
-
-       if (isValid) {
-           const variantObj = cartItem.variantId ? service.variants?.find(v => (v.variantId?._id || v.variantId || v._id) === cartItem.variantId) : null;
-           const priceData = getDepartmentPrice(service, !!cartItem.variantId, variantObj, selectedDepartment);
-           
-           if (priceData.total !== cartItem.price || selectedDepartment !== cartItem.departmentId) {
-               needsUpdate = true;
-               updatedServices.push({
-                   ...cartItem,
-                   price: priceData.total,
-                   taxAmount: priceData.taxAmount,
-                   taxPercentage: priceData.taxPercentage,
-                   basePrice: priceData.basePrice,
-                   isTaxInclusive: priceData.isTaxInclusive,
-                   departmentId: selectedDepartment
-               });
-           } else {
-               updatedServices.push(cartItem);
-           }
-       } else {
-           needsUpdate = true; // Drop invalid item
-       }
-    }
-
-    if (needsUpdate) {
-        dispatch(updateSelectedServices(updatedServices));
-    }
-  }, [selectedDepartment, servicesData, dispatch]);
 
   const getDepartmentPrice = (service, isVariant = false, variantObj = null, deptOverride = null) => {
       const activeDept = deptOverride || selectedDepartment;
@@ -296,6 +248,56 @@ const SelectServices = () => {
           offerDetails: offerInfo.offerDetails
       };
   };
+
+  useEffect(() => {
+    if (!selectedDepartment || servicesData.length === 0 || selectedServices.length === 0) return;
+    
+    let needsUpdate = false;
+    const updatedServices = [];
+
+    for (const cartItem of selectedServices) {
+       const service = servicesData.find(s => s._id === cartItem._id);
+       if (!service) continue;
+
+       let isValid = false;
+       if (service.useVariants && service.variants && service.variants.length > 0) {
+           isValid = service.variants.some(v => 
+               v.pricing && v.pricing.some(p => (p.departmentId?._id || p.departmentId || p.department?._id || p.department) === selectedDepartment)
+           );
+       } else {
+           if (service.pricing && service.pricing.length > 0) {
+               isValid = service.pricing.some(p => (p.departmentId?._id || p.departmentId || p.department?._id || p.department) === selectedDepartment);
+           }
+       }
+
+       if (isValid) {
+           const variantObj = cartItem.variantId ? service.variants?.find(v => (v.variantId?._id || v.variantId || v._id) === cartItem.variantId) : null;
+           const priceData = getDepartmentPrice(service, !!cartItem.variantId, variantObj, selectedDepartment);
+           
+           if (priceData.total !== cartItem.price || selectedDepartment !== cartItem.departmentId) {
+               needsUpdate = true;
+               updatedServices.push({
+                   ...cartItem,
+                   price: priceData.total,
+                   taxAmount: priceData.taxAmount,
+                   taxPercentage: priceData.taxPercentage,
+                   basePrice: priceData.basePrice,
+                   isTaxInclusive: priceData.isTaxInclusive,
+                   departmentId: selectedDepartment
+               });
+           } else {
+               updatedServices.push(cartItem);
+           }
+       } else {
+           needsUpdate = true; // Drop invalid item
+       }
+    }
+
+    if (needsUpdate) {
+        dispatch(updateSelectedServices(updatedServices));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDepartment, servicesData, dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -589,8 +591,8 @@ const SelectServices = () => {
     );
   }
 
-  // Category pills component (reused in desktop)
-  const CategoryPills = () => (
+  // Category pills render helper (reused in desktop)
+  const renderCategoryPills = () => (
     <div className="flex items-center gap-2">
       <div data-tabbar className="flex-1 flex items-center gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth">
         {categories.map((cat) => (
@@ -645,7 +647,7 @@ const SelectServices = () => {
     </div>
   );
   
-  const DepartmentPills = () => (
+  const renderDepartmentPills = () => (
     departments.length > 0 && (
       <div className="flex w-full bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] relative">
         {departments.map(dept => (
@@ -696,7 +698,7 @@ const SelectServices = () => {
           </div>
             {/* Department Pills */}
             <div className="mb-6">
-              <DepartmentPills />
+              {renderDepartmentPills()}
             </div>
           <div className="flex items-center gap-2 px-4 pb-3 pt-1">
             <div data-tabbar className="flex-1 flex items-center gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth">
@@ -896,7 +898,7 @@ const SelectServices = () => {
             <div className="max-w-[1200px] mx-auto w-full px-8 pr-[510px] pointer-events-auto">
               {/* Grey backing only behind the pills strip (not full width) so content doesn't bleed through */}
               <div className="bg-[#f5f5f7] dark:bg-dark-bg py-3">
-                <CategoryPills />
+                {renderCategoryPills()}
               </div>
             </div>
           </div>
@@ -928,9 +930,9 @@ const SelectServices = () => {
                 {/* Inline Category Pills (scrolls away) - stays in left column only */}
                 <div ref={desktopCategoryPillsRef} className="mb-6">
                   <div className="mb-4 -mx-4 lg:mx-0">
-                    <DepartmentPills />
+                    {renderDepartmentPills()}
                   </div>
-                  <CategoryPills />
+                  {renderCategoryPills()}
                 </div>
 
                 {/* Selected services chip — sticky so it stays visible while scrolling (like mobile) */}

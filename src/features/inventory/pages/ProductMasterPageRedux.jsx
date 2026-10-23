@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useCurrency } from "../../../hooks/useCurrency";
 import { useStockFilters } from "../../../hooks/useStockFilters";
@@ -10,16 +10,11 @@ import {
   useDeleteProductMutation,
   useBulkDeleteProductsMutation,
   useToggleProductStatusMutation,
-  useToggleProductSaleStatusMutation,
   useToggleProductFavouriteMutation,
-  useGenerateProductImageMutation,
-  useBulkGenerateProductImagesMutation,
-  useUploadProductsMutation,
 } from "../../../store/api/stockEndpoints";
 import {
   useGetProductCategoriesListQuery,
   useGetUnitsListQuery,
-  useGetVariantsListQuery,
 } from "../../../store/api/tenantCrudEndpoints";
 import CustomTable from "../../../components/shared/CustomTable";
 import Modal from "../../../components/shared/Modal";
@@ -38,12 +33,11 @@ import {
   Plus,
   RefreshCw,
   Filter,
-  UploadCloud,
-  Sparkles,
   Package,
   DollarSign,
   Layers,
   Heart,
+  Star,
 } from "lucide-react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 
@@ -59,7 +53,7 @@ import { motion as Motion, AnimatePresence } from "framer-motion";
  * - Reduced re-renders
  */
 const ProductMasterPageRedux = () => {
-  const { user, currencySymbol, hasPermission, isAdmin } = useAuth();
+  const { currencySymbol, hasPermission, isAdmin } = useAuth();
   const { formatDisplayNumber } = useCurrency();
   
   // Permissions
@@ -67,20 +61,17 @@ const ProductMasterPageRedux = () => {
   const canEdit = isAdmin || hasPermission("stock:products:edit");
   const canDelete = isAdmin || hasPermission("stock:products:delete");
   const canChangeStatus = isAdmin || hasPermission("stock:products:status");
-  const canChangeSale = isAdmin || hasPermission("stock:products:sale_status");
-  const canGenerateImage = isAdmin || hasPermission("stock:products:image");
 
   // Redux hooks
   const { filters, pagination, queryParams, updateFilters, updateSearch, updatePagination, resetFilters } =
     useStockFilters("products");
-  const { selectedIds, selectedCount, toggleSelection, clearSelection, selectAll, isSelected, isAllSelected } =
+  const { selectedCount, toggleSelection, clearSelection, selectAll, isSelected, isAllSelected } =
     useStockSelection("products");
 
   // RTK Query hooks
   const { data, isLoading, isFetching, refetch } = useGetProductsQuery(queryParams);
   const { data: categories = [] } = useGetProductCategoriesListQuery();
   const { data: units = [] } = useGetUnitsListQuery();
-  const { data: variants = [] } = useGetVariantsListQuery();
 
   // Mutations
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
@@ -88,11 +79,7 @@ const ProductMasterPageRedux = () => {
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
   const [bulkDeleteProducts, { isLoading: isBulkDeleting }] = useBulkDeleteProductsMutation();
   const [toggleStatus] = useToggleProductStatusMutation();
-  const [toggleSaleStatus] = useToggleProductSaleStatusMutation();
   const [toggleFavourite] = useToggleProductFavouriteMutation();
-  const [generateImage] = useGenerateProductImageMutation();
-  const [bulkGenerateImages] = useBulkGenerateProductImagesMutation();
-  const [uploadProducts] = useUploadProductsMutation();
 
   // Local UI state
   const [showModal, setShowModal] = useState(false);
@@ -155,6 +142,64 @@ const ProductMasterPageRedux = () => {
     ],
     [stats, currencySymbol, formatDisplayNumber]
   );
+
+  // Handlers
+  const handleToggleStatus = useCallback(
+    async (id, isActive) => {
+      try {
+        await toggleStatus({ id, isActive }).unwrap();
+        setSnack({ message: "Status updated successfully", type: "success" });
+      } catch (error) {
+        setSnack({
+          message: error?.data?.message || "Failed to update status",
+          type: "error",
+        });
+      }
+    },
+    [toggleStatus]
+  );
+
+  const handleToggleFavourite = useCallback(
+    async (id) => {
+      try {
+        await toggleFavourite(id).unwrap();
+        setSnack({ message: "Favourite updated successfully", type: "success" });
+      } catch (error) {
+        setSnack({
+          message: error?.data?.message || "Failed to update favourite",
+          type: "error",
+        });
+      }
+    },
+    [toggleFavourite]
+  );
+
+  const handleEdit = useCallback((product) => {
+    setEditingId(product._id);
+    setForm({
+      name: product.name,
+      sku: product.sku,
+      category: product.category,
+      unit: product.unit,
+      purchasePrice: product.purchasePrice,
+      sellingPrice: product.sellingPrice,
+      taxPercent: product.taxPercent || 0,
+      taxId: product.taxId || "",
+      isTaxInclusive: product.isTaxInclusive || false,
+      hsnCode: product.hsnCode || "",
+      currentStock: product.currentStock,
+      isSale: product.isSale,
+      useVariants: product.useVariants || false,
+      variants: product.variants || [],
+      branches: product.branches || [],
+    });
+    setShowModal(true);
+  }, []);
+
+  const handleDeleteClick = useCallback((product) => {
+    setProductToDelete(product);
+    setShowDeleteConfirm(true);
+  }, []);
 
   // Memoized table columns
   const columns = useMemo(
@@ -288,6 +333,9 @@ const ProductMasterPageRedux = () => {
       clearSelection,
       toggleSelection,
       handleToggleFavourite,
+      handleToggleStatus,
+      handleEdit,
+      handleDeleteClick,
       canEdit,
       canDelete,
       canChangeStatus,
@@ -297,62 +345,6 @@ const ProductMasterPageRedux = () => {
   );
 
   // Handlers
-  const handleToggleStatus = useCallback(
-    async (id, isActive) => {
-      try {
-        await toggleStatus({ id, isActive }).unwrap();
-        setSnack({ message: "Status updated successfully", type: "success" });
-      } catch (error) {
-        setSnack({
-          message: error?.data?.message || "Failed to update status",
-          type: "error",
-        });
-      }
-    },
-    [toggleStatus]
-  );
-
-  const handleToggleFavourite = useCallback(
-    async (id) => {
-      try {
-        await toggleFavourite(id).unwrap();
-        setSnack({ message: "Favourite updated successfully", type: "success" });
-      } catch (error) {
-        setSnack({
-          message: error?.data?.message || "Failed to update favourite",
-          type: "error",
-        });
-      }
-    },
-    [toggleFavourite]
-  );
-
-  const handleEdit = useCallback((product) => {
-    setEditingId(product._id);
-    setForm({
-      name: product.name,
-      sku: product.sku,
-      category: product.category,
-      unit: product.unit,
-      purchasePrice: product.purchasePrice,
-      sellingPrice: product.sellingPrice,
-      taxPercent: product.taxPercent || 0,
-      taxId: product.taxId || "",
-      isTaxInclusive: product.isTaxInclusive || false,
-      hsnCode: product.hsnCode || "",
-      currentStock: product.currentStock,
-      isSale: product.isSale,
-      useVariants: product.useVariants || false,
-      variants: product.variants || [],
-      branches: product.branches || [],
-    });
-    setShowModal(true);
-  }, []);
-
-  const handleDeleteClick = useCallback((product) => {
-    setProductToDelete(product);
-    setShowDeleteConfirm(true);
-  }, []);
 
   const handleDelete = useCallback(async () => {
     if (!productToDelete) return;

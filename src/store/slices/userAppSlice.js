@@ -39,7 +39,9 @@ const userAppSlice = createSlice({
           const perShop = JSON.parse(localStorage.getItem("selectedBranches") || "{}");
           perShop[payload.shopSlug] = { id: payload.id, name: payload.name, address: payload.address || "" };
           localStorage.setItem("selectedBranches", JSON.stringify(perShop));
-        } catch {}
+        } catch {
+          // ignore error reading or parsing localStorage
+        }
       }
     },
     clearBranch(state) {

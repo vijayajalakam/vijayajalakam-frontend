@@ -12,7 +12,7 @@ const UserLayout = () => {
     const location = useLocation();
     const { shopSlug } = useParams();
     const dispatch = useDispatch();
-    const isHome = location.pathname.endsWith('/user/home');
+    const isHome = location.pathname === '/' || location.pathname.endsWith('/user/home');
     const isFavourites = location.pathname.endsWith('/user/favourites');
     const isSearch = location.pathname.endsWith('/user/search');
     const isGallery = location.pathname.endsWith('/user/gallery');

@@ -95,8 +95,8 @@ const StaffCalendarView = ({ appointments = [], staffList = [], onBookingClick, 
         startMins = parseTimeToMinutes(app.slotTimes[0]);
       } else {
         // Fallback for bookings from invoice screen without times
-        const d = new Date(app.createdAt || app.date || Date.now());
-        startMins = d.getHours() * 60 + d.getMinutes();
+        const fallbackDate = app.createdAt ? new Date(app.createdAt) : (app.date ? new Date(app.date) : null);
+        startMins = fallbackDate ? fallbackDate.getHours() * 60 + fallbackDate.getMinutes() : minMinutes;
         
         // Keep it within calendar bounds visually
         if (startMins < minMinutes) startMins = minMinutes;

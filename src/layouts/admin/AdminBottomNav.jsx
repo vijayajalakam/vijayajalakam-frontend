@@ -15,7 +15,7 @@ const AdminBottomNav = () => {
   const portalRole = urlPortalRole || authPortalRole;
 
   // The requested menu labels
-  const allowedLabels = ["Invoice", "Bookings", "Reports"];
+  const allowedLabels = ["Dashboard", "Invoice", "Stock", "Reports"];
 
   // Filter the original adminMenu config by both labels and permissions
   const filteredMenu = useMemo(() => {

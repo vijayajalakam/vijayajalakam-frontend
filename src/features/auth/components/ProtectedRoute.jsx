@@ -36,7 +36,7 @@ const ProtectedRoute = ({ children, allowedRoles, requiredPermission }) => {
     return <Navigate to={homePath} replace />;
   }
 
-  if (requiredPermission && user.role !== "SUPER_ADMIN" && user.role !== "SHOP_ADMIN") {
+  if (requiredPermission && user.role !== "SUPER_ADMIN" && user.role !== "SHOP_ADMIN" && user.role !== "admin") {
     if (!hasPermission || !hasPermission(requiredPermission)) {
       const portalRole = getPortalRole(user.role);
       const dashboardPath = shopSlug

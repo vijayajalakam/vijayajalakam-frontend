@@ -29,7 +29,7 @@ const CartDrawer = () => {
 
     const handleCheckout = () => {
         handleClose();
-        navigate(`/${shopSlug}/user/cart-checkout`);
+        navigate(shopSlug && shopSlug !== "undefined" ? `/${shopSlug}/user/cart-checkout` : `/user/cart-checkout`);
     };
 
     // Calculate totals based on cart items (using the exact same logic that checkout will use)

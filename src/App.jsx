@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useParams,
 } from "react-router-dom";
 import { AuthProvider } from "./features/auth/components/AuthProvider";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
@@ -149,7 +150,6 @@ import ProductDetail from "./features/booking/pages/ProductDetail";
 import Cart from "./features/booking/pages/Cart";
 
 import ShopDisabledModal from "./components/shared/ShopDisabledModal";
-import ShopSelector from "./components/shared/ShopSelector";
 import ThemeProviderInner from "./components/shared/ThemeProvider";
 import SearchScreen from "./features/booking/pages/SearchScreen";
 import LocationPicker from "./features/booking/pages/LocationPicker";
@@ -158,6 +158,24 @@ import ForgotPasswordPage from "./pages/ForgetPasswordPage";
 import PrivacyPolicyPage from "./features/legal/pages/PrivacyPolicyPage";
 import TermsConditionsPage from "./features/legal/pages/TermsConditionsPage";
 import { useGlobalHorizontalScroll } from "./hooks/useGlobalHorizontalScroll";
+import { useAuth } from "./features/auth/hooks/useAuth";
+import { getPortalRole } from "./utils/portalUtils";
+
+const RootHome = () => {
+  const { user } = useAuth();
+  if (user) {
+    const rolePrefix = getPortalRole(user.role);
+    if (rolePrefix === "admin") return <Navigate to="/admin/dashboard" replace />;
+    if (rolePrefix === "staff") return <Navigate to="/staff/bookings" replace />;
+  }
+  return <UserHome />;
+};
+
+const LegacyPortalRedirect = () => {
+  const { portalRole, "*": rest } = useParams();
+  const normalizedRole = getPortalRole(portalRole);
+  return <Navigate to={`/${normalizedRole}/${rest || "dashboard"}`} replace />;
+};
 
 const NotFound = () => (
   <div className="p-8 text-center text-2xl">404 - Not Found</div>
@@ -182,19 +200,18 @@ function App() {
         <ThemeProviderInner>
           <GoogleTranslate />
           <Routes>
-            <Route path="/:shopSlug">
-              {/* Public Routes */}
-              <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
-              <Route path="forgot-password" element={<ForgotPasswordPage />} />
-              {/* Admin & Staff Protected Routes with Sidebar Layout */}
-              <Route
-                element={
-                  <ProtectedRoute
-                    allowedRoles={["admin", "staff", "SHOP_ADMIN"]}
-                  />
-                }
-              >
+            {/* Top-Level Redirects */}
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="/staff" element={<Navigate to="/staff/bookings" replace />} />
+
+            {/* Admin & Staff Protected Routes with Sidebar Layout */}
+            <Route
+              element={
+                <ProtectedRoute
+                  allowedRoles={["admin", "staff", "SHOP_ADMIN"]}
+                />
+              }
+            >
                 {/* Standalone Full-Screen Routes */}
                 <Route
                   path=":portalRole/settings/more/booking-display"
@@ -1159,69 +1176,79 @@ function App() {
                 </Route>
               </Route>
 
-              {/* User Protected Routes with User Layout */}
+            {/* User Routes with UserLayout (Home, Services, Booking Flow, Account) */}
+            <Route element={<UserLayout />}>
+              <Route path="/" element={<RootHome />} />
+              <Route path="/user/home" element={<UserHome />} />
+              <Route path="/user/gallery" element={<ShopGallery />} />
+              <Route path="/user/search" element={<SearchScreen />} />
+              <Route path="/user/location" element={<LocationPicker />} />
+              <Route path="/user/select-services" element={<SelectServices />} />
+              <Route path="/user/select-professional" element={<SelectProfessional />} />
+              <Route path="/user/select-datetime" element={<SelectDateTime />} />
+              <Route path="/user/review-booking" element={<ReviewBooking />} />
+              <Route path="/user/confirm-pay" element={<ConfirmAndPay />} />
+              <Route path="/user/appointment-confirmed" element={<AppointmentConfirmed />} />
+              <Route path="/user/booking/:appointmentId" element={<BookingDetails />} />
+              <Route path="/user/checkout/:serviceId" element={<BookingCheckout />} />
+              <Route path="/user/product-checkout/:productId" element={<ProductCheckout />} />
+              <Route path="/user/cart-checkout" element={<CartCheckout />} />
+              <Route path="/user/product/:productId" element={<ProductDetail />} />
+              <Route path="/user/cart" element={<Cart />} />
+
+              {/* Protected User Account Routes */}
               <Route
                 element={
                   <ProtectedRoute
-                    allowedRoles={["user", "admin", "SHOP_ADMIN"]}
+                    allowedRoles={["user", "admin", "SHOP_ADMIN", "staff"]}
                   />
                 }
               >
-                <Route element={<UserLayout />}>
-                  <Route path="user/home" element={<UserHome />} />
-                  <Route path="user/gallery" element={<ShopGallery />} />
-                  <Route path="user/bookings" element={<MyBookings />} />
-                  <Route path="user/cart" element={<Cart />} />
-                  <Route path="user/profile" element={<UserProfile />} />
-                  <Route path="user/profile/edit" element={<EditProfile />} />
-                  <Route path="user/profile/address" element={<EditAddress />} />
-                  <Route path="user/profile/details" element={<EditProfileDetails />} />
-                  <Route path="user/favourites" element={<Favourites />} />
-                  <Route path="user/select-services" element={<SelectServices />} />
-                  <Route path="user/select-professional" element={<SelectProfessional />} />
-                  <Route path="user/select-datetime" element={<SelectDateTime />} />
-                  <Route path="user/review-booking" element={<ReviewBooking />} />
-                  <Route path="user/confirm-pay" element={<ConfirmAndPay />} />
-                  <Route path="user/appointment-confirmed" element={<AppointmentConfirmed />} />
-                  <Route path="user/booking/:appointmentId" element={<BookingDetails />} />
-                  <Route path="user/checkout/:serviceId" element={<BookingCheckout />} />
-                  <Route path="user/product-checkout/:productId" element={<ProductCheckout />} />
-                  <Route path="user/cart-checkout" element={<CartCheckout />} />
-                  <Route path="user/product/:productId" element={<ProductDetail />} />
-                </Route>
-              </Route>
-
-            <Route index element={<Navigate to="login" replace />} />
-            </Route>
-
-            {/* Global User Routes without ShopSlug */}
-            <Route
-              element={
-                <ProtectedRoute
-                  allowedRoles={["user", "admin", "SHOP_ADMIN"]}
-                />
-              }
-            >
-              <Route element={<UserLayout />}>
                 <Route path="/user/profile" element={<UserProfile />} />
                 <Route path="/user/profile/edit" element={<EditProfile />} />
                 <Route path="/user/profile/address" element={<EditAddress />} />
                 <Route path="/user/profile/details" element={<EditProfileDetails />} />
                 <Route path="/user/bookings" element={<MyBookings />} />
-                <Route path="/user/cart" element={<Cart />} />
                 <Route path="/user/favourites" element={<Favourites />} />
               </Route>
+
+              {/* Legacy /:shopSlug/user/* routes compatibility */}
+              <Route path="/:shopSlug/user/home" element={<UserHome />} />
+              <Route path="/:shopSlug/user/gallery" element={<ShopGallery />} />
+              <Route path="/:shopSlug/user/select-services" element={<SelectServices />} />
+              <Route path="/:shopSlug/user/select-professional" element={<SelectProfessional />} />
+              <Route path="/:shopSlug/user/select-datetime" element={<SelectDateTime />} />
+              <Route path="/:shopSlug/user/review-booking" element={<ReviewBooking />} />
+              <Route path="/:shopSlug/user/confirm-pay" element={<ConfirmAndPay />} />
+              <Route path="/:shopSlug/user/appointment-confirmed" element={<AppointmentConfirmed />} />
+              <Route path="/:shopSlug/user/booking/:appointmentId" element={<BookingDetails />} />
+              <Route path="/:shopSlug/user/checkout/:serviceId" element={<BookingCheckout />} />
+              <Route path="/:shopSlug/user/product-checkout/:productId" element={<ProductCheckout />} />
+              <Route path="/:shopSlug/user/cart-checkout" element={<CartCheckout />} />
+              <Route path="/:shopSlug/user/product/:productId" element={<ProductDetail />} />
+              <Route path="/:shopSlug/user/cart" element={<Cart />} />
+              <Route path="/:shopSlug/user/profile" element={<UserProfile />} />
+              <Route path="/:shopSlug/user/profile/edit" element={<EditProfile />} />
+              <Route path="/:shopSlug/user/profile/address" element={<EditAddress />} />
+              <Route path="/:shopSlug/user/profile/details" element={<EditProfileDetails />} />
+              <Route path="/:shopSlug/user/bookings" element={<MyBookings />} />
+              <Route path="/:shopSlug/user/favourites" element={<Favourites />} />
             </Route>
 
+            {/* Legacy Portal URL redirects (e.g. /saloon/admin/dashboard -> /admin/dashboard) */}
+            <Route path="/:shopSlug/:portalRole/*" element={<LegacyPortalRedirect />} />
+
+            {/* Public Authentication & Info Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/user/search" element={<SearchScreen />} />
-            <Route path="/user/location" element={<LocationPicker />} />
-            <Route path="/" element={<ShopSelector />} />
+            <Route path="/:shopSlug/login" element={<Navigate to="/login" replace />} />
+            <Route path="/:shopSlug/register" element={<Navigate to="/register" replace />} />
+            <Route path="/:shopSlug/forgot-password" element={<Navigate to="/forgot-password" replace />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/privacy-polict" element={<Navigate to="/privacy-policy" replace />} />
             <Route path="/terms-and-conditions" element={<TermsConditionsPage />} />
+            <Route path="/:shopSlug" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProviderInner>

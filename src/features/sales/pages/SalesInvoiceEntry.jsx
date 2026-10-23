@@ -63,6 +63,11 @@ import { useHorizontalScroll } from "../../../hooks/useHorizontalScroll";
 import { useLocation, useNavigate } from "react-router-dom";
 import PaymentSuccessPopup from "../../../components/shared/PaymentSuccessPopup";
 
+const successAudio = typeof Audio !== "undefined" ? new Audio("/audio/invoice.mp3") : null;
+if (successAudio) {
+  successAudio.preload = "auto";
+}
+
 const ProductCard = ({ product, cartQty, onAdd, currencySymbol }) => {
   const { formatDisplayNumber } = useCurrency();
   const hasVariants = product.useVariants && product.variants?.length > 0;
@@ -113,7 +118,7 @@ const ProductCard = ({ product, cartQty, onAdd, currencySymbol }) => {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-dark-card transition-colors group-hover:bg-brand-primary/[0.02]">
+          <div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-dark-card transition-colors group-hover:bg-brand-primary/2">
             <Package size={32} strokeWidth={1.5} className="text-gray-200 dark:text-gray-700 transition-colors group-hover:text-brand-primary/20" />
           </div>
         )}
@@ -819,8 +824,10 @@ const SalesInvoiceEntry = () => {
         setShowSuccessPopup(true);
 
         try {
-          successAudio.currentTime = 0;
-          successAudio.play().catch(e => console.log('Audio play failed:', e));
+          if (successAudio) {
+            successAudio.currentTime = 0;
+            successAudio.play().catch(e => console.log('Audio play failed:', e));
+          }
         } catch (err) {
           console.error("Audio playback error:", err);
         }
@@ -892,10 +899,10 @@ const SalesInvoiceEntry = () => {
                     key={vId}
                     disabled={vStock <= 0}
                     onClick={() => addVariantToCart(variantProduct, v)}
-                    className={`flex-1 min-w-[140px] flex flex-col items-start p-4 rounded-2xl border transition-all duration-200 active:scale-95 ${
+                    className={`flex-1 min-w-35 flex flex-col items-start p-4 rounded-2xl border transition-all duration-200 active:scale-95 ${
                       vStock <= 0
                         ? "opacity-50 grayscale cursor-not-allowed bg-gray-50 dark:bg-dark-card border-gray-200 dark:border-dark-border"
-                        : "bg-white dark:bg-dark-surface border-gray-100 dark:border-dark-border hover:border-brand-primary/30 hover:bg-brand-primary/[0.02] cursor-pointer"
+                        : "bg-white dark:bg-dark-surface border-gray-100 dark:border-dark-border hover:border-brand-primary/30 hover:bg-brand-primary/2 cursor-pointer"
                     }`}
                   >
                     <span className="text-[13px] font-black uppercase tracking-tight text-gray-700 dark:text-gray-300">
@@ -945,7 +952,7 @@ const SalesInvoiceEntry = () => {
         className={`flex-1 flex flex-col min-w-0 bg-transparent h-full ${showMobileCart ? "hidden md:flex" : "flex"}`}
       >
         {/* Header / Filters */}
-        <div className="bg-white dark:bg-dark-surface rounded-[1.5rem] p-4 border border-gray-100 dark:border-dark-border mb-4 shrink-0">
+        <div className="bg-white dark:bg-dark-surface rounded-3xl p-4 border border-gray-100 dark:border-dark-border mb-4 shrink-0">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-4">
             <h2 className="text-lg font-black text-gray-800 dark:text-gray-100 flex items-center gap-2">
               <ShoppingBag className="text-brand-primary dark:text-blue-400" /> Product Sales
@@ -1016,7 +1023,7 @@ const SalesInvoiceEntry = () => {
 
         {/* Mobile Floating Cart Summary */}
         {!showMobileCart && cart.length > 0 && (
-          <div className="md:hidden fixed bottom-16 left-0 w-full bg-gray-900 text-white shadow-[0_-10px_40px_rgba(0,0,0,0.2)] p-4 z-[40] flex items-center justify-between pointer-events-auto border-t border-gray-800">
+          <div className="md:hidden fixed bottom-16 left-0 w-full bg-gray-900 text-white shadow-[0_-10px_40px_rgba(0,0,0,0.2)] p-4 z-40 flex items-center justify-between pointer-events-auto border-t border-gray-800">
             <div className="flex flex-col">
               <span className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest leading-none mb-1">
                 {cart.reduce((a, b) => a + b.qty, 0)} item
@@ -1042,7 +1049,7 @@ const SalesInvoiceEntry = () => {
       {/* RIGHT COLUMN: Cart & Checkout */}
       <div
         className={`shrink-0 flex-col overflow-hidden bg-white dark:bg-dark-surface 
-          ${showMobileCart ? "fixed top-0 left-0 right-0 bottom-16 z-[40] w-full rounded-none border-none flex" : "hidden md:flex md:relative md:w-[420px] md:h-full md:rounded-[1.5rem] md:border md:border-gray-100 dark:border-dark-border"}
+          ${showMobileCart ? "fixed top-0 left-0 right-0 bottom-16 z-40 w-full rounded-none border-none flex" : "hidden md:flex md:relative md:w-105 md:h-full md:rounded-3xl md:border md:border-gray-100 dark:border-dark-border"}
         `}
       >
         {/* Mobile Back to Products */}
@@ -1264,7 +1271,7 @@ const SalesInvoiceEntry = () => {
                           <Plus size={8} />
                         </button>
                       </div>
-                      <div className="text-right min-w-[40px]">
+                      <div className="text-right min-w-10">
                         <p className="text-gray-800 dark:text-gray-100 font-black text-[10px]">
                           <span className="notranslate">
                             {currencySymbol}
@@ -1313,7 +1320,7 @@ const SalesInvoiceEntry = () => {
             <div className="overflow-visible space-y-2">
               {payments.map((p, index) => (
                 <div key={index} className="flex gap-2 items-center">
-                  <div className="w-[120px] sm:w-[150px] shrink-0">
+                  <div className="w-30 sm:w-37.5 shrink-0">
                     <CustomDropdown
                       variant="compact"
                       value={p.method}
@@ -1327,7 +1334,7 @@ const SalesInvoiceEntry = () => {
                       placeholder="Method"
                     />
                   </div>
-                  <div className="flex-1 h-[34px] bg-white dark:bg-dark-surface rounded-lg px-3 border border-gray-200 dark:border-dark-border flex items-center focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-brand-primary/20 transition-all">
+                  <div className="flex-1 h-8.5 bg-white dark:bg-dark-surface rounded-lg px-3 border border-gray-200 dark:border-dark-border flex items-center focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-brand-primary/20 transition-all">
                     <span className="text-[10px] text-gray-400 dark:text-gray-500 font-bold notranslate">
                       {currencySymbol}
                     </span>
@@ -1348,7 +1355,7 @@ const SalesInvoiceEntry = () => {
                       {payments.length > 1 && (
                         <button
                           onClick={() => handleRemovePaymentRow(index)}
-                          className="h-[34px] w-[34px] bg-red-50 hover:bg-red-100 text-red-500 rounded-lg flex items-center justify-center transition-colors shrink-0"
+                          className="h-8.5 w-8.5 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg flex items-center justify-center transition-colors shrink-0"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -1356,7 +1363,7 @@ const SalesInvoiceEntry = () => {
                       {index === payments.length - 1 && (
                         <button
                           onClick={handleAddPaymentRow}
-                          className="h-[34px] px-3 bg-brand-primary/5 hover:bg-brand-primary/10 border border-brand-primary/20 hover:border-brand-primary/30 text-brand-primary rounded-lg text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shrink-0"
+                          className="h-8.5 px-3 bg-brand-primary/5 hover:bg-brand-primary/10 border border-brand-primary/20 hover:border-brand-primary/30 text-brand-primary rounded-lg text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shrink-0"
                         >
                           <Plus size={12} strokeWidth={2.5} />
                           <span>Split</span>

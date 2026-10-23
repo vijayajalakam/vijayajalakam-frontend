@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { userMenu } from './userMenu.config';
-import { selectBookingBadgeCount } from '../../store/slices/bookingBadgeSlice';
+import { selectUserCartCount } from '../../store/slices/userAppSlice';
 
 const UserBottomNav = () => {
     const location = useLocation();
-    const badgeCount = useSelector(selectBookingBadgeCount);
+    const cartCount = useSelector(selectUserCartCount);
     const { shopSlug } = useParams();
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -159,9 +159,9 @@ const UserBottomNav = () => {
                                                 className="transition-all duration-200"
                                                 fill="none"
                                             />
-                                            {item.label === "Bookings" && badgeCount > 0 && (
-                                                <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center shadow-md border border-white dark:border-dark-surface">
-                                                    {badgeCount}
+                                            {item.label === "Cart" && cartCount > 0 && (
+                                                <span className="absolute -top-1.5 -right-2 bg-black dark:bg-white text-white dark:text-black text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center shadow-md">
+                                                    {cartCount}
                                                 </span>
                                             )}
                                         </div>

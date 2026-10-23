@@ -32,29 +32,16 @@ const Login = () => {
     const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
     
     if (user && !isLoggedOut) {
-      console.log("Login: User already logged in, redirecting...");
       const rolePrefix = getPortalRole(user.role);
-      
-      if (user.role === "SHOP_ADMIN" || user.role === "staff") {
-        const userShopSlug = user.shopSlug || shopSlug;
-        if (rolePrefix === "staff") {
-          navigate(`/${userShopSlug}/staff/bookings`, { replace: true });
-        } else {
-          navigate(`/${userShopSlug}/${rolePrefix}/dashboard`, { replace: true });
-        }
+      if (rolePrefix === "staff") {
+        navigate("/staff/bookings", { replace: true });
+      } else if (rolePrefix === "admin") {
+        navigate("/admin/dashboard", { replace: true });
       } else {
-        const basePath = shopSlug ? `/${shopSlug}` : "";
-        if (rolePrefix === "staff") {
-          navigate(`${basePath}/staff/bookings`, { replace: true });
-        } else if (rolePrefix === "shop-admin" || rolePrefix === "admin") {
-          navigate(`${basePath}/${rolePrefix}/dashboard`, { replace: true });
-        } else {
-          const redirectPath = shopSlug ? `/${shopSlug}/user/home` : "/";
-          navigate(redirectPath, { replace: true });
-        }
+        navigate("/", { replace: true });
       }
     }
-  }, [user, navigate, shopSlug]);
+  }, [user, navigate]);
 
 
 
@@ -68,21 +55,14 @@ const googleLoginFn = async (credential)=>{
     const user = await googleLogin(credential, shopSlug);
     console.log("Login: Google Auth result:", user ? "Success" : "Failed");
     if (user) {
-      const userShopSlug = (user.role === "SHOP_ADMIN" || user.role === "staff") ? (user.shopSlug || shopSlug) : shopSlug;
-      const basePath = userShopSlug ? `/${userShopSlug}` : "";
       const rolePrefix = getPortalRole(user.role);
-      console.log("Login: User role:", user.role, "Redirecting to:", rolePrefix);
-      
-      let redirectPath;
+      let redirectPath = "/";
       if (rolePrefix === "staff") {
-        redirectPath = `${basePath}/staff/bookings`;
-      } else if (rolePrefix === "shop-admin" || rolePrefix === "admin") {
-        redirectPath = `${basePath}/${rolePrefix}/dashboard`;
-      } else {
-        redirectPath = userShopSlug ? `${basePath}/user/home` : "/";
+        redirectPath = "/staff/bookings";
+      } else if (rolePrefix === "admin") {
+        redirectPath = "/admin/dashboard";
       }
 
-      // Clear history and redirect to prevent back button issues
       window.history.replaceState(null, '', redirectPath);
       window.location.href = redirectPath;
     } else {
@@ -124,21 +104,14 @@ const googleLoginFn = async (credential)=>{
 
 
       if (user) {
-        const userShopSlug = (user.role === "SHOP_ADMIN" || user.role === "staff") ? (user.shopSlug || shopSlug) : shopSlug;
-        const basePath = userShopSlug ? `/${userShopSlug}` : "";
         const rolePrefix = getPortalRole(user.role);
-        console.log("Login: User role:", user.role, "Redirecting to:", rolePrefix);
-
-        let redirectPath;
+        let redirectPath = "/";
         if (rolePrefix === "staff") {
-          redirectPath = `${basePath}/staff/bookings`;
-        } else if (rolePrefix === "shop-admin" || rolePrefix === "admin") {
-          redirectPath = `${basePath}/${rolePrefix}/dashboard`;
-        } else {
-          redirectPath = userShopSlug ? `${basePath}/user/home` : "/";
+          redirectPath = "/staff/bookings";
+        } else if (rolePrefix === "admin") {
+          redirectPath = "/admin/dashboard";
         }
 
-        // Clear history and redirect to prevent back button issues
         window.history.replaceState(null, '', redirectPath);
         window.location.href = redirectPath;
       } else {
@@ -177,11 +150,11 @@ const googleLoginFn = async (credential)=>{
       />
 
       {/* Abstract Background Orbs */}
-      <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-luxury-gold/10 rounded-full blur-[150px] pointer-events-none mix-blend-multiply" />
-      <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-100/50 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute top-[-20%] right-[-10%] w-200 h-200 bg-luxury-gold/10 rounded-full blur-[150px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute bottom-[-20%] left-[-10%] w-150 h-150 bg-blue-100/50 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
 
       {/* Left Side: Brand Story (Hidden on Mobile) */}
-      <div className="hidden lg:flex flex-[5] flex-col justify-center px-16 xl:px-24 relative z-10 border-r border-gray-100 dark:border-dark-border bg-white dark:bg-dark-surface/50 backdrop-blur-3xl shadow-2xl">
+      <div className="hidden lg:flex flex-5 flex-col justify-center px-16 xl:px-24 relative z-10 border-r border-gray-100 dark:border-dark-border bg-white dark:bg-dark-surface/50 backdrop-blur-3xl shadow-2xl">
         <Motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -205,16 +178,16 @@ const googleLoginFn = async (credential)=>{
       </div>
 
       {/* Right Side: Login Form */}
-      <div className="flex-[6] flex flex-col justify-center items-center lg:items-start px-6 sm:px-12 relative z-10 w-full bg-light-bg">
+      <div className="flex-6 flex flex-col justify-center items-center lg:items-start px-6 sm:px-12 relative z-10 w-full bg-light-bg">
         <Motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-[480px] bg-white dark:bg-dark-surface/80 backdrop-blur-2xl border border-gray-200 dark:border-dark-border p-10 sm:p-14 rounded-[2rem] shadow-xl shadow-gray-200/50 relative lg:ml-12"
+          className="w-full max-w-120 bg-white dark:bg-dark-surface/80 backdrop-blur-2xl border border-gray-200 dark:border-dark-border p-10 sm:p-14 rounded-4xl shadow-xl shadow-gray-200/50 relative lg:ml-12"
         >
           {/* Decorative Corner accents */}
-          <div className="absolute top-0 left-0 w-16 h-16 border-t-[3px] border-l-[3px] border-luxury-gold/40 rounded-tl-[2rem] opacity-70 pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-[3px] border-r-[3px] border-luxury-gold/40 rounded-br-[2rem] opacity-70 pointer-events-none" />
+          <div className="absolute top-0 left-0 w-16 h-16 border-t-[3px] border-l-[3px] border-luxury-gold/40 rounded-tl-4xl opacity-70 pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-[3px] border-r-[3px] border-luxury-gold/40 rounded-br-4xl opacity-70 pointer-events-none" />
 
           {/* Back Button */}
           <button
@@ -245,7 +218,7 @@ const googleLoginFn = async (credential)=>{
               className="bg-red-50/80 border border-red-200 text-red-600 px-5 py-4 mb-8 flex items-start gap-3 text-sm font-light relative overflow-hidden rounded-xl shadow-sm"
             >
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />
-              <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+              <AlertCircle size={18} className="shrink-0 mt-0.5" />
               <span>{error}</span>
             </Motion.div>
           )}

@@ -1,35 +1,28 @@
 /**
  * Normalizes user roles to portal URL prefixes.
  * @param {string} role - The user's role from the auth object.
- * @returns {string} - The URL prefix (e.g., 'admin', 'shop-admin', 'staff').
+ * @returns {string} - The URL prefix ('admin', 'staff', 'user').
  */
 export const getPortalRole = (role) => {
     if (!role) return "admin";
-
     const normalizedRole = role.toLowerCase().replace(/_/g, "-");
 
     if (normalizedRole === "staff") return "staff";
-    if (normalizedRole === "shop-admin") return "shop-admin";
-    if (normalizedRole === "admin" || normalizedRole === "super-admin") return "admin";
     if (normalizedRole === "user" || normalizedRole === "customer") return "user";
-
-    return "user"; // Default fallback for safety (customers)
+    return "admin"; // Default for admin, shop-admin, etc.
 };
 
 /**
- * Generates a full path including shop slug and portal role.
- * @param {string} shopSlug - The current shop's unique identifier.
- * @param {string} portalRole - The normalized portal role prefix.
+ * Generates a clean full path for single-salon routing.
+ * Admin paths start with /admin and staff paths start with /staff.
+ * @param {string} _shopSlug - Unused in single-salon mode.
+ * @param {string} portalRole - The normalized portal role prefix ('admin' or 'staff').
  * @param {string} path - The relative path within the portal.
- * @returns {string} - The full application path.
+ * @returns {string} - The full application path (e.g. /admin/dashboard).
  */
-export const getDynamicPortalPath = (shopSlug, portalRole, path = "") => {
-    // If path already starts with the portal role, don't duplicate it
+export const getDynamicPortalPath = (_shopSlug, portalRole, path = "") => {
+    const role = (portalRole === "staff") ? "staff" : "admin";
     const cleanPath = path.replace(/^\/(admin|staff|shop-admin)/, "");
-    const base = shopSlug ? `/${shopSlug}/${portalRole}` : `/${portalRole}`;
-
-    // Ensure path starts with / if it's not empty
     const formattedPath = cleanPath.startsWith("/") ? cleanPath : (cleanPath ? `/${cleanPath}` : "");
-
-    return `${base}${formattedPath}`;
+    return `/${role}${formattedPath}`;
 };

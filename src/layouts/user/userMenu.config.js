@@ -1,23 +1,17 @@
-import { Home, Search, Calendar, User } from 'lucide-react';
+import { Home, ShoppingBag, User } from 'lucide-react';
 
 export const userMenu = [
     {
         path: '/user/home',
-        label: 'Home',
+        label: 'Store',
         icon: Home,
-        activePaths: ['/user/home']
+        activePaths: ['/user/home', '/']
     },
     {
-        path: '/user/search',
-        label: 'Search',
-        icon: Search,
-        activePaths: ['/user/search']
-    },
-    {
-        path: '/user/bookings',
-        label: 'Bookings',
-        icon: Calendar,
-        activePaths: ['/user/bookings', '/user/my-bookings']
+        path: '/user/cart',
+        label: 'Cart',
+        icon: ShoppingBag,
+        activePaths: ['/user/cart', '/user/cart-checkout']
     },
     {
         path: '/user/profile',

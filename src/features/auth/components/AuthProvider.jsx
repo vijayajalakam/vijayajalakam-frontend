@@ -322,9 +322,7 @@ export const AuthProvider = ({ children }) => {
   }, [dispatch]);
 
   const isAdmin = useMemo(() => {
-    // Only SUPER_ADMIN is considered "admin" with full bypass
-    // SHOP_ADMIN is now restricted by shop-level privileges
-    return user?.role === "SUPER_ADMIN";
+    return user?.role === "admin" || user?.role === "SUPER_ADMIN";
   }, [user]);
 
   const hasPermission = useCallback(
