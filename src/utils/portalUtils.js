@@ -13,9 +13,9 @@ export const getPortalRole = (role) => {
 };
 
 /**
- * Generates a clean full path for single-salon routing.
+ * Generates a clean full path for single-tenant routing.
  * Admin paths start with /admin and staff paths start with /staff.
- * @param {string} _shopSlug - Unused in single-salon mode.
+ * @param {string} _shopSlug - Unused in single-tenant mode.
  * @param {string} portalRole - The normalized portal role prefix ('admin' or 'staff').
  * @param {string} path - The relative path within the portal.
  * @returns {string} - The full application path (e.g. /admin/dashboard).

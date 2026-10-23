@@ -71,7 +71,7 @@ const STATUS_ABBR = {
 };
 
 const PayrollPage = () => {
-  const { salonConfig } = useAuth();
+  const { shopConfig } = useAuth();
   const { currencySymbol, formatDisplay } = useCurrency();
   const [showExportMenu, setShowExportMenu] = useState(false);
   const exportMenuRef = useRef(null);
@@ -244,7 +244,7 @@ const PayrollPage = () => {
       return;
     }
     try {
-      await exportPayrollPDF(filteredData, monthLabel, salonConfig, currencySymbol, selectedMonth);
+      await exportPayrollPDF(filteredData, monthLabel, shopConfig, currencySymbol, selectedMonth);
       showSnack("PDF exported successfully");
     } catch (error) {
       console.error(error);
@@ -263,7 +263,7 @@ const PayrollPage = () => {
       await new Promise(resolve => setTimeout(resolve, 50));
 
       // Generate PDF in Base64
-      const base64Pdf = await exportPayrollPDF([staffPayrollData], monthLabel, salonConfig, currencySymbol, selectedMonth, true);
+      const base64Pdf = await exportPayrollPDF([staffPayrollData], monthLabel, shopConfig, currencySymbol, selectedMonth, true);
 
       // Send to backend
       const res = await sendSlip({
@@ -300,7 +300,7 @@ const PayrollPage = () => {
           // Yield to main thread to prevent UI freezing
           await new Promise(resolve => setTimeout(resolve, 100));
           
-          const base64Pdf = await exportPayrollPDF([item], monthLabel, salonConfig, currencySymbol, selectedMonth, true);
+          const base64Pdf = await exportPayrollPDF([item], monthLabel, shopConfig, currencySymbol, selectedMonth, true);
           const res = await sendSlip({
             staffId: item.staff._id,
             pdfBase64: base64Pdf,

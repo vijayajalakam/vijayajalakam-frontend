@@ -51,7 +51,7 @@ const getOngoingFinancialYear = () => {
 };
 
 const LeaveStatementReportPage = () => {
-  const { hasPermission, isAdmin, salonProfile } = useAuth();
+  const { hasPermission, isAdmin, businessProfile } = useAuth();
 
   const ongoingFY = useMemo(() => getOngoingFinancialYear(), []);
   const [selectedFY, setSelectedFY] = useState(ongoingFY);
@@ -327,8 +327,8 @@ const LeaveStatementReportPage = () => {
       const doc = new jsPDF("landscape", "pt", "a3");
 
       const title = `LEAVE STATEMENT FOR FINANCIAL YEAR ${selectedFY}`;
-      const subtitle = salonProfile?.name
-        ? `${salonProfile.name} - Generated on ${new Date().toLocaleDateString()}`
+      const subtitle = businessProfile?.name
+        ? `${businessProfile.name} - Generated on ${new Date().toLocaleDateString()}`
         : `Generated on ${new Date().toLocaleDateString()}`;
 
       doc.setFontSize(16);

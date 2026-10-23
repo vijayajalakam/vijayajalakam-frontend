@@ -21,7 +21,7 @@ const PaymentSuccessPopup = ({
   receiptPayload, // Added this prop
 }) => {
   const [isSharing, setIsSharing] = React.useState(false);
-  const { user, salonConfig } = useAuth();
+  const { user, shopConfig } = useAuth();
   const { formatDisplayNumber } = useCurrency();
   const userId = user?._id || user?.id || "default";
   const settingsKey = `printerSettings_${userId}`;
@@ -186,7 +186,7 @@ const PaymentSuccessPopup = ({
                   invoiceNumber={receiptPayload?.invoiceNumber || invoiceNo}
                   customerName={receiptPayload?.customerName}
                   currencySymbol={currencySymbol}
-                  logoUrl={salonConfig?.logo || ""}
+                  logoUrl={shopConfig?.logo || ""}
                 />
               )}
             </div>

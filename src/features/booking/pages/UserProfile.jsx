@@ -32,7 +32,7 @@ const UserProfile = () => {
   const { shopSlug } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout, salonConfig } = useAuth();
+  const { logout, shopConfig } = useAuth();
   const { theme, setTheme } = useTheme();
   const { currencySymbol } = useCurrency();
   const currentUser = useSelector(selectCurrentUser);

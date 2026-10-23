@@ -16,7 +16,7 @@ const InvoicePreviewSheet = ({
   onDownload,
   onShare,
 }) => {
-  const { salonConfig, user } = useAuth();
+  const { shopConfig, user } = useAuth();
   const [darkMode, setDarkMode] = useState(false);
   const printRef = useRef(null);
 
@@ -311,7 +311,7 @@ const InvoicePreviewSheet = ({
   const storedRoundOff = Number(invoice?.roundOffAmount) || 0;
   const roundedPayableTotal = finalPayable + storedRoundOff;
   const showRoundOffInPreview =
-    Boolean(salonConfig?.enableRoundOff) &&
+    Boolean(shopConfig?.enableRoundOff) &&
     Math.abs(storedRoundOff) > 0.0001;
 
   const bg = darkMode ? "bg-gray-900" : "bg-white dark:bg-dark-surface";
@@ -492,7 +492,7 @@ const InvoicePreviewSheet = ({
                   shopInfo={{
                     name: shopName,
                     address: shopAddress,
-                    phone: invoice?.shop?.phone || invoice?.shop?.phoneNumber || invoice?.branchId?.phone || invoice?.branchId?.phoneNumber || salonConfig?.phone || salonConfig?.phoneNumber || salonConfig?.contactNumber || "",
+                    phone: invoice?.shop?.phone || invoice?.shop?.phoneNumber || invoice?.branchId?.phone || invoice?.branchId?.phoneNumber || shopConfig?.phone || shopConfig?.phoneNumber || shopConfig?.contactNumber || "",
                     gstin: invoice?.shop?.gstin || invoice?.branchId?.gstin,
                   }}
                   staffName={previewStaffName}
@@ -512,7 +512,7 @@ const InvoicePreviewSheet = ({
                   paymentStatus={dynamicStatus}
                   customerName={invoice?.customer?.name || invoice?.user?.name || "LOCAL CUSTOMER"}
                   customerPhone={invoice?.customer?.phone || invoice?.customer?.phoneNumber || invoice?.user?.phone || invoice?.user?.phoneNumber || ""}
-                  logoUrl={salonConfig?.logo || invoice?.shop?.logo || ""}
+                  logoUrl={shopConfig?.logo || invoice?.shop?.logo || ""}
                   {...printSettings}
                 />
               </div>

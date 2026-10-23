@@ -14,7 +14,7 @@
  *     variantModalOpen, itemForVariants, openVariantModal, closeVariantModal,
  *     showSuccessPopup, successData, showSuccess, hideSuccess,
  *     totals, resetInvoiceEntry,
- *   } = useInvoiceCart(salonConfig);
+ *   } = useInvoiceCart(shopConfig);
  *
  * Replace the createSalesInvoice axios call with:
  *   import { useCreateSalesInvoiceMutation } from "../../../store/api/invoiceEndpoints";
@@ -740,7 +740,7 @@ const SalesInvoiceEntry = () => {
       function handleCheckoutSuccess(responseData) {
         const shopNameVal = selectedShopId
           ? shops.find((b) => b._id === selectedShopId)?.name
-          : shops[0]?.name || user?.salonName || "Salon";
+          : shops[0]?.name || user?.shopName || "Vijayajalakam";
         const selectedBranch = shops?.find((b) => b._id === selectedShopId);
         const fallbackShopLoc = user?.shop?.area ? `${user.shop.area}, ${user.shop.state}` : user?.shop?.address || "";
         const shopLocVal = selectedBranch

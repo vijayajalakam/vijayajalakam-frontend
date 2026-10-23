@@ -166,7 +166,7 @@ const ShopManager = () => {
 
         setFormData((prev) => ({
           ...prev,
-          name: salon?.salonName || "",
+          name: salon?.shopName || "",
           address: fullAddress || "",
           phone: authUser?.phone || "",
         }));

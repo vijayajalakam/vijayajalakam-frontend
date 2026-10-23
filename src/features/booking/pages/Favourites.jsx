@@ -145,7 +145,7 @@ const Favourites = () => {
                 : (shop.state ? `${shop.state}, ${shop.country || ''}` : (shop.country || ''));
               const rating = Number(shop.rating) || 0;
               const reviewsCount = shop.reviewsCount || 0;
-              const categoryName = shop.category?.name || shop.category || "Salon";
+              const categoryName = shop.category?.name || shop.category || "Vijayajalakam";
 
               return (
                 <div

@@ -12,13 +12,13 @@ const UserNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { salonConfig } = useAuth();
+  const { shopConfig } = useAuth();
   const { theme, setTheme } = useTheme();
   const user = useSelector(selectCurrentUser);
   const searchQuery = useSelector(selectUserSearchQuery);
   const cartCount = useSelector(selectUserCartCount);
 
-  const shopName = salonConfig?.salonName || "Vijayajalakam";
+  const shopName = shopConfig?.shopName || "Vijayajalakam";
   const isHome = location.pathname.endsWith("/user/home");
   
   // Check if we're on bookings or profile page
@@ -41,9 +41,9 @@ const UserNavbar = () => {
           {isHome ? (
             <div className="flex items-center gap-2 md:gap-3">
               <div className="w-9 h-9 md:w-10 md:h-10 bg-user-accent rounded-xl md:rounded-2xl flex items-center justify-center overflow-hidden shadow-sm">
-                {salonConfig?.logo ? (
+                {shopConfig?.logo ? (
                   <img 
-                    src={salonConfig.logo} 
+                    src={shopConfig.logo} 
                     alt={shopName} 
                     className="w-full h-full object-cover" 
                   />

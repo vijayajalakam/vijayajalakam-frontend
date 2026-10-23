@@ -12,7 +12,7 @@ import BookingAlertFooter from "../../components/shared/BookingAlertFooter";
 import { clearBadgeCount } from "../../store/slices/bookingBadgeSlice";
 
 const AdminLayout = () => {
-  const { user, hasPermission, salonConfig, portalRole, sidebarDefaultExpanded } = useAuth();
+  const { user, hasPermission, shopConfig, portalRole, sidebarDefaultExpanded } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const { shopSlug } = useParams();
@@ -63,7 +63,7 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(sidebarDefaultExpanded !== undefined ? sidebarDefaultExpanded : true);
   const [isMobile, setIsMobile] = useState(false);
 
-  const shopIdStr = salonConfig?.shopId || salonConfig?._id || (typeof user?.shopId === 'object' ? user?.shopId?._id : user?.shopId);
+  const shopIdStr = shopConfig?.shopId || shopConfig?._id || (typeof user?.shopId === 'object' ? user?.shopId?._id : user?.shopId);
   const isAlertEnabled = !!(user && shopIdStr);
 
   const { alert: bookingAlert, dismiss: dismissBookingAlert } = useBookingAlert({
@@ -92,10 +92,10 @@ const AdminLayout = () => {
 
   useEffect(() => {
     const setSaasMetaTitleWithLogo = () => {
-      const displayTitle = salonConfig?.salonName
-        ? `${salonConfig?.salonName}`
+      const displayTitle = shopConfig?.shopName
+        ? `${shopConfig?.shopName}`
         : "Vijayajalakam";
-      const logo = salonConfig?.logo || null;
+      const logo = shopConfig?.logo || null;
       console.log("logo", logo);
 
       document.title = displayTitle;
@@ -116,11 +116,11 @@ const AdminLayout = () => {
     setSaasMetaTitleWithLogo();
   });
 
-  // const { logout, user, salonConfig, hasPermission, portalRole } = useAuth();
+  // const { logout, user, shopConfig, hasPermission, portalRole } = useAuth();
   //
-  //  {salonConfig?.logo ? (
+  //  {shopConfig?.logo ? (
   //   <img
-  //     src={salonConfig.logo}
+  //     src={shopConfig.logo}
   //     alt={displayTitle}
   //     className="h-10 w-auto object-contain max-w-[140px]"
   //   />
@@ -162,7 +162,7 @@ const AdminLayout = () => {
           <BookingAlertFooter
             alert={bookingAlert}
             onDismiss={dismissBookingAlert}
-            currencySymbol={salonConfig?.currency?.symbol || "₹"}
+            currencySymbol={shopConfig?.currency?.symbol || "₹"}
             isMobile={isMobile}
           />
         </main>
@@ -198,7 +198,7 @@ const AdminLayout = () => {
             <BookingAlertFooter
               alert={bookingAlert}
               onDismiss={dismissBookingAlert}
-              currencySymbol={salonConfig?.currency?.symbol || "₹"}
+              currencySymbol={shopConfig?.currency?.symbol || "₹"}
               isMobile={isMobile}
             />
           </div>

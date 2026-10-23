@@ -29,7 +29,7 @@ const Navbar = () => {
     return (
         <nav className="bg-brand-primary text-white p-4 shadow-md">
             <div className="container mx-auto flex justify-between items-center">
-                <Link to={`${basePath}/`} className="text-xl font-bold">Salon System</Link>
+                <Link to={`${basePath}/`} className="text-xl font-bold">Vijayajalakam</Link>
                 <div className="space-x-4">
                     {user ? (
                         <>

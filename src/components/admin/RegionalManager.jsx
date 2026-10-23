@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import {
   useGetAdminProfileQuery,
-  useUpdateSalonProfileMutation,
+  useUpdateBusinessProfileMutation,
 } from "../../store/api/tenantCrudEndpoints";
 import { rtkErrorMessage } from "../../store/api/rtkUtils";
 import PageHeader from "../shared/PageHeader";
@@ -35,7 +35,7 @@ const RegionalManager = () => {
   });
 
   const { data: profile, isLoading: initialLoading } = useGetAdminProfileQuery();
-  const [updateSalonProfile] = useUpdateSalonProfileMutation();
+  const [updateBusinessProfile] = useUpdateBusinessProfileMutation();
   const [loading, setLoading] = useState(false);
 
   const [snack, setSnack] = useState({ message: "", type: "success" });
@@ -142,7 +142,7 @@ const RegionalManager = () => {
 
     setLoading(true);
     try {
-      const res = await updateSalonProfile(formData).unwrap();
+      const res = await updateBusinessProfile(formData).unwrap();
       if (res?.success !== false) {
         await refreshConfig();
         showSnack("Regional Settings Updated Successfully!", "success");

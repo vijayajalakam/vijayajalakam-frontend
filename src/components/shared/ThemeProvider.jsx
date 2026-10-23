@@ -55,7 +55,7 @@ const ThemeProviderInner = ({ children }) => {
     if (savedTheme) return savedTheme;
     
     // Fallback to legacy key
-    const legacyTheme = localStorage.getItem("salon-theme");
+    const legacyTheme = localStorage.getItem("vijayajalakam-theme");
     if (legacyTheme) return legacyTheme;
     
     return "light";
@@ -68,7 +68,7 @@ const ThemeProviderInner = ({ children }) => {
     if (savedColor) return savedColor;
     
     // Fallback to legacy key
-    const legacyColor = localStorage.getItem("salon-primary-color");
+    const legacyColor = localStorage.getItem("vijayajalakam-primary-color");
     return legacyColor || DEFAULT_PRIMARY_COLOR;
   });
 
@@ -78,7 +78,7 @@ const ThemeProviderInner = ({ children }) => {
     localStorage.setItem("vijayajalakam-user-theme", newTheme);
     
     // Also keep legacy key for compatibility
-    localStorage.setItem("salon-theme", newTheme);
+    localStorage.setItem("vijayajalakam-theme", newTheme);
   }, []);
 
   // Sync theme from user preference ONLY on first login or user change
@@ -120,20 +120,20 @@ const ThemeProviderInner = ({ children }) => {
     }
     // Ensure localStorage is always in sync
     localStorage.setItem("vijayajalakam-user-theme", theme);
-    localStorage.setItem("salon-theme", theme);
+    localStorage.setItem("vijayajalakam-theme", theme);
   }, [theme]);
 
   // Apply primary color CSS variable whenever it changes
   useEffect(() => {
     applyPrimaryColor(primaryColor);
     localStorage.setItem("vijayajalakam-primary-color", primaryColor);
-    localStorage.setItem("salon-primary-color", primaryColor);
+    localStorage.setItem("vijayajalakam-primary-color", primaryColor);
   }, [primaryColor]);
 
   const setPrimaryColor = useCallback((color) => {
     setPrimaryColorState(color);
     localStorage.setItem("vijayajalakam-primary-color", color);
-    localStorage.setItem("salon-primary-color", color);
+    localStorage.setItem("vijayajalakam-primary-color", color);
   }, []);
 
   const value = { theme, setTheme, primaryColor, setPrimaryColor };

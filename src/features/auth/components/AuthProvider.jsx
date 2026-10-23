@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   const user = useSelector(selectCurrentUser);
   const [loading, setLoading] = useState(true);
 
-  const [salonConfig, setSalonConfig] = useState(null);
+  const [shopConfig, setShopConfig] = useState(null);
 
   // Extract tenant slug from URL for cache keying
   const getTenantSlug = () => {
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (!publicCfg) return;
-    setSalonConfig(publicCfg);
+    setShopConfig(publicCfg);
     const isRtlLang = isRTL(publicCfg.language);
     const langCode = getLanguageConfig(publicCfg.language).code;
     document.dir = isRtlLang ? "rtl" : "ltr";
@@ -368,33 +368,33 @@ export const AuthProvider = ({ children }) => {
       //------------- FROGET PASSWORD APIS --------------//
 
       loading,
-      salonConfig,
+      shopConfig,
       hasPermission,
       isAdmin,
       portalRole,
       refreshConfig: refetchPublicConfig,
       updateUser: (newData) => dispatch(updateAuthUser(newData)),
-      currencySymbol: salonConfig?.currencySymbol || " ",
-      decimalPrecision: salonConfig?.decimalPrecision !== undefined ? salonConfig.decimalPrecision : 2,
-      language: salonConfig?.language || "English",
-      country: salonConfig?.country || "India",
-      sidebarStyle: salonConfig?.sidebarStyle || "classic",
-      sidebarDefaultExpanded: salonConfig?.sidebarDefaultExpanded !== undefined ? salonConfig.sidebarDefaultExpanded : true,
-      sidebarItemOrientation: salonConfig?.sidebarItemOrientation || "row",
-      stockButtonsView: salonConfig?.stockButtonsView || "row",
-      invoiceServiceCardView: salonConfig?.invoiceServiceCardView || "image-details",
-      invoiceProductCardView: salonConfig?.invoiceProductCardView || "image-details",
+      currencySymbol: shopConfig?.currencySymbol || " ",
+      decimalPrecision: shopConfig?.decimalPrecision !== undefined ? shopConfig.decimalPrecision : 2,
+      language: shopConfig?.language || "English",
+      country: shopConfig?.country || "India",
+      sidebarStyle: shopConfig?.sidebarStyle || "classic",
+      sidebarDefaultExpanded: shopConfig?.sidebarDefaultExpanded !== undefined ? shopConfig.sidebarDefaultExpanded : true,
+      sidebarItemOrientation: shopConfig?.sidebarItemOrientation || "row",
+      stockButtonsView: shopConfig?.stockButtonsView || "row",
+      invoiceServiceCardView: shopConfig?.invoiceServiceCardView || "image-details",
+      invoiceProductCardView: shopConfig?.invoiceProductCardView || "image-details",
       // Round-off settings
-      enableRoundOff: salonConfig?.enableRoundOff || false,
-      roundOffValue: salonConfig?.roundOffValue || 1,
-      roundOffBenefit: salonConfig?.roundOffBenefit || "customer",
+      enableRoundOff: shopConfig?.enableRoundOff || false,
+      roundOffValue: shopConfig?.roundOffValue || 1,
+      roundOffBenefit: shopConfig?.roundOffBenefit || "customer",
       defaultInvoicePaymentMethod:
-        salonConfig?.defaultInvoicePaymentMethod || "CASH",
+        shopConfig?.defaultInvoicePaymentMethod || "CASH",
     }),
     [
       user,
       loading,
-      salonConfig,
+      shopConfig,
       login,
       googleLogin,
       register,

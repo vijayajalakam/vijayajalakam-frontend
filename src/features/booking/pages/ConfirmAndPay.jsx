@@ -23,7 +23,7 @@ const ConfirmAndPay = () => {
   const { shopSlug } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { currencySymbol, user, updateUser, salonConfig } = useAuth();
+  const { currencySymbol, user, updateUser, shopConfig } = useAuth();
 
   const selectedServices = useSelector(selectSelectedServices);
   const totalAmount = useSelector(selectBookingTotal);
@@ -58,12 +58,12 @@ const ConfirmAndPay = () => {
   }, [selectedServices.length, selectedDate, shopSlug, navigate]);
 
   useEffect(() => {
-    if (salonConfig?.isRazorpayEnabled) {
+    if (shopConfig?.isRazorpayEnabled) {
       dispatch(setPaymentMethod("PAY_NOW"));
     } else {
       dispatch(setPaymentMethod("PAY_LATER"));
     }
-  }, [salonConfig?.isRazorpayEnabled, dispatch]);
+  }, [shopConfig?.isRazorpayEnabled, dispatch]);
 
   const handlePayNow = async () => {
     // Check if user has a phone number
@@ -73,7 +73,7 @@ const ConfirmAndPay = () => {
       return;
     }
 
-    if (paymentMethod === "PAY_NOW" && salonConfig?.isRazorpayEnabled) {
+    if (paymentMethod === "PAY_NOW" && shopConfig?.isRazorpayEnabled) {
       await processRazorpayPayment();
     } else {
       await submitBooking();
@@ -85,7 +85,7 @@ const ConfirmAndPay = () => {
     try {
       const orderRes = await api.post("/appointments/razorpay/create-order", {
         amount: totalAmount,
-        currency: salonConfig?.currency || "INR",
+        currency: shopConfig?.currency || "INR",
         receipt: `booking_${Date.now()}`,
       });
 
@@ -119,7 +119,7 @@ const ConfirmAndPay = () => {
         key: apiKey,
         amount,
         currency,
-        name: salonConfig?.salonName || "Salon Booking",
+        name: shopConfig?.shopName || "Vijayajalakam Booking",
         description: "Payment for booking",
         order_id: orderId,
         handler: async function (response) {
@@ -297,8 +297,8 @@ const ConfirmAndPay = () => {
           <button
             onClick={() => dispatch(setPaymentMethod("PAY_NOW"))}
             className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-dark-card dark:bg-dark-card transition-colors"
-            disabled={!salonConfig?.isRazorpayEnabled}
-            style={{ opacity: salonConfig?.isRazorpayEnabled ? 1 : 0.5, cursor: salonConfig?.isRazorpayEnabled ? "pointer" : "not-allowed" }}
+            disabled={!shopConfig?.isRazorpayEnabled}
+            style={{ opacity: shopConfig?.isRazorpayEnabled ? 1 : 0.5, cursor: shopConfig?.isRazorpayEnabled ? "pointer" : "not-allowed" }}
           >
             <div>
               <p className="text-[15px] font-bold text-black dark:text-white">Pay now in full</p>
@@ -382,7 +382,7 @@ const ConfirmAndPay = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[16px] font-bold text-black dark:text-white">
-              {currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}
+              {currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}
             </p>
             <p className="text-[12px] text-gray-500 dark:text-gray-400 font-medium">
               {paymentMethod === "PAY_NOW" ? "Pay now in full" : "Pay in store later"}

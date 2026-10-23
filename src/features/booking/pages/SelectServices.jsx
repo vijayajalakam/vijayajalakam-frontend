@@ -34,7 +34,7 @@ const SelectServices = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { currencySymbol, salonConfig } = useAuth();
+  const { currencySymbol, shopConfig } = useAuth();
   const selectedBranchId = useSelector(selectSelectedBranchId);
   const selectedBranchAddress = useSelector(selectSelectedBranchAddress);
 
@@ -112,21 +112,21 @@ const SelectServices = () => {
   const shopReviewTotal = reviewsData?.total || 0;
 
   // Shop info for desktop sidebar
-  const shopName = salonConfig?.salonName || "";
+  const shopName = shopConfig?.shopName || "";
   // Cover image: primary gallery image first, then coverImage/banner, finally logo
   const shopCover = (() => {
-    const gallery = salonConfig?.galleryImages || [];
+    const gallery = shopConfig?.galleryImages || [];
     if (gallery.length > 0) {
       const primary = gallery.find((img) => img.isPrimary);
       const url = (primary || gallery[0])?.url;
       if (url) return url;
     }
-    return salonConfig?.coverImage || salonConfig?.banner || salonConfig?.logo || null;
+    return shopConfig?.coverImage || shopConfig?.banner || shopConfig?.logo || null;
   })();
   const shopAddress = (() => {
     if (selectedBranchAddress) return selectedBranchAddress;
-    if (salonConfig?.address && salonConfig.address !== "N/A") return salonConfig.address;
-    const parts = [salonConfig?.area, salonConfig?.state, salonConfig?.country].filter(Boolean);
+    if (shopConfig?.address && shopConfig.address !== "N/A") return shopConfig.address;
+    const parts = [shopConfig?.area, shopConfig?.state, shopConfig?.country].filter(Boolean);
     return parts.length > 0 ? parts.join(", ") : "";
   })();
 
@@ -366,12 +366,12 @@ const SelectServices = () => {
       dispatch(
         setShopContext({
           shopSlug,
-          shopName: salonConfig?.salonName || "",
-          shopImage: salonConfig?.logo || null,
+          shopName: shopConfig?.shopName || "",
+          shopImage: shopConfig?.logo || null,
         })
       );
     }
-  }, [shopSlug, salonConfig, dispatch]);
+  }, [shopSlug, shopConfig, dispatch]);
 
   const categories = useMemo(() => [{ _id: "All", name: "Featured" }, ...categoriesData], [categoriesData]);
 
@@ -840,7 +840,7 @@ const SelectServices = () => {
           <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-surface z-30 px-4 py-4" style={{ boxShadow: "0 -2px 10px rgba(0,0,0,0.06)" }}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[16px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</p>
+                <p className="text-[16px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</p>
                 <p className="text-[12px] text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1">
                   <ShoppingCart size={11} />
                   {selectedServices.length} item{selectedServices.length > 1 ? "s" : ""} &bull; {formatDuration(totalDuration)}
@@ -1123,7 +1123,7 @@ const SelectServices = () => {
                                   </p>
                                 </div>
                                 <span className="text-[14px] font-semibold text-black dark:text-white flex-shrink-0">
-                                  {currencySymbol}{Number(service.price).toFixed(salonConfig?.decimalPrecision ?? 2)}
+                                  {currencySymbol}{Number(service.price).toFixed(shopConfig?.decimalPrecision ?? 2)}
                                 </span>
                               </div>
                             </div>
@@ -1143,7 +1143,7 @@ const SelectServices = () => {
                       {selectedServices.length > 0 && (
                         <div className="flex items-center justify-between mb-5 pt-3 border-t border-gray-100 dark:border-dark-border">
                           <span className="text-[15px] font-bold text-black dark:text-white">Total</span>
-                          <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                          <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
                         </div>
                       )}
 

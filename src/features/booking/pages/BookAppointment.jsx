@@ -567,7 +567,7 @@ const BookAppointment = () => {
                                         <ArrowRight size={40} strokeWidth={2.5} className="relative z-10" />
                                     </div>
                                     <h3 className="font-black text-gray-900 dark:text-white text-xl mb-3 tracking-tight">Your Journey Starts Here</h3>
-                                    <p className="text-sm text-gray-400 dark:text-gray-500 font-bold max-w-[240px] leading-relaxed">Choose a service from our curated collection to begin your premium salon experience.</p>
+                                    <p className="text-sm text-gray-400 dark:text-gray-500 font-bold max-w-[240px] leading-relaxed">Choose a service from our curated collection to begin your premium shopping experience.</p>
                                 </Motion.div>
                             ) : (
                                 <Motion.div

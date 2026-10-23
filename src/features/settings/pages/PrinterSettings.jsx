@@ -161,7 +161,7 @@ const PrinterSettings = () => {
   // Mock data for preview
   const previewData = {
     shopInfo: {
-      name: profile?.salon?.salonName || "TONEY",
+      name: profile?.salon?.shopName || "TONEY",
       address: profile?.salon?.area
         ? `${profile.salon.area}, ${profile.salon.state || ""}`
         : "Kozhikode, Kerala",

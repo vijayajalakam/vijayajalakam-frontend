@@ -50,7 +50,7 @@
  *     commissionType, setCommissionType,
  *     totals,           // ← pre-calculated subtotal/tax/finalAmount/roundOff
  *     resetInvoiceEntry,
- *   } = useInvoiceCart(salonConfig);
+ *   } = useInvoiceCart(shopConfig);
  *
  * The `useEffect` that synced staffId to cart items is now handled inside the
  * `setSelectedStaffId` reducer — no manual effect needed.
@@ -995,7 +995,7 @@ const CartItemRow = memo(({
   filteredStaff,
   isAdmin,
   isStaff,
-  salonConfig,
+  shopConfig,
   shopSettings,
   formatNumber,
   applyPrecision,
@@ -1074,7 +1074,7 @@ const CartItemRow = memo(({
     ? applyPrecision(originalLineTotal + lineTax, shopSettings) // approximation
     : null;
 
-  const showFooter = (salonConfig?.showItemStaff !== false) || (salonConfig?.showItemDiscount !== false);
+  const showFooter = (shopConfig?.showItemStaff !== false) || (shopConfig?.showItemDiscount !== false);
 
   return (
     <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl transition-all p-3 mb-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
@@ -1184,10 +1184,10 @@ const CartItemRow = memo(({
       </div>
 
       {/* Footer: Staff & Discount in same row */}
-      {((salonConfig?.showItemStaff !== false) || (salonConfig?.showItemDiscount !== false)) && (
+      {((shopConfig?.showItemStaff !== false) || (shopConfig?.showItemDiscount !== false)) && (
         <div className="flex items-center gap-2">
           {/* Staff Selection */}
-          {(salonConfig?.showItemStaff !== false) && (isAdmin || isStaff) && (
+          {(shopConfig?.showItemStaff !== false) && (isAdmin || isStaff) && (
             <div className="flex-1">
               <CustomDropdown
                 variant="compact"
@@ -1206,7 +1206,7 @@ const CartItemRow = memo(({
           )}
 
           {/* Discount Input */}
-          {(salonConfig?.showItemDiscount !== false) && (
+          {(shopConfig?.showItemDiscount !== false) && (
             <div className="flex-1 relative">
               <CustomTextField
                 variant="compact"
@@ -1235,7 +1235,7 @@ const UnifiedInvoiceEntry = () => {
   const { shopSlug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, hasPermission, salonConfig, invoiceServiceCardView, invoiceProductCardView } = useAuth();
+  const { user, hasPermission, shopConfig, invoiceServiceCardView, invoiceProductCardView } = useAuth();
   const isSuperAdmin = user?.role === "SUPER_ADMIN";
   const isShopAdmin = user?.role === "SHOP_ADMIN";
   const isStaff = user?.role === "staff";
@@ -2457,7 +2457,7 @@ const UnifiedInvoiceEntry = () => {
       const variantName = variantData ? variantData.name : "";
       const finalPrice = Number(price) || 0;
       const baseVariantKey = `svc-${service._id}-${variantId}-${finalPrice}-${activeDept}`;
-      const duplicateItemAction = salonConfig?.duplicateItemAction || "unselect";
+      const duplicateItemAction = shopConfig?.duplicateItemAction || "unselect";
 
       const existingItems = prev.filter((item) => item.variantKey === baseVariantKey || item.variantKey.startsWith(`${baseVariantKey}-`));
 
@@ -3393,7 +3393,7 @@ const UnifiedInvoiceEntry = () => {
 
         const shopNameVal = selectedShopId
           ? branches.find((b) => b._id === selectedShopId)?.name
-          : branches[0]?.name || user?.salonName || "Salon";
+          : branches[0]?.name || user?.shopName || "Vijayajalakam";
         const selectedBranch = branches?.find((b) => b._id === selectedShopId);
         const fallbackShopLoc = user?.shop?.area ? `${user.shop.area}, ${user.shop.state}` : user?.shop?.address || "";
         const shopLocVal = selectedBranch
@@ -3851,7 +3851,7 @@ const UnifiedInvoiceEntry = () => {
 
           {/* Header & Selectors */}
           <div ref={headerRef} className="relative p-4 bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border flex items-center gap-3">
-            {(isAdmin || isStaff) && salonConfig?.showGlobalStaffSelection !== false && (
+            {(isAdmin || isStaff) && shopConfig?.showGlobalStaffSelection !== false && (
               <div className="flex gap-2 w-full max-w-[200px]">
                 <div className="flex-1 min-w-0">
                     <CustomDropdown
@@ -3874,7 +3874,7 @@ const UnifiedInvoiceEntry = () => {
             )}
 
             {/* Customer Selection */}
-            <div className={`flex items-center gap-2 ${((isAdmin || isStaff) && (branches.length > 1 || isSuperAdmin) && salonConfig?.showGlobalStaffSelection !== false) ? "" : "flex-1 min-w-0"}`}>
+            <div className={`flex items-center gap-2 ${((isAdmin || isStaff) && (branches.length > 1 || isSuperAdmin) && shopConfig?.showGlobalStaffSelection !== false) ? "" : "flex-1 min-w-0"}`}>
               <div className="flex-1 min-w-0">
                 {selectedCustomer ? (
                   <div className="bg-brand-primary/5 p-2 rounded-xl flex items-center justify-between border border-brand-primary/10">
@@ -3893,7 +3893,7 @@ const UnifiedInvoiceEntry = () => {
                               {selectedCustomer.email}
                             </span>
                           )}
-                          {salonConfig?.loyaltySettings?.isActive && selectedCustomer.loyaltyPoints > 0 && selectedCustomer.name !== "LOCAL CUSTOMER" && (
+                          {shopConfig?.loyaltySettings?.isActive && selectedCustomer.loyaltyPoints > 0 && selectedCustomer.name !== "LOCAL CUSTOMER" && (
                             <button
                               onClick={() => {
                                 setPointsToRedeemInput(selectedCustomer.loyaltyPoints);
@@ -3909,9 +3909,9 @@ const UnifiedInvoiceEntry = () => {
                           
                           {/* NEW PROJECTED LOYALTY POINTS BADGE */}
                           {(() => {
-                            if (!salonConfig?.loyaltySettings?.isActive || !selectedCustomer || selectedCustomer.name === "LOCAL CUSTOMER") return null;
-                            const minSale = salonConfig.loyaltySettings.minimumSalesAmount || 0;
-                            const amountPerPoint = salonConfig.loyaltySettings.amountPerPoint || 1;
+                            if (!shopConfig?.loyaltySettings?.isActive || !selectedCustomer || selectedCustomer.name === "LOCAL CUSTOMER") return null;
+                            const minSale = shopConfig.loyaltySettings.minimumSalesAmount || 0;
+                            const amountPerPoint = shopConfig.loyaltySettings.amountPerPoint || 1;
                             if (minSale === 0 || amountPerPoint === 0) return null;
                             
                             const currentTotal = finalTotal;
@@ -3920,7 +3920,7 @@ const UnifiedInvoiceEntry = () => {
                               const multiples = currentTotal / minSale;
                               let points = multiples * amountPerPoint;
                               
-                              if (salonConfig.loyaltySettings.isRoundOff) {
+                              if (shopConfig.loyaltySettings.isRoundOff) {
                                 points = Math.round(points);
                               } else {
                                 points = Math.round(points * 100) / 100;
@@ -4018,7 +4018,7 @@ const UnifiedInvoiceEntry = () => {
                                 </div>
                                 
                                 <div className="shrink-0 flex items-center gap-2 text-right">
-                                  {(salonConfig?.loyaltySettings?.isActive && c.loyaltyPoints > 0 && c.name !== "LOCAL CUSTOMER") && (
+                                  {(shopConfig?.loyaltySettings?.isActive && c.loyaltyPoints > 0 && c.name !== "LOCAL CUSTOMER") && (
                                     <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-100 dark:bg-dark-border text-gray-900 dark:text-gray-100 rounded-md text-[10px] font-black tracking-widest">
                                       <Award size={10} className="text-brand-primary" />
                                       {Number(c.loyaltyPoints).toLocaleString(undefined, { maximumFractionDigits: 2 })} PTS
@@ -4045,7 +4045,7 @@ const UnifiedInvoiceEntry = () => {
               </div>
 
               {/* Miscellaneous Button (Commission + Shipping) */}
-              {salonConfig?.showStaffCommission && (
+              {shopConfig?.showStaffCommission && (
                 <button
                   onClick={() => {
                     setMiscActiveTab("commission");
@@ -4105,7 +4105,7 @@ const UnifiedInvoiceEntry = () => {
                     user={user}
                     isAdmin={isAdmin}
                     isStaff={isStaff}
-                    salonConfig={salonConfig}
+                    shopConfig={shopConfig}
                     shopSettings={shopSettings}
                     formatNumber={formatNumber}
                     applyPrecision={applyPrecision}
@@ -4910,7 +4910,7 @@ const UnifiedInvoiceEntry = () => {
                                   <p className="text-[9px] text-gray-400 dark:text-gray-500">
                                     {c.phone}
                                   </p>
-                                  {(salonConfig?.loyaltySettings?.isActive && c.loyaltyPoints > 0 && c.name !== "LOCAL CUSTOMER") && (
+                                  {(shopConfig?.loyaltySettings?.isActive && c.loyaltyPoints > 0 && c.name !== "LOCAL CUSTOMER") && (
                                     <span
                                       className="text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-tighter bg-brand-primary/10 text-brand-primary flex items-center gap-0.5 ml-1"
                                     >
@@ -5109,9 +5109,9 @@ const UnifiedInvoiceEntry = () => {
               </h3>
             </div>
             
-            {(selectedCustomer?.loyaltyPoints || 0) < (salonConfig?.loyaltySettings?.minimumRedeemPoints || 0) ? (
+            {(selectedCustomer?.loyaltyPoints || 0) < (shopConfig?.loyaltySettings?.minimumRedeemPoints || 0) ? (
               <div className="bg-amber-50 text-amber-600 p-3 rounded-xl border border-amber-100 text-xs font-bold text-center">
-                Minimum {salonConfig?.loyaltySettings?.minimumRedeemPoints} points required to redeem.
+                Minimum {shopConfig?.loyaltySettings?.minimumRedeemPoints} points required to redeem.
               </div>
             ) : (
               <div className="bg-gray-50 dark:bg-dark-surface border border-gray-100 dark:border-dark-border p-4 rounded-2xl space-y-4">
@@ -5119,7 +5119,7 @@ const UnifiedInvoiceEntry = () => {
                   <label className="text-xs font-bold text-gray-500 uppercase">Points to Redeem</label>
                   <input
                     type="number"
-                    min={salonConfig?.loyaltySettings?.minimumRedeemPoints || 0}
+                    min={shopConfig?.loyaltySettings?.minimumRedeemPoints || 0}
                     max={selectedCustomer?.loyaltyPoints || 0}
                     value={pointsToRedeemInput}
                     onChange={(e) => setPointsToRedeemInput(Number(e.target.value))}
@@ -5131,14 +5131,14 @@ const UnifiedInvoiceEntry = () => {
                   Value:{" "}
                   <span className="font-bold text-emerald-500 notranslate">
                     {currencySymbol}
-                    {formatNumber((pointsToRedeemInput || 0) * (salonConfig?.loyaltySettings?.pointValueInCurrency || 0), shopSettings)}
+                    {formatNumber((pointsToRedeemInput || 0) * (shopConfig?.loyaltySettings?.pointValueInCurrency || 0), shopSettings)}
                   </span>{" "}
                   (Added to Wallet)
                 </p>
                 <button
                   onClick={async () => {
-                    if (pointsToRedeemInput < (salonConfig?.loyaltySettings?.minimumRedeemPoints || 0)) {
-                      return showSnack("Error", `Minimum ${salonConfig?.loyaltySettings?.minimumRedeemPoints} points required`, "error");
+                    if (pointsToRedeemInput < (shopConfig?.loyaltySettings?.minimumRedeemPoints || 0)) {
+                      return showSnack("Error", `Minimum ${shopConfig?.loyaltySettings?.minimumRedeemPoints} points required`, "error");
                     }
                     if (pointsToRedeemInput > selectedCustomer.loyaltyPoints) {
                       return showSnack("Error", "Not enough points", "error");
@@ -5147,7 +5147,7 @@ const UnifiedInvoiceEntry = () => {
                       await redeemPointsMut({ customerId: selectedCustomer._id, pointsToRedeem: pointsToRedeemInput }).unwrap();
                       showSnack("Success", "Points redeemed to wallet successfully", "success");
                       
-                      const addedCash = (pointsToRedeemInput || 0) * (salonConfig?.loyaltySettings?.pointValueInCurrency || 0);
+                      const addedCash = (pointsToRedeemInput || 0) * (shopConfig?.loyaltySettings?.pointValueInCurrency || 0);
                       
                       // Update local state instantly so UI reflects changes
                       setSelectedCustomer((prev) => ({
@@ -5192,7 +5192,7 @@ const UnifiedInvoiceEntry = () => {
           selectedShopId={selectedShopId}
           cart={cart}
           getOfferInfo={getOfferInfo}
-          duplicateItemAction={salonConfig?.duplicateItemAction || "unselect"}
+          duplicateItemAction={shopConfig?.duplicateItemAction || "unselect"}
           onSelect={(item, price, variantData) => {
             if (item.itemType === "service") {
               addServiceToCart(item, price, variantData);

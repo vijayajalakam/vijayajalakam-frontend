@@ -3,8 +3,8 @@ import { useAuth } from '../../features/auth/hooks/useAuth';
 import { SUPPORTED_LANGUAGES, getLanguageConfig, getAllLanguageCodes } from '../../utils/languageUtils';
 
 const GoogleTranslate = () => {
-    const { salonConfig } = useAuth();
-    const language = salonConfig?.language;
+    const { shopConfig } = useAuth();
+    const language = shopConfig?.language;
 
     useEffect(() => {
         // Function to set the cookie

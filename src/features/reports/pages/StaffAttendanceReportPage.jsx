@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import * as exportUtils from "../../../utils/exportUtils";
 
 const StaffAttendanceReportPage = () => {
-  const { hasPermission, salonConfig } = useAuth();
+  const { hasPermission, shopConfig } = useAuth();
   const navigate = useNavigate();
   
   // View mode state
@@ -195,7 +195,7 @@ const StaffAttendanceReportPage = () => {
         {
           title: "Staff Attendance Chart",
           subtitle: `Monthly Attendance for ${new Date(currentMonth + "-01").toLocaleString('default', { month: 'long', year: 'numeric' })}`,
-          shopDetails: salonConfig,
+          shopDetails: shopConfig,
           orientation: "l" // Landscape to fit the columns
         }
       );

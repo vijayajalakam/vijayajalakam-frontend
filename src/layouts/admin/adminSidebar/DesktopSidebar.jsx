@@ -9,7 +9,7 @@ import { getDynamicPortalPath } from "../../../utils/portalUtils";
 import { selectBookingBadgeCount } from "../../../store/slices/bookingBadgeSlice";
 
 const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
-  const { user, salonConfig, hasPermission, portalRole: authPortalRole, sidebarStyle, sidebarItemOrientation } = useAuth();
+  const { user, shopConfig, hasPermission, portalRole: authPortalRole, sidebarStyle, sidebarItemOrientation } = useAuth();
   const badgeCount = useSelector(selectBookingBadgeCount);
   
   const location = useLocation();
@@ -125,12 +125,12 @@ const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
             onClick={() => setOpen(!isOpen)}
             className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden shrink-0 hover:ring-2 hover:ring-brand-primary/20 transition-all"
           >
-            {salonConfig?.logo ? (
-              <img src={salonConfig.logo} alt="Logo" className="w-full h-full object-cover" />
+            {shopConfig?.logo ? (
+              <img src={shopConfig.logo} alt="Logo" className="w-full h-full object-cover" />
             ) : (
               <div className={`w-full h-full flex items-center justify-center ${sidebarStyle === 'gradient' ? 'bg-white dark:bg-dark-surface/20' : 'bg-primary-dynamic'}`}>
                 <span className="text-white font-black text-xl">
-                  {salonConfig?.salonName ? salonConfig.salonName.charAt(0).toUpperCase() : "S"}
+                  {shopConfig?.shopName ? shopConfig.shopName.charAt(0).toUpperCase() : "S"}
                 </span>
               </div>
             )}
@@ -140,12 +140,12 @@ const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3 overflow-hidden animate-in fade-in slide-in-from-left-2 duration-300">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
-                {salonConfig?.logo ? (
-                  <img src={salonConfig.logo} alt="Logo" className="w-full h-full object-cover" />
+                {shopConfig?.logo ? (
+                  <img src={shopConfig.logo} alt="Logo" className="w-full h-full object-cover" />
                 ) : (
                   <div className={`w-full h-full flex items-center justify-center ${sidebarStyle === 'gradient' ? 'bg-white dark:bg-dark-surface/20' : 'bg-primary-dynamic'}`}>
                     <span className="text-white font-black text-xl">
-                      {salonConfig?.salonName ? salonConfig.salonName.charAt(0).toUpperCase() : "S"}
+                      {shopConfig?.shopName ? shopConfig.shopName.charAt(0).toUpperCase() : "S"}
                     </span>
                   </div>
                 )}
@@ -153,9 +153,9 @@ const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
               <div className="flex flex-col overflow-hidden">
               <span
                 className={`text-sm font-black leading-none tracking-tight truncate ${getTitleClasses()}`}
-                title={salonConfig?.salonName || "SALON SYSTEM"}
+                title={shopConfig?.shopName || "VIJAYAJALAKAM"}
               >
-                {salonConfig?.salonName || "SALON SYSTEM"}
+                {shopConfig?.shopName || "VIJAYAJALAKAM"}
               </span>
               <span
                 className={`text-[10px] font-bold leading-none mt-0.5 truncate ${sidebarStyle === 'gradient' ? 'text-white/50' : 'text-gray-400 dark:text-gray-500'}`}

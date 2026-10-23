@@ -32,7 +32,7 @@ const ReviewBooking = () => {
   const { shopSlug } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { currencySymbol, salonConfig, user, updateUser } = useAuth();
+  const { currencySymbol, shopConfig, user, updateUser } = useAuth();
 
   const selectedServices = useSelector(selectSelectedServices);
   const totalAmount = useSelector(selectBookingTotal);
@@ -70,12 +70,12 @@ const ReviewBooking = () => {
   }, [selectedServices.length, selectedDate, shopSlug, navigate]);
 
   useEffect(() => {
-    if (salonConfig?.isRazorpayEnabled) {
+    if (shopConfig?.isRazorpayEnabled) {
       dispatch(setPaymentMethod("PAY_NOW"));
     } else {
       dispatch(setPaymentMethod("PAY_LATER"));
     }
-  }, [salonConfig?.isRazorpayEnabled, dispatch]);
+  }, [shopConfig?.isRazorpayEnabled, dispatch]);
 
   const startTime = selectedSlotTimes?.[0] || "";
   const endTime = selectedSlotTimes?.length
@@ -84,28 +84,28 @@ const ReviewBooking = () => {
 
   const dateLabel = selectedDate ? moment(selectedDate).format("dddd, D MMMM") : "";
 
-  const shopName = salonConfig?.salonName || "Shop";
+  const shopName = shopConfig?.shopName || "Shop";
   const shopAddress = selectedBranchAddress || (() => {
     const parts = [];
-    if (salonConfig?.address && salonConfig.address !== "N/A") parts.push(salonConfig.address);
+    if (shopConfig?.address && shopConfig.address !== "N/A") parts.push(shopConfig.address);
     else {
-      if (salonConfig?.area) parts.push(salonConfig.area);
-      if (salonConfig?.state) parts.push(salonConfig.state);
-      if (salonConfig?.country) parts.push(salonConfig.country);
+      if (shopConfig?.area) parts.push(shopConfig.area);
+      if (shopConfig?.state) parts.push(shopConfig.state);
+      if (shopConfig?.country) parts.push(shopConfig.country);
     }
     return parts.length > 0 ? parts.join(", ") : "";
   })();
-  const shopRating = salonConfig?.avgRating || 4.9;
-  const shopReviewsCount = salonConfig?.reviewsCount || 0;
+  const shopRating = shopConfig?.avgRating || 4.9;
+  const shopReviewsCount = shopConfig?.reviewsCount || 0;
   // Cover image: primary gallery image first, then coverImage/banner, finally logo
   const shopCover = (() => {
-    const gallery = salonConfig?.galleryImages || [];
+    const gallery = shopConfig?.galleryImages || [];
     if (gallery.length > 0) {
       const primary = gallery.find((img) => img.isPrimary);
       const url = (primary || gallery[0])?.url;
       if (url) return url;
     }
-    return salonConfig?.coverImage || salonConfig?.banner || salonConfig?.logo || null;
+    return shopConfig?.coverImage || shopConfig?.banner || shopConfig?.logo || null;
   })();
 
   // Mobile: go to the standalone confirm-pay screen.
@@ -119,7 +119,7 @@ const ReviewBooking = () => {
       return;
     }
     
-    if (paymentMethod === "PAY_NOW" && salonConfig?.isRazorpayEnabled) {
+    if (paymentMethod === "PAY_NOW" && shopConfig?.isRazorpayEnabled) {
       await processRazorpayPayment();
     } else {
       await submitBooking();
@@ -131,7 +131,7 @@ const ReviewBooking = () => {
     try {
       const orderRes = await api.post("/appointments/razorpay/create-order", {
         amount: totalAmount,
-        currency: salonConfig?.currency || "INR",
+        currency: shopConfig?.currency || "INR",
         receipt: `booking_${Date.now()}`,
       });
 
@@ -165,7 +165,7 @@ const ReviewBooking = () => {
         key: apiKey,
         amount,
         currency,
-        name: salonConfig?.salonName || "Salon Booking",
+        name: shopConfig?.shopName || "Vijayajalakam Booking",
         description: "Payment for booking",
         order_id: orderId,
         handler: async function (response) {
@@ -351,11 +351,11 @@ const ReviewBooking = () => {
           </div>
           <div className="text-right flex-shrink-0">
             <p className="text-[14px] font-bold text-black dark:text-white">
-              {currencySymbol}{Number(service.price).toFixed(salonConfig?.decimalPrecision ?? 2)}
+              {currencySymbol}{Number(service.price).toFixed(shopConfig?.decimalPrecision ?? 2)}
             </p>
             {service.originalPrice && service.originalPrice > service.price && (
               <p className="text-[12px] text-gray-400 dark:text-gray-500 line-through">
-                {currencySymbol}{Number(service.originalPrice).toFixed(salonConfig?.decimalPrecision ?? 2)}
+                {currencySymbol}{Number(service.originalPrice).toFixed(shopConfig?.decimalPrecision ?? 2)}
               </p>
             )}
           </div>
@@ -372,8 +372,8 @@ const ReviewBooking = () => {
       <button
         onClick={() => dispatch(setPaymentMethod("PAY_NOW"))}
         className="w-full flex items-center justify-between p-5 text-left"
-        disabled={!salonConfig?.isRazorpayEnabled}
-        style={{ opacity: salonConfig?.isRazorpayEnabled ? 1 : 0.5, cursor: salonConfig?.isRazorpayEnabled ? "pointer" : "not-allowed" }}
+        disabled={!shopConfig?.isRazorpayEnabled}
+        style={{ opacity: shopConfig?.isRazorpayEnabled ? 1 : 0.5, cursor: shopConfig?.isRazorpayEnabled ? "pointer" : "not-allowed" }}
       >
         <div>
           <p className="text-[15px] font-bold text-black dark:text-white">Pay now in full</p>
@@ -465,21 +465,21 @@ const ReviewBooking = () => {
               <>
                 <div className="pt-4 flex items-center justify-between">
                   <span className="text-[14px] font-medium text-gray-500 dark:text-gray-400">Subtotal</span>
-                  <span className="text-[14px] font-medium text-black dark:text-white">{currencySymbol}{Number(baseTotal).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                  <span className="text-[14px] font-medium text-black dark:text-white">{currencySymbol}{Number(baseTotal).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
                 </div>
                 <div className="pt-3 flex items-center justify-between">
                   <span className="text-[14px] font-medium text-gray-500 dark:text-gray-400">Taxes</span>
-                  <span className="text-[14px] font-medium text-black dark:text-white">{currencySymbol}{Number(taxTotal).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                  <span className="text-[14px] font-medium text-black dark:text-white">{currencySymbol}{Number(taxTotal).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
                 </div>
                 <div className="pt-4 mt-4 border-t border-gray-100 dark:border-dark-border flex items-center justify-between">
                   <span className="text-[15px] font-bold text-black dark:text-white">Total</span>
-                  <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                  <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
                 </div>
               </>
             ) : (
               <div className="pt-4 flex items-center justify-between">
                 <span className="text-[15px] font-bold text-black dark:text-white">Total</span>
-                <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
               </div>
             )}
             <div className="pt-4 mt-3 border-t border-gray-100 dark:border-dark-border flex items-center justify-between">
@@ -502,7 +502,7 @@ const ReviewBooking = () => {
               <p className="text-[15px] font-bold text-black dark:text-white">Cancellation policy</p>
               <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-1">Cancel for free anytime</p>
             </div>
-            {salonConfig?.isRazorpayEnabled && (
+            {shopConfig?.isRazorpayEnabled && (
               <>
                 <div className="border-t border-gray-100 dark:border-dark-border" />
                 <div>
@@ -522,7 +522,7 @@ const ReviewBooking = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[12px] text-gray-500 dark:text-gray-400 font-medium">Total</p>
-              <p className="text-[16px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</p>
+              <p className="text-[16px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</p>
             </div>
             <button
               onClick={handleMobileContinue}
@@ -619,7 +619,7 @@ const ReviewBooking = () => {
                     <p className="text-[15px] font-bold text-black dark:text-white">Cancellation policy</p>
                     <p className="text-[13px] text-gray-500 dark:text-gray-400 mt-1">Cancel for free anytime</p>
                   </div>
-                  {salonConfig?.isRazorpayEnabled && (
+                  {shopConfig?.isRazorpayEnabled && (
                     <>
                       <div className="border-t border-gray-100 dark:border-dark-border" />
                       <div>
@@ -691,11 +691,11 @@ const ReviewBooking = () => {
                         </div>
                         <div className="text-right flex-shrink-0">
                           <span className="text-[14px] font-semibold text-black dark:text-white block">
-                            {currencySymbol}{Number(service.price).toFixed(salonConfig?.decimalPrecision ?? 2)}
+                            {currencySymbol}{Number(service.price).toFixed(shopConfig?.decimalPrecision ?? 2)}
                           </span>
                           {service.originalPrice && service.originalPrice > service.price && (
                             <span className="text-[12px] font-medium text-gray-400 dark:text-gray-500 line-through block mt-0.5">
-                              {currencySymbol}{Number(service.originalPrice).toFixed(salonConfig?.decimalPrecision ?? 2)}
+                              {currencySymbol}{Number(service.originalPrice).toFixed(shopConfig?.decimalPrecision ?? 2)}
                             </span>
                           )}
                         </div>
@@ -713,17 +713,17 @@ const ReviewBooking = () => {
                 <div className="space-y-3 mb-4 pt-4 border-t border-gray-100 dark:border-dark-border">
                   <div className="flex items-center justify-between">
                     <span className="text-[13px] font-medium text-gray-500 dark:text-gray-400">Subtotal</span>
-                    <span className="text-[13px] font-medium text-black dark:text-white">{currencySymbol}{Number(baseTotal).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                    <span className="text-[13px] font-medium text-black dark:text-white">{currencySymbol}{Number(baseTotal).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-[13px] font-medium text-gray-500 dark:text-gray-400">Taxes</span>
-                    <span className="text-[13px] font-medium text-black dark:text-white">{currencySymbol}{Number(taxTotal).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                    <span className="text-[13px] font-medium text-black dark:text-white">{currencySymbol}{Number(taxTotal).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
                   </div>
                 </div>
               )}
               <div className={`flex items-center justify-between mb-5 ${taxTotal === 0 ? 'pt-3 border-t border-gray-100 dark:border-dark-border' : 'pt-4 border-t border-gray-100 dark:border-dark-border'}`}>
                 <span className="text-[15px] font-bold text-black dark:text-white">Total</span>
-                <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+                <span className="text-[15px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
               </div>
               <button
                 onClick={handleDesktopConfirm}

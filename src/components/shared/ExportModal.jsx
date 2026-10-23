@@ -18,7 +18,7 @@ const ExportModal = ({
   filename = "Report",
   onExportAll = null,
 }) => {
-  const { salonConfig } = useAuth();
+  const { shopConfig } = useAuth();
   const [isExporting, setIsExporting] = useState(false);
   const [status, setStatus] = useState("idle");
   const [exportingFormat, setExportingFormat] = useState(null);
@@ -85,7 +85,7 @@ const ExportModal = ({
             exportData,
             columns,
             `${fullFilename}.pdf`,
-            { title: filename, shopDetails: salonConfig }
+            { title: filename, shopDetails: shopConfig }
           );
           break;
       }

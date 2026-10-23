@@ -240,7 +240,7 @@ const GalleryManager = () => {
               value={unsplashQuery}
               onChange={(e) => setUnsplashQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && searchUnsplash()}
-              placeholder="Search Unsplash (e.g. salon, barber, spa)"
+              placeholder="Search Unsplash (e.g. books, education, stationery)"
               className="flex-1 px-4 py-2.5 bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
             />
             <button

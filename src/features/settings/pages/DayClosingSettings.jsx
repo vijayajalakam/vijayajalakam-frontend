@@ -3,7 +3,7 @@ import { CheckCircle2, CalendarDays, Receipt } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   useGetAdminProfileQuery,
-  useUpdateSalonProfileMutation,
+  useUpdateBusinessProfileMutation,
 } from "../../../store/api/tenantCrudEndpoints";
 import Snackbar from "../../../components/shared/Snackbar";
 import { SettingsPageSkeleton } from "../../../components/shared/Skeleton";
@@ -29,11 +29,11 @@ const DayClosingSettings = () => {
     }
   }, [profileData]);
 
-  const [updateSalonProfile] = useUpdateSalonProfileMutation();
+  const [updateBusinessProfile] = useUpdateBusinessProfileMutation();
 
   const saveSettings = useCallback(async () => {
     try {
-      const res = await updateSalonProfile({ 
+      const res = await updateBusinessProfile({ 
         isDayClosingEnabled,
         dayClosingIncludeTax
       }).unwrap();
@@ -49,7 +49,7 @@ const DayClosingSettings = () => {
     } finally {
       isUserChange.current = false;
     }
-  }, [isDayClosingEnabled, dayClosingIncludeTax, showSnack, refreshConfig, updateSalonProfile]);
+  }, [isDayClosingEnabled, dayClosingIncludeTax, showSnack, refreshConfig, updateBusinessProfile]);
 
   // Auto-save logic
   useEffect(() => {

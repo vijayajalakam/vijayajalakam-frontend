@@ -38,7 +38,7 @@ import Snackbar from "../../../components/shared/Snackbar";
 const UserHome = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { salonConfig, currencySymbol, user } = useAuth();
+  const { shopConfig, currencySymbol, user } = useAuth();
   const { formatDisplayNumber } = useCurrency();
   const { theme, setTheme } = useTheme();
   const cartCount = useSelector(selectUserCartCount);
@@ -59,11 +59,11 @@ const UserHome = () => {
 
   const showSnack = (message, type = "success") => setSnack({ message, type });
 
-  const salonName = salonConfig?.salonName || "Saloon";
-  const salonPhone = salonConfig?.phone || "+91 99999 99999";
-  const salonAddress = salonConfig?.address && salonConfig.address !== "N/A"
-    ? salonConfig.address
-    : [salonConfig?.area, salonConfig?.state, salonConfig?.country].filter(Boolean).join(", ") || "Main Salon Center";
+  const shopName = shopConfig?.shopName || "Vijayajalakam";
+  const shopPhone = shopConfig?.phone || "+91 99999 99999";
+  const shopAddress = shopConfig?.address && shopConfig.address !== "N/A"
+    ? shopConfig.address
+    : [shopConfig?.area, shopConfig?.state, shopConfig?.country].filter(Boolean).join(", ") || "Main Center";
 
   // Fetch Products added by Admin
   useEffect(() => {
@@ -213,14 +213,14 @@ const UserHome = () => {
       {/* ── TOP HEADER / NAVIGATION BAR ── */}
       <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#12131a]/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
-          {/* Logo & Salon Branding */}
+          {/* Logo & business Branding */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center font-black text-lg tracking-wider shadow-sm">
-              {salonName.charAt(0).toUpperCase()}
+              {shopName.charAt(0).toUpperCase()}
             </div>
             <div>
               <div className="font-extrabold text-lg leading-tight tracking-tight text-gray-900 dark:text-white">
-                {salonName}
+                {shopName}
               </div>
               <div className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -318,13 +318,13 @@ const UserHome = () => {
           <div className="max-w-2xl space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest backdrop-blur-md">
               <Sparkles size={14} className="text-yellow-400" />
-              100% Genuine Salon Products
+              100% Genuine Publications
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-              Exclusive Salon Collection
+              Exclusive Collection
             </h1>
             <p className="text-gray-300 text-sm sm:text-base font-normal leading-relaxed">
-              Discover authentic, professional-grade haircare, skincare, and styling products added directly by our salon specialists.
+              Discover authentic, professional-grade haircare, skincare, and styling products added directly by our specialists.
             </p>
           </div>
 
@@ -334,7 +334,7 @@ const UserHome = () => {
               <ShieldCheck size={22} className="text-emerald-400 shrink-0" />
               <div>
                 <div className="text-xs font-bold leading-tight">Verified Quality</div>
-                <div className="text-[10px] text-gray-400">Salon Recommended</div>
+                <div className="text-[10px] text-gray-400">Recommended</div>
               </div>
             </div>
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-3">
@@ -782,20 +782,20 @@ const UserHome = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           <div className="space-y-1">
             <div className="font-extrabold text-base text-gray-900 dark:text-white">
-              {salonName} Store
+              {shopName} Store
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400 flex flex-wrap items-center justify-center md:justify-start gap-4">
               <span className="flex items-center gap-1">
-                <MapPin size={13} className="text-gray-400" /> {salonAddress}
+                <MapPin size={13} className="text-gray-400" /> {shopAddress}
               </span>
               <span className="flex items-center gap-1">
-                <Phone size={13} className="text-gray-400" /> {salonPhone}
+                <Phone size={13} className="text-gray-400" /> {shopPhone}
               </span>
             </div>
           </div>
 
           <div className="text-xs text-gray-400 dark:text-gray-500">
-            &copy; {new Date().getFullYear()} {salonName}. All rights reserved.
+            &copy; {new Date().getFullYear()} {shopName}. All rights reserved.
           </div>
         </div>
       </footer>

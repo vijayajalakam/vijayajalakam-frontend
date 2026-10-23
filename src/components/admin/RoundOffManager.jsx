@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useGetPaymentMethodsQuery } from "../../store/api/tenantEndpoints";
-import { useUpdateSalonProfileMutation } from "../../store/api/tenantCrudEndpoints";
+import { useUpdateBusinessProfileMutation } from "../../store/api/tenantCrudEndpoints";
 import { rtkErrorMessage } from "../../store/api/rtkUtils";
 import Snackbar from "../shared/Snackbar";
 import { Calculator, ChevronDown } from "lucide-react";
@@ -9,7 +9,7 @@ import Skeleton from "../shared/Skeleton";
 import CustomDropdown from "../shared/CustomDropdown";
 
 const RoundOffManager = () => {
-  const { salonConfig, refreshConfig } = useAuth();
+  const { shopConfig, refreshConfig } = useAuth();
   const [snack, setSnack] = useState({ message: "", type: "success" });
   const showSnack = (message, type = "success") => setSnack({ message, type });
 
@@ -20,7 +20,7 @@ const RoundOffManager = () => {
   const [roundOffPaymentMethod, setRoundOffPaymentMethod] =
     useState("CASH");
   const { data: pmRaw = [] } = useGetPaymentMethodsQuery();
-  const [updateSalonProfile] = useUpdateSalonProfileMutation();
+  const [updateBusinessProfile] = useUpdateBusinessProfileMutation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const paymentMethods = useMemo(
@@ -29,20 +29,20 @@ const RoundOffManager = () => {
   );
 
   useEffect(() => {
-    if (salonConfig) {
-      setEnableRoundOff(salonConfig.enableRoundOff || false);
-      setRoundOffValue(salonConfig.roundOffValue || 1);
-      setRoundOffBenefit(salonConfig.roundOffBenefit || "customer");
+    if (shopConfig) {
+      setEnableRoundOff(shopConfig.enableRoundOff || false);
+      setRoundOffValue(shopConfig.roundOffValue || 1);
+      setRoundOffBenefit(shopConfig.roundOffBenefit || "customer");
       setRoundOffPaymentMethod(
-        salonConfig.roundOffPaymentMethod || "CASH",
+        shopConfig.roundOffPaymentMethod || "CASH",
       );
     }
-  }, [salonConfig]);
+  }, [shopConfig]);
 
   const handleSave = async () => {
     setLoading(true);
     try {
-      const res = await updateSalonProfile({
+      const res = await updateBusinessProfile({
         enableRoundOff,
         roundOffValue,
         roundOffBenefit,
@@ -80,7 +80,7 @@ const RoundOffManager = () => {
     (opt) => opt.value === roundOffBenefit,
   );
 
-  if (!salonConfig) {
+  if (!shopConfig) {
     return (
       <div className="space-y-4">
         <Skeleton height="60px" />

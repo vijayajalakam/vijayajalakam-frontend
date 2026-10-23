@@ -1140,7 +1140,7 @@ const SearchScreen = () => {
 const SearchShopCard = ({ shop, onClick, locationText }) => {
   const rating = shop.rating || 0;
   const reviewCount = shop.reviewsCount || 0;
-  const categoryName = shop.category?.name || "Beauty Salon";
+  const categoryName = shop.category?.name || "Book Store";
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imageScrollRef = useRef(null);
 

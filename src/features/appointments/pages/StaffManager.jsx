@@ -1776,7 +1776,7 @@ const StaffManager = () => {
                         <CustomTextField
                           label="Email Address (Optional)"
                           icon={Mail}
-                          placeholder="email@salon.com (Optional)"
+                          placeholder="email@vijayajalakam.com (Optional)"
                           value={newStaff.email}
                           onChange={(e) =>
                             setNewStaff({ ...newStaff, email: e.target.value })

@@ -75,7 +75,7 @@ const CustomTable = ({
   const [isExportDropdownOpen, setIsExportDropdownOpen] = React.useState(false);
   const [isExporting, setIsExporting] = React.useState(false);
   const [exportingFormat, setExportingFormat] = React.useState(null);
-  const { salonConfig } = useAuth();
+  const { shopConfig } = useAuth();
 
   const handleDirectExport = async (formatId) => {
     if (isExporting) return;
@@ -133,7 +133,7 @@ const CustomTable = ({
             exportData,
             columns,
             `${fullFilename}.pdf`,
-            { title: derivedTitle, subtitle, startDate, endDate, shopDetails: salonConfig, summaryDataOverride, returnBase64: true }
+            { title: derivedTitle, subtitle, startDate, endDate, shopDetails: shopConfig, summaryDataOverride, returnBase64: true }
           );
           
           const res = await api.post("/whatsapp/send-report", {
@@ -151,7 +151,7 @@ const CustomTable = ({
             exportData,
             columns,
             `${fullFilename}.pdf`,
-            { title: derivedTitle, subtitle, startDate, endDate, shopDetails: salonConfig, summaryDataOverride }
+            { title: derivedTitle, subtitle, startDate, endDate, shopDetails: shopConfig, summaryDataOverride }
           );
         }
       } else {

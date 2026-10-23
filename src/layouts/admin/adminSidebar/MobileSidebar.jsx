@@ -9,13 +9,13 @@ import { getDynamicPortalPath } from "../../../utils/portalUtils";
 import { selectBookingBadgeCount } from "../../../store/slices/bookingBadgeSlice";
 
 const MobileSidebar = ({ isOpen, onClose, menuItems = adminMenu }) => {
-  const { user, salonConfig, hasPermission, portalRole: authPortalRole, sidebarStyle } = useAuth();
+  const { user, shopConfig, hasPermission, portalRole: authPortalRole, sidebarStyle } = useAuth();
   const badgeCount = useSelector(selectBookingBadgeCount);
   const { shopSlug, portalRole: urlPortalRole } = useParams();
   const portalRole = urlPortalRole || authPortalRole;
   const location = useLocation();
 
-  const displayTitle = salonConfig?.salonName || "SALON ADMIN";
+  const displayTitle = shopConfig?.shopName || "VIJAYAJALAKAM ADMIN";
 
   const getSidebarClasses = () => {
     switch (sidebarStyle) {
@@ -131,9 +131,9 @@ const MobileSidebar = ({ isOpen, onClose, menuItems = adminMenu }) => {
             {/* Header */}
             <div className={`h-16 flex items-center justify-between px-6 border-b flex-shrink-0 ${getHeaderClasses()}`}>
               <div className="flex items-center gap-3">
-                {salonConfig?.logo ? (
+                {shopConfig?.logo ? (
                   <img
-                    src={salonConfig.logo}
+                    src={shopConfig.logo}
                     alt={displayTitle}
                     className="h-10 w-auto object-contain max-w-[140px]"
                   />
@@ -142,7 +142,7 @@ const MobileSidebar = ({ isOpen, onClose, menuItems = adminMenu }) => {
                     {displayTitle.charAt(0).toUpperCase()}
                   </div>
                 )}
-                {!salonConfig?.logo && (
+                {!shopConfig?.logo && (
                   <span className={`font-bold tracking-tight text-base truncate max-w-[120px] ${getTitleClasses()}`}>
                     {displayTitle}
                   </span>

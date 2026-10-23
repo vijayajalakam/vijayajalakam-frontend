@@ -10,7 +10,7 @@ import { useAuth } from "../../features/auth/hooks/useAuth";
 const DesktopFooter = () => {
   const navigate = useNavigate();
   const { shopSlug } = useParams();
-  const { salonConfig } = useAuth();
+  const { shopConfig } = useAuth();
 
   const currentYear = new Date().getFullYear();
 

@@ -6,7 +6,7 @@
  *  - Derived totals (memoized)
  *
  * Usage:
- *   const { cart, addToCart, totals, ... } = useInvoiceCart(salonConfig);
+ *   const { cart, addToCart, totals, ... } = useInvoiceCart(shopConfig);
  */
 import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -73,9 +73,9 @@ import {
 } from "../../../store/slices/invoiceSlice";
 
 /**
- * @param {object} [salonConfig] - Salon settings for precision/round-off calculations
+ * @param {object} [shopConfig] - business settings for precision/round-off calculations
  */
-export function useInvoiceCart(salonConfig) {
+export function useInvoiceCart(shopConfig) {
   const dispatch = useDispatch();
 
   // ── Selectors ──────────────────────────────────────────────────────────────
@@ -113,9 +113,9 @@ export function useInvoiceCart(salonConfig) {
       calculateCartTotals({
         items: cart,
         discount: Number(discount) || 0,
-        settings: salonConfig,
+        settings: shopConfig,
       }),
-    [cart, discount, salonConfig]
+    [cart, discount, shopConfig]
   );
 
   // ── Bound dispatchers ──────────────────────────────────────────────────────

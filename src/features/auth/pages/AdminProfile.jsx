@@ -31,7 +31,7 @@ import Modal from "../../../components/shared/Modal";
 
 import {
   useGetAdminProfileQuery,
-  useUpdateSalonProfileWithImageMutation,
+  useUpdateBusinessProfileWithImageMutation,
   useGetShopsListQuery,
   useCreateShopMutation,
   useUpdateShopMutation,
@@ -49,9 +49,9 @@ import {
 
 
 /* ─── Avatar Upload ──────────────────────────────────────────── */
-const AvatarUpload = ({ previewImage, onImageChange, salonName }) => {
-  const initials = salonName
-    ? salonName
+const AvatarUpload = ({ previewImage, onImageChange, shopName }) => {
+  const initials = shopName
+    ? shopName
         .split(" ")
         .map((w) => w[0])
         .join("")
@@ -132,20 +132,20 @@ const Section = ({
 const AdminProfile = () => {
   const {
     hasPermission,
-    salonConfig,
+    shopConfig,
     user: authUser,
     logout,
     isAdmin,
   } = useAuth();
   const { data: profileData, isLoading: initialLoading } = useGetAdminProfileQuery();
   const { data: shops = [], isLoading: branchLoading } = useGetShopsListQuery();
-  const [updateSalonProfile, { isLoading: loading }] = useUpdateSalonProfileWithImageMutation();
+  const [updateBusinessProfile, { isLoading: loading }] = useUpdateBusinessProfileWithImageMutation();
   const [createShop] = useCreateShopMutation();
   const [updateShop] = useUpdateShopMutation();
   const [deleteShop] = useDeleteShopMutation();
 
   const [formData, setFormData] = useState({
-    salonName: "",
+    shopName: "",
     ownerName: "",
     country: "",
     state: "",
@@ -199,7 +199,7 @@ const AdminProfile = () => {
       const { user, salon, logo } = profileData;
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
-        salonName: salon?.salonName || "",
+        shopName: salon?.shopName || "",
         ownerName: salon?.ownerName || "",
         country: salon?.country || "",
         state: salon?.state || "",
@@ -249,7 +249,7 @@ const AdminProfile = () => {
       data.append("phone", formData.mobile);
       if (imageFile) data.append("image", imageFile);
 
-      await updateSalonProfile(data).unwrap();
+      await updateBusinessProfile(data).unwrap();
       showSnack("Profile updated successfully!", "success");
     } catch (err) {
       showSnack(
@@ -281,7 +281,7 @@ const AdminProfile = () => {
       );
     } else {
       setBranchFormData({
-        name: formData.salonName,
+        name: formData.shopName,
         address: `${formData.area}, ${formData.state}, ${formData.country}`,
         phone: formData.mobile,
         gstNumber: "",
@@ -370,11 +370,11 @@ const AdminProfile = () => {
             <AvatarUpload
               previewImage={previewImage}
               onImageChange={handleImageChange}
-              salonName={formData.salonName}
+              shopName={formData.shopName}
             />
             <div className="flex-1 text-center sm:text-left">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                {formData.salonName || "Your Shop"}
+                {formData.shopName || "Your Shop"}
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                 {formData.ownerName || authUser?.name || "Owner"}
@@ -413,8 +413,8 @@ const AdminProfile = () => {
         <Section title="Business Information" icon={Building2} delay={0.2}>
           <CustomTextField
             label="Shop Name"
-            name="salonName"
-            value={formData.salonName}
+            name="shopName"
+            value={formData.shopName}
             onChange={handleChange}
             icon={Building2}
             placeholder="Enter shop name"
@@ -556,7 +556,7 @@ const AdminProfile = () => {
               value={formData.aboutText}
               onChange={handleChange}
               rows={4}
-              placeholder={`At ${formData.salonName || "your shop"}, we prioritize delivering an exceptional experience...`}
+              placeholder={`At ${formData.shopName || "your shop"}, we prioritize delivering an exceptional experience...`}
               className="w-full px-4 py-3 bg-gray-50 dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary resize-none transition-all"
             />
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">This text will be shown in the "About" section on your shop's public page. Leave empty for a default message.</p>
@@ -564,9 +564,9 @@ const AdminProfile = () => {
         </Section>
       </form>
 
-      {/* Salon Location & Contact Section */}
+      {/* Location & Contact Section */}
       <Section
-        title="Salon Location & Contact"
+        title="Location & Contact"
         icon={Store}
         delay={0.3}
         cols={0}
@@ -673,17 +673,17 @@ const AdminProfile = () => {
               <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Subscription</span>
             </div>
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400">
-              {!salonConfig?.planExpiryDate ? "Lifetime" : "Active"}
+              {!shopConfig?.planExpiryDate ? "Lifetime" : "Active"}
             </span>
           </div>
-          {!salonConfig?.planExpiryDate ? (
+          {!shopConfig?.planExpiryDate ? (
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm">
               <Sparkles size={14} className="text-violet-500" />
               <span>No expiry — enjoy forever</span>
             </div>
           ) : (
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Expires <span className="font-medium text-gray-700 dark:text-gray-300">{new Date(salonConfig.planExpiryDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</span>
+              Expires <span className="font-medium text-gray-700 dark:text-gray-300">{new Date(shopConfig.planExpiryDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</span>
             </p>
           )}
         </div>

@@ -26,7 +26,7 @@ export const TENANT_TAG_TYPES = [
   "Profile",
   "Privilege",
   "Report",
-  "SalonProfile",
+  "BusinessProfile",
   "ProductCategory",
   "AccountTransaction",
   "Notification",

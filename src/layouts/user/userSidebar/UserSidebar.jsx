@@ -4,7 +4,7 @@ import { userMenu } from '../userMenu.config'
 
 const UserSidebar = ({ isOpen, setOpen, isMobile, onClose }) => {
     if (isMobile) {
-        return <MobileSidebar isOpen={isOpen} onClose={onClose} menuItems={userMenu} title="SALON USER" />
+        return <MobileSidebar isOpen={isOpen} onClose={onClose} menuItems={userMenu} title="VIJAYAJALAKAM" />
     }
     return <DesktopSidebar isOpen={isOpen} setOpen={setOpen} menuItems={userMenu} />
 }

@@ -1,6 +1,6 @@
 /**
  * Precision and Round-off Helper (Frontend)
- * Handles decimal precision and round-off calculations based on salon settings
+ * Handles decimal precision and round-off calculations based on business settings
  */
 
 /**
@@ -18,7 +18,7 @@ export const toFixedNumber = (value, precision = 2) => {
 /**
  * Apply decimal precision to a value
  * @param {number} value - The value to format
- * @param {object} settings - Salon settings with decimalPrecision
+ * @param {object} settings - business settings with decimalPrecision
  * @returns {number} - Value with applied precision
  */
 export const applyPrecision = (value, settings) => {
@@ -29,7 +29,7 @@ export const applyPrecision = (value, settings) => {
 /**
  * Apply round-off to final amount if enabled
  * @param {number} amount - The amount to round
- * @param {object} settings - Salon settings with enableRoundOff, roundOffValue, roundOffBenefit
+ * @param {object} settings - business settings with enableRoundOff, roundOffValue, roundOffBenefit
  * @returns {object} - { finalAmount, roundOffAmount }
  */
 export const applyRoundOff = (amount, settings) => {
@@ -63,7 +63,7 @@ export const applyRoundOff = (amount, settings) => {
  * Round individual amount if round-off is enabled
  * Used for displaying individual item amounts in invoice
  * @param {number} amount - The amount to round
- * @param {object} settings - Salon settings
+ * @param {object} settings - business settings
  * @returns {number} - Rounded amount
  */
 export const roundAmount = (amount, settings) => {
@@ -76,7 +76,7 @@ export const roundAmount = (amount, settings) => {
  * @param {number} quantity - Item quantity
  * @param {number} price - Item price
  * @param {number} discount - Item discount
- * @param {object} settings - Salon settings
+ * @param {object} settings - business settings
  * @returns {number} - Calculated amount
  */
 export const calculateItemAmount = (quantity, price, discount = 0, settings) => {
@@ -88,7 +88,7 @@ export const calculateItemAmount = (quantity, price, discount = 0, settings) => 
  * Calculate tax amount with precision
  * @param {number} amount - Base amount
  * @param {number} taxPercent - Tax percentage
- * @param {object} settings - Salon settings
+ * @param {object} settings - business settings
  * @returns {number} - Tax amount
  */
 export const calculateTaxAmount = (amount, taxPercent, settings) => {
@@ -101,7 +101,7 @@ export const calculateTaxAmount = (amount, taxPercent, settings) => {
  * @param {object} params - Calculation parameters
  * @param {array} params.items - Cart/Invoice items
  * @param {number} params.discount - Invoice level discount
- * @param {object} params.settings - Salon settings
+ * @param {object} params.settings - business settings
  * @returns {object} - { subtotal, totalTax, totalItemDiscount, finalAmount, roundOffAmount }
  */
 export const calculateCartTotals = ({ items, discount = 0, settings }) => {
@@ -174,7 +174,7 @@ export const calculateCartTotals = ({ items, discount = 0, settings }) => {
 /**
  * Format currency display value
  * @param {number} value - The value to format
- * @param {object} settings - Salon settings
+ * @param {object} settings - business settings
  * @param {string} currencySymbol - Currency symbol
  * @returns {string} - Formatted currency string
  */
@@ -190,7 +190,7 @@ export const formatCurrency = (value, settings, currencySymbol = '') => {
 /**
  * Format number for display with precision
  * @param {number} value - The value to format
- * @param {object} settings - Salon settings
+ * @param {object} settings - business settings
  * @returns {string} - Formatted number string
  */
 export const formatNumber = (value, settings) => {

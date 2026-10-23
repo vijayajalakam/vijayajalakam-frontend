@@ -28,7 +28,7 @@ const SlotsPage = () => {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white tracking-tight mb-4">Slot Configuration</h3>
                 <p className="text-gray-600 dark:text-gray-400 font-medium max-w-md mx-auto leading-relaxed text-sm">
-                    Set up your salon's recurring availability patterns. Define custom service durations and automated buffer times for your professionals.
+                    Set up your shop's recurring availability patterns. Define custom service durations and automated buffer times for your professionals.
                 </p>
             </div>
         </div>

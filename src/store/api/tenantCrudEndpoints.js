@@ -35,7 +35,7 @@ export const {
   useCreatePaymentMethodMutation,
   useUpdatePaymentMethodMutation,
   useDeletePaymentMethodMutation,
-  useUpdateSalonProfileMutation,
+  useUpdateBusinessProfileMutation,
   useUpdateUserThemeMutation,
   useUpdateUserPrimaryColorMutation,
   useGetAdminCustomersQuery,
@@ -91,7 +91,7 @@ export const {
   useUpdateShopMutation,
   useDeleteShopMutation,
   useUpdateReceiptSettingsMutation,
-  useUpdateSalonProfileWithImageMutation,
+  useUpdateBusinessProfileWithImageMutation,
 } = appApi.injectEndpoints({
   overrideExisting: false,
   endpoints: (builder) => ({
@@ -134,7 +134,7 @@ export const {
     getAdminProfile: builder.query({
       query: () => ({ url: "/admin/profile" }),
       transformResponse: asData,
-      providesTags: ["Profile", "SalonProfile"],
+      providesTags: ["Profile", "BusinessProfile"],
     }),
 
     createTax: builder.mutation({
@@ -278,7 +278,7 @@ export const {
       invalidatesTags: ["PaymentMethod"],
     }),
 
-    updateSalonProfile: builder.mutation({
+    updateBusinessProfile: builder.mutation({
       query: (data) => ({
         url: "/admin/profile",
         method: "PUT",
@@ -287,7 +287,7 @@ export const {
       transformResponse: passthrough,
       invalidatesTags: [
         "Profile",
-        "SalonProfile",
+        "BusinessProfile",
         "PublicConfig",
         "InvoiceMetadata",
       ],
@@ -583,7 +583,7 @@ export const {
         headers: { "Content-Type": "multipart/form-data" },
       }),
       transformResponse: asData,
-      invalidatesTags: ["Profile", "SalonProfile"],
+      invalidatesTags: ["Profile", "BusinessProfile"],
     }),
 
     addUnsplashImage: builder.mutation({
@@ -593,7 +593,7 @@ export const {
         data: body,
       }),
       transformResponse: asData,
-      invalidatesTags: ["Profile", "SalonProfile"],
+      invalidatesTags: ["Profile", "BusinessProfile"],
     }),
 
     deleteGalleryImage: builder.mutation({
@@ -602,7 +602,7 @@ export const {
         method: "DELETE",
       }),
       transformResponse: asData,
-      invalidatesTags: ["Profile", "SalonProfile"],
+      invalidatesTags: ["Profile", "BusinessProfile"],
     }),
 
     setPrimaryGalleryImage: builder.mutation({
@@ -611,7 +611,7 @@ export const {
         method: "PUT",
       }),
       transformResponse: asData,
-      invalidatesTags: ["Profile", "SalonProfile"],
+      invalidatesTags: ["Profile", "BusinessProfile"],
     }),
 
     searchUnsplash: builder.query({
@@ -631,7 +631,7 @@ export const {
         headers: { "Content-Type": "multipart/form-data" },
       }),
       transformResponse: asData,
-      invalidatesTags: ["Profile", "SalonProfile"],
+      invalidatesTags: ["Profile", "BusinessProfile"],
     }),
 
     deletePortfolioImage: builder.mutation({
@@ -640,13 +640,13 @@ export const {
         method: "DELETE",
         data: { imageUrl },
       }),
-      invalidatesTags: ["Profile", "SalonProfile"],
+      invalidatesTags: ["Profile", "BusinessProfile"],
     }),
 
     getLoyaltySettings: builder.query({
       query: () => ({ url: "/admin/loyalty-settings" }),
       transformResponse: asData,
-      providesTags: ["SalonProfile"],
+      providesTags: ["BusinessProfile"],
     }),
 
     updateLoyaltySettings: builder.mutation({
@@ -656,7 +656,7 @@ export const {
         data: body,
       }),
       transformResponse: asData,
-      invalidatesTags: ["SalonProfile"],
+      invalidatesTags: ["BusinessProfile"],
     }),
 
     /** Settings — Shops / Branches (admin, no slug) */
@@ -698,11 +698,11 @@ export const {
         method: "PUT",
         data,
       }),
-      invalidatesTags: ["SalonProfile"],
+      invalidatesTags: ["BusinessProfile"],
     }),
 
     /** Settings — Profile update with image (FormData) */
-    updateSalonProfileWithImage: builder.mutation({
+    updateBusinessProfileWithImage: builder.mutation({
       query: (formData) => ({
         url: "/admin/profile",
         method: "PUT",
@@ -712,7 +712,7 @@ export const {
       transformResponse: passthrough,
       invalidatesTags: [
         "Profile",
-        "SalonProfile",
+        "BusinessProfile",
         "PublicConfig",
         "InvoiceMetadata",
       ],

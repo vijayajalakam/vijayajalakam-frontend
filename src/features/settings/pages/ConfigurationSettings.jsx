@@ -27,7 +27,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useGetAdminProfileQuery,
-  useUpdateSalonProfileMutation,
+  useUpdateBusinessProfileMutation,
 } from "../../../store/api/tenantCrudEndpoints";
 import CustomTextField from "../../../components/shared/CustomTextField";
 import Snackbar from "../../../components/shared/Snackbar";
@@ -70,7 +70,7 @@ const ConfigurationSettings = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data: profileData, isLoading: fetching } = useGetAdminProfileQuery();
-  const [updateSalonProfile] = useUpdateSalonProfileMutation();
+  const [updateBusinessProfile] = useUpdateBusinessProfileMutation();
 
   const [formData, setFormData] = useState({
     showServices: true,
@@ -146,7 +146,7 @@ const ConfigurationSettings = () => {
 
   const saveSettings = useCallback(async () => {
     try {
-      const res = await updateSalonProfile(formData).unwrap();
+      const res = await updateBusinessProfile(formData).unwrap();
       if (res) {
         showSnack("Settings saved automatically", "success");
         if (refreshConfig) {
@@ -159,7 +159,7 @@ const ConfigurationSettings = () => {
     } finally {
       isUserChange.current = false;
     }
-  }, [formData, showSnack, refreshConfig, updateSalonProfile]);
+  }, [formData, showSnack, refreshConfig, updateBusinessProfile]);
 
   // Auto-save logic
   useEffect(() => {

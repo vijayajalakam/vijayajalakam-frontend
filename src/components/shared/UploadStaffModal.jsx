@@ -26,7 +26,7 @@ const UploadStaffModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) => {
   const handleDownloadTemplate = () => {
     const templateData = [{
       name: "Jane Doe",
-      email: "jane@salon.com",
+      email: "jane@vijayajalakam.com",
       phone: "+1987654321",
       password: "password123",
       gender: "Female",

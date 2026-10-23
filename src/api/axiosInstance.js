@@ -41,7 +41,7 @@ if (storedToken) {
 // Request interceptor to add tenant slug
 api.interceptors.request.use(
   (config) => {
-    // Extract slug from URL: http://localhost:5173/toney-salon/admin -> toney-salon
+    // Extract slug from URL: http://localhost:5173/toney-business/admin -> toney-business
     const pathParts = window.location.pathname.split("/");
     let slug = pathParts[1];
 

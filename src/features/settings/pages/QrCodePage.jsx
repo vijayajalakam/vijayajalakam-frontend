@@ -21,7 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import {
   useGetAdminProfileQuery,
-  useUpdateSalonProfileMutation,
+  useUpdateBusinessProfileMutation,
 } from "../../../store/api/tenantCrudEndpoints";
 
 const QrCodePage = () => {
@@ -36,8 +36,8 @@ const QrCodePage = () => {
 
   // Profile data & mutations
   const { data: profileData } = useGetAdminProfileQuery();
-  const [updateSalonProfile, { isLoading: isSavingProfile }] =
-    useUpdateSalonProfileMutation();
+  const [updateBusinessProfile, { isLoading: isSavingProfile }] =
+    useUpdateBusinessProfileMutation();
 
   // Shop website URL
   const baseUrl = "https://vijayajalakam.com";
@@ -123,7 +123,7 @@ const QrCodePage = () => {
     }
 
     try {
-      await updateSalonProfile({
+      await updateBusinessProfile({
         googleReviewUrl: cleanUrl,
       }).unwrap();
 

@@ -4,7 +4,7 @@ import AdminNavbar from '../admin/AdminNavbar';
 const UserNavbar = ({ onMenuClick }) => {
     return (
         <AdminNavbar
-            portalLabel="SALON USER"
+            portalLabel="VIJAYAJALAKAM"
             menuItems={userMenu}
             onMenuClick={onMenuClick}
         />

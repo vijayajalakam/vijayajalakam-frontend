@@ -212,7 +212,7 @@ const CancelConfirmModal = ({ isOpen, onClose, onConfirm, isCancelling }) => {
 const BookingDetails = () => {
   const { shopSlug, appointmentId } = useParams();
   const navigate = useNavigate();
-  const { currencySymbol, salonConfig } = useAuth();
+  const { currencySymbol, shopConfig } = useAuth();
 
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -283,7 +283,7 @@ const BookingDetails = () => {
             }
           }
         }
-        // Fetch cover image from salon config gallery
+        // Fetch cover image from business config gallery
         try {
           const profileRes = await api.get("/admin/profile");
           if (profileRes.data.success) {
@@ -324,7 +324,7 @@ const BookingDetails = () => {
     );
   }
 
-  const shopName = booking.shopId?.name || salonConfig?.salonName || "Shop";
+  const shopName = booking.shopId?.name || shopConfig?.shopName || "Shop";
   
   // Build branch address - prioritize mapAddress from the booked branch
   const shopAddress = (() => {
@@ -336,15 +336,15 @@ const BookingDetails = () => {
     // Then check branchLocation (fetched separately)
     if (branchLocation?.mapAddress) return branchLocation.mapAddress;
     if (branchLocation?.address) return branchLocation.address;
-    const salonAddr = salonConfig?.address;
-    if (salonAddr && salonAddr !== "N/A") return salonAddr;
-    // Build from salonConfig parts
-    const parts = [salonConfig?.area, salonConfig?.state, salonConfig?.country].filter(Boolean);
+    const shopAddr = shopConfig?.address;
+    if (shopAddr && shopAddr !== "N/A") return shopAddr;
+    // Build from shopConfig parts
+    const parts = [shopConfig?.area, shopConfig?.state, shopConfig?.country].filter(Boolean);
     return parts.length > 0 ? parts.join(", ") : "";
   })();
   
-  // Get cover image from salonConfig gallery or fallback
-  const galleryImages = salonConfig?.galleryImages || [];
+  // Get cover image from shopConfig gallery or fallback
+  const galleryImages = shopConfig?.galleryImages || [];
   const primaryGallery = galleryImages.find(img => img.isPrimary);
   const gallerycover = primaryGallery?.url || galleryImages[0]?.url || null;
   const heroImage = coverImage || gallerycover || booking.shopId?.galleryImage || booking.shopId?.image?.url || null;
@@ -371,7 +371,7 @@ const BookingDetails = () => {
   };
 
   const openWhatsApp = () => {
-    const whatsappNumber = salonConfig?.whatsapp || salonConfig?.phone || "";
+    const whatsappNumber = shopConfig?.whatsapp || shopConfig?.phone || "";
     if (whatsappNumber) {
       // Remove any non-digit characters except +
       const cleanNumber = whatsappNumber.replace(/[^\d+]/g, "");
@@ -566,7 +566,7 @@ const BookingDetails = () => {
                 </p>
               </div>
               <p className="text-[14px] font-bold text-black dark:text-white flex-shrink-0">
-                {currencySymbol}{Number(s.price || 0).toFixed(salonConfig?.decimalPrecision ?? 2)}
+                {currencySymbol}{Number(s.price || 0).toFixed(shopConfig?.decimalPrecision ?? 2)}
               </p>
             </div>
           ))}
@@ -575,15 +575,15 @@ const BookingDetails = () => {
           <div className="border-t border-gray-100 dark:border-dark-border mt-3 pt-3 space-y-2">
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-500 dark:text-gray-400">Subtotal</span>
-              <span className="text-black dark:text-white">{currencySymbol}{Number(totalAmount - taxAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+              <span className="text-black dark:text-white">{currencySymbol}{Number(totalAmount - taxAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
             </div>
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-500 dark:text-gray-400">Tax</span>
-              <span className="text-black dark:text-white">{currencySymbol}{Number(taxAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+              <span className="text-black dark:text-white">{currencySymbol}{Number(taxAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
             </div>
             <div className="flex justify-between pt-2 mt-2 border-t border-gray-50">
               <span className="text-[14px] font-bold text-black dark:text-white">Total</span>
-              <span className="text-[14px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(salonConfig?.decimalPrecision ?? 2)}</span>
+              <span className="text-[14px] font-bold text-black dark:text-white">{currencySymbol}{Number(totalAmount).toFixed(shopConfig?.decimalPrecision ?? 2)}</span>
             </div>
           </div>
         </div>

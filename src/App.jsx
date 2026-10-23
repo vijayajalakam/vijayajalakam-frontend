@@ -1259,7 +1259,7 @@ function App() {
               <Route path="/:shopSlug/user/favourites" element={<Favourites />} />
             </Route>
 
-            {/* Legacy Portal URL redirects (e.g. /saloon/admin/dashboard -> /admin/dashboard) */}
+            {/* Legacy Portal URL redirects (e.g. /legacy/admin/dashboard -> /admin/dashboard) */}
             <Route path="/:shopSlug/:portalRole/*" element={<LegacyPortalRedirect />} />
 
             {/* Public Authentication & Info Routes */}

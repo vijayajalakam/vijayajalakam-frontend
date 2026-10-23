@@ -169,7 +169,7 @@ const ProductDetail = () => {
                             {product.name}
                         </h1>
                         <p className="text-user-text-muted text-xl leading-relaxed max-w-xl">
-                            {product.description || "Experience perfection with our professional-grade salon products. Specifically formulated for high-performance care and stunning results."}
+                            {product.description || "Experience perfection with our professional-grade products. Specifically formulated for high-performance care and stunning results."}
                         </p>
                     </div>
 

@@ -125,7 +125,7 @@ export const exportToPDF = async (data, columns, filename = "report.pdf", option
 
     // Shop Info Header
     if (shopDetails) {
-      const shopName = shopDetails.salonName || shopDetails.name || shopDetails.shopName || "";
+      const shopName = shopDetails.shopName || shopDetails.name || shopDetails.shopName || "";
       const addressParts = [
         shopDetails.address,
         shopDetails.area,
@@ -560,7 +560,7 @@ export const exportPayrollPDF = async (data, monthLabel, shopDetails, currencySy
     }
 
     // Shop info
-    const shopName = shopDetails?.salonName || shopDetails?.name || shopDetails?.shopName || "";
+    const shopName = shopDetails?.shopName || shopDetails?.name || shopDetails?.shopName || "";
     const addressParts = [
       shopDetails?.address,
       shopDetails?.area,

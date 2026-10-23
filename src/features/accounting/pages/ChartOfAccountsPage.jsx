@@ -31,8 +31,8 @@ import { useAuth } from "../../../features/auth/hooks/useAuth";
 import StatsGrid from "../../../components/shared/StatsGrid";
 
 const ChartOfAccountsPage = () => {
-  const { salonConfig } = useAuth();
-  const currencySymbol = salonConfig?.currencySymbol || "$";
+  const { shopConfig } = useAuth();
+  const currencySymbol = shopConfig?.currencySymbol || "$";
 
   const CurrencyIcon = () => (
     <span className="text-sm font-bold text-gray-500 group-focus-within:text-brand-primary dark:text-blue-400 transition-colors notranslate">

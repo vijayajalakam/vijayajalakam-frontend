@@ -6,25 +6,25 @@ import { X } from "lucide-react";
 const ShopGallery = () => {
   const { shopSlug } = useParams();
   const navigate = useNavigate();
-  const { salonConfig } = useAuth();
+  const { shopConfig } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
-  const shopName = salonConfig?.salonName || "Shop";
+  const shopName = shopConfig?.shopName || "Shop";
 
   // Build gallery images - same logic as UserHome
   const galleryImages = (() => {
     const images = [];
-    if (salonConfig?.galleryImages && salonConfig.galleryImages.length > 0) {
-      const sorted = [...salonConfig.galleryImages].sort((a, b) => {
+    if (shopConfig?.galleryImages && shopConfig.galleryImages.length > 0) {
+      const sorted = [...shopConfig.galleryImages].sort((a, b) => {
         if (a.isPrimary) return -1;
         if (b.isPrimary) return 1;
         return a.order - b.order;
       });
       return sorted.map(img => img.url);
     }
-    if (salonConfig?.logo) images.push(salonConfig.logo);
-    if (salonConfig?.banner && salonConfig.banner !== salonConfig?.logo) images.push(salonConfig.banner);
-    if (salonConfig?.coverImage && !images.includes(salonConfig.coverImage)) images.push(salonConfig.coverImage);
+    if (shopConfig?.logo) images.push(shopConfig.logo);
+    if (shopConfig?.banner && shopConfig.banner !== shopConfig?.logo) images.push(shopConfig.banner);
+    if (shopConfig?.coverImage && !images.includes(shopConfig.coverImage)) images.push(shopConfig.coverImage);
     if (images.length === 0) images.push("https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=1200");
     return images;
   })();

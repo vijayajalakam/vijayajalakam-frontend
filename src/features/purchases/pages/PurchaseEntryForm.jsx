@@ -49,7 +49,7 @@ const PurchaseEntryForm = () => {
     roundOffBenefit,
   } = useAuth();
   const { currencySymbol, formatDisplayNumber } = useCurrency();
-  const salonSettings = useMemo(
+  const shopSettings = useMemo(
     () => ({
       decimalPrecision:
         decimalPrecision !== undefined ? decimalPrecision : 2,
@@ -440,11 +440,11 @@ const PurchaseEntryForm = () => {
   }, 0);
   const preRoundGrand = applyPrecision(
     subtotal + totalTax + (Number(form.freightCharge) || 0),
-    salonSettings,
+    shopSettings,
   );
   const { finalAmount: roundedGrandTotal } = applyRoundOff(
     preRoundGrand,
-    salonSettings,
+    shopSettings,
   );
   const displayGrandTotal = roundedGrandTotal;
   const dueBalance = displayGrandTotal - (Number(form.paidAmount) || 0);
