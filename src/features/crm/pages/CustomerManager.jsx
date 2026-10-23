@@ -673,7 +673,7 @@ const CustomerManager = () => {
                 className="h-10 px-2.5 md:px-4 flex items-center gap-2 bg-brand-primary text-white font-bold rounded-xl transition-all hover:bg-brand-secondary active:scale-95 text-xs shrink-0"
               >
                 <UserPlus size={16} />
-                <span className="hidden md:inline">Add Customer</span>
+                <span className="hidden md:inline">Add Buyer</span>
               </button>
             )}
           </div>
@@ -787,10 +787,10 @@ const CustomerManager = () => {
                   </div>
                   <div>
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                      {editingId ? "Update Customer Profile" : "New Customer Profile"}
+                      {editingId ? "Update Buyer Profile" : "New Buyer Profile"}
                     </h2>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {editingId ? "Update customer information" : "Add a new customer to your database"}
+                      {editingId ? "Update buyer information" : "Add a new buyer to your database"}
                     </p>
                   </div>
                 </div>
@@ -1479,7 +1479,7 @@ const CustomerManager = () => {
                         <span>{editingId ? "Updating..." : "Registering..."}</span>
                       </>
                     ) : (
-                      <span>{editingId ? "Update Profile" : "Register Customer"}</span>
+                      <span>{editingId ? "Update Profile" : "Register Buyer"}</span>
                     )}
                   </button>
                 ) : (

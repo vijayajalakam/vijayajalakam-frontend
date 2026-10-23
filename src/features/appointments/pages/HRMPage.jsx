@@ -24,7 +24,7 @@ const HRMPage = () => {
   const tabs = [
     {
       id: "staff",
-      label: "HRM",
+      label: "Staff",
       icon: Users,
       path: getDynamicPortalPath("/admin/hrm/staff"),
       permission: "hrm:staff:view", 

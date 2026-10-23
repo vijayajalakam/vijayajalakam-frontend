@@ -223,7 +223,7 @@ const CustomerGroupManager = () => {
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-3 py-2 bg-white dark:bg-dark-bg border border-gray-200 dark:border-dark-border rounded-lg text-sm focus:ring-2 focus:ring-brand-primary outline-none"
-                placeholder="e.g. VIP Customers"
+                placeholder="e.g. VIP Buyers"
               />
             </div>
             <div className="flex gap-3">
@@ -301,7 +301,7 @@ const CustomerGroupManager = () => {
                       <span className="bg-white/50 dark:bg-dark-bg/50 px-2 py-0.5 rounded border border-black/5 dark:border-white/5">
                         {group.discountType === 'percentage' ? `${group.discountValue}% Off` : `Fixed: ${group.discountValue}`}
                       </span>
-                      <span>{group.customerCount || 0} customers</span>
+                      <span>{group.customerCount || 0} buyers</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">

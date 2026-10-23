@@ -91,27 +91,6 @@ const ReportsPage = () => {
           permission: "reports:sales:pending_invoices"
         },
         {
-          id: "booking-cancellation",
-          label: "Booking Cancellation Report",
-          icon: XCircle,
-          path: getDynamicPortalPath("/admin/reports/booking-cancellation"),
-          permission: "reports:sales:cancellation_report"
-        },
-        {
-          id: "bookings",
-          label: "Bookings Report",
-          icon: CalendarCheck,
-          path: getDynamicPortalPath("/admin/reports/bookings"),
-          permission: "reports:sales:bookings_report"
-        },
-        {
-          id: "appointment-analytics",
-          label: "Appointment Analytics",
-          icon: PieChart,
-          path: getDynamicPortalPath("/admin/reports/appointment-analytics"),
-          permission: "reports:sales:appointment_analytics"
-        },
-        {
           id: "trash-invoices",
           label: "Trash Invoices",
           icon: Trash2,
@@ -212,48 +191,48 @@ const ReportsPage = () => {
       ],
     },
     {
-      title: "Customer Reports",
+      title: "Buyer Reports",
       color: "green",
       icon: Contact,
       reports: [
         {
           id: "customer-report",
-          label: "Customer Report",
+          label: "Buyer Report",
           icon: Users,
           path: getDynamicPortalPath("/admin/reports/customer-report"),
           permission: "reports:customer:customer_report"
         },
         {
           id: "ledger",
-          label: "Customer Invoice Report",
+          label: "Buyer Invoice Report",
           icon: CreditCard,
           path: getDynamicPortalPath("/admin/reports/customer-invoice-report"),
           permission: "reports:customer:customer_ledger"
         },
         {
           id: "customer-stmt",
-          label: "Customer Statement",
+          label: "Buyer Statement",
           icon: ClipboardList,
           path: getDynamicPortalPath("/admin/reports/customer-statement"),
           permission: "reports:customer:customer_statement"
         },
         {
           id: "customer-credit-report",
-          label: "Customer Credit Report",
+          label: "Buyer Credit Report",
           icon: CreditCard,
           path: getDynamicPortalPath("/admin/reports/customer-credit-report"),
           permission: "reports:customer:customer_credit_report"
         },
         {
           id: "valuable-customer-report",
-          label: "Valuable Customer",
+          label: "Valuable Buyer",
           icon: Trophy,
           path: getDynamicPortalPath("/admin/reports/valuable-customer-report"),
           permission: "reports:customer:valuable_customer_report"
         },
         {
           id: "regular-customer-report",
-          label: "Regular Customer",
+          label: "Regular Buyer",
           icon: Repeat2,
           path: getDynamicPortalPath("/admin/reports/regular-customer-report"),
           permission: "reports:customer:regular_customer_report"

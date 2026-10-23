@@ -24,14 +24,14 @@ const CRMPage = () => {
   const tabs = [
     {
       id: "customers",
-      label: "CRM",
+      label: "Buyer",
       icon: Users,
       path: getDynamicPortalPath("/admin/crm/customers"),
       permission: "crm:customers:view",
     },
     {
       id: "groups",
-      label: "Customer Group",
+      label: "Buyer Group",
       icon: UsersRound,
       path: getDynamicPortalPath("/admin/crm/groups"),
       permission: "crm:customer_group:view",
@@ -87,7 +87,7 @@ const CRMPage = () => {
         {/* Reports Navigation Button */}
         {hasPermission("reports:customer:customer_report") && (
           <button
-            onClick={() => navigate(getDynamicPortalPath("/admin/reports"), { state: { targetSection: 'Customer Reports' } })}
+            onClick={() => navigate(getDynamicPortalPath("/admin/reports"), { state: { targetSection: 'Buyer Reports' } })}
             className="ml-auto flex shrink-0 items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap text-brand-primary dark:text-blue-400 bg-brand-primary/10 hover:bg-brand-primary/20"
           >
             <BarChart3 size={16} strokeWidth={2.5} />

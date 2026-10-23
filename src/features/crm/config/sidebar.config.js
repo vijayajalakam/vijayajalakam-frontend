@@ -1,7 +1,7 @@
 import { Users } from "lucide-react";
 
 export const crmSidebarConfig = {
-  label: "CRM",
+  label: "Buyer",
   path: "/admin/crm",
   icon: Users,
   roles: ["admin", "staff", "SHOP_ADMIN"],

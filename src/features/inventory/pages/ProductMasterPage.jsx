@@ -413,7 +413,7 @@ const ProductMasterPage = () => {
     if (!newCategoryName.trim()) return;
     try {
       setIsSubmittingCategory(true);
-      await createCategory({ name: newCategoryName, type: newCategoryType }).unwrap();
+      await createCategory({ name: newCategoryName, type: "product" }).unwrap();
       showSnack("Category created successfully", "success");
       setNewCategoryName("");
       setIsAddCategoryOpen(false);
@@ -1353,21 +1353,6 @@ const ProductMasterPage = () => {
         footer={<div className="flex gap-3"><button type="button" onClick={() => setIsAddCategoryOpen(false)} className="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-dark-card text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-dark-border transition-colors">Cancel</button><button onClick={handleAddNewCategory} disabled={isSubmittingCategory} className={`flex-1 px-4 py-2.5 text-white font-medium rounded-lg transition-colors ${isSubmittingCategory ? "bg-gray-400 cursor-not-allowed" : "bg-brand-primary hover:bg-brand-secondary"}`}>{isSubmittingCategory ? "Saving..." : "Create"}</button></div>}>
         <form onSubmit={handleAddNewCategory} className="py-4 space-y-4">
           <CustomTextField label="Category Name" placeholder="e.g. Hair Care, Skin Care" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} required autoFocus />
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              Category Type
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <input type="radio" checked={newCategoryType === "service"} onChange={() => setNewCategoryType("service")} className="w-4 h-4 text-brand-primary dark:text-blue-400 border-gray-300 dark:border-dark-border focus:ring-brand-primary" />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Service</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <input type="radio" checked={newCategoryType === "product"} onChange={() => setNewCategoryType("product")} className="w-4 h-4 text-brand-primary dark:text-blue-400 border-gray-300 dark:border-dark-border focus:ring-brand-primary" />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Product</span>
-              </label>
-            </div>
-          </div>
         </form>
       </Modal>
 

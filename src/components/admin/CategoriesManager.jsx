@@ -32,20 +32,16 @@ const CategoriesManager = () => {
   const [updateProductCategory] = useUpdateProductCategoryMutation();
   const [deleteProductCategory] = useDeleteProductCategoryMutation();
 
-  const loading = loadingSvc || loadingProd;
+  const loading = loadingProd;
 
   const categories = useMemo(() => {
-    const all = [
-      ...svcCats.map((c) => ({ ...c, type: "service" })),
-      ...prodCats.map((c) => ({ ...c, type: "product" })),
-    ];
+    const all = [...prodCats.map((c) => ({ ...c, type: "product" }))];
     all.sort((a, b) => a.name.localeCompare(b.name));
     return all;
-  }, [svcCats, prodCats]);
+  }, [prodCats]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCat, setCurrentCat] = useState(null);
   const [name, setName] = useState("");
-  const [categoryType, setCategoryType] = useState("service");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -57,11 +53,9 @@ const CategoriesManager = () => {
     if (cat) {
       setCurrentCat(cat);
       setName(cat.name);
-      setCategoryType(cat.type);
     } else {
       setCurrentCat(null);
       setName("");
-      setCategoryType("service");
     }
     setIsModalOpen(true);
   };
@@ -73,19 +67,10 @@ const CategoriesManager = () => {
     try {
       const payload = { name };
       if (currentCat) {
-        if (currentCat.type === "service") {
-          await updateServiceCategory({
-            id: currentCat._id,
-            body: payload,
-          }).unwrap();
-        } else {
-          await updateProductCategory({
-            id: currentCat._id,
-            body: payload,
-          }).unwrap();
-        }
-      } else if (categoryType === "service") {
-        await createServiceCategory(payload).unwrap();
+        await updateProductCategory({
+          id: currentCat._id,
+          body: payload,
+        }).unwrap();
       } else {
         await createProductCategory(payload).unwrap();
       }
@@ -98,11 +83,7 @@ const CategoriesManager = () => {
   const handleDelete = async () => {
     if (!categoryToDelete) return;
     try {
-      if (categoryToDelete.type === "service") {
-        await deleteServiceCategory(categoryToDelete._id).unwrap();
-      } else {
-        await deleteProductCategory(categoryToDelete._id).unwrap();
-      }
+      await deleteProductCategory(categoryToDelete._id).unwrap();
       setIsDeleteModalOpen(false);
       setCategoryToDelete(null);
     } catch (err) {
@@ -277,42 +258,6 @@ const CategoriesManager = () => {
             required
             autoFocus
           />
-
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              Category Type
-            </label>
-            <div className="flex gap-4">
-              <label
-                className={`flex items-center gap-2 ${currentCat ? "cursor-not-allowed opacity-60" : "cursor-pointer group"}`}
-              >
-                <input
-                  type="radio"
-                  checked={categoryType === "service"}
-                  onChange={() => !currentCat && setCategoryType("service")}
-                  disabled={!!currentCat}
-                  className="w-4 h-4 text-brand-primary dark:text-blue-400 border-gray-300 dark:border-dark-border focus:ring-brand-primary"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Service
-                </span>
-              </label>
-              <label
-                className={`flex items-center gap-2 ${currentCat ? "cursor-not-allowed opacity-60" : "cursor-pointer group"}`}
-              >
-                <input
-                  type="radio"
-                  checked={categoryType === "product"}
-                  onChange={() => !currentCat && setCategoryType("product")}
-                  disabled={!!currentCat}
-                  className="w-4 h-4 text-brand-primary dark:text-blue-400 border-gray-300 dark:border-dark-border focus:ring-brand-primary"
-                />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Product
-                </span>
-              </label>
-            </div>
-          </div>
         </form>
       </Modal>
 

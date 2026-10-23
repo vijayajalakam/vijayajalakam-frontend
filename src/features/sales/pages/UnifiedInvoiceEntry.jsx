@@ -1269,7 +1269,7 @@ const UnifiedInvoiceEntry = () => {
   });
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState(canSeeServices ? "services" : "products");
+  const [activeTab, setActiveTab] = useState("products");
 
   // Service Data
   const [services, setServices] = useState([]);
@@ -1660,9 +1660,8 @@ const UnifiedInvoiceEntry = () => {
       if (data.taxes) setTaxes(data.taxes);
       if (data.settings) {
         setShopSettings(data.settings);
-        // Default activeTab based on settings if current is disabled
-        if (!data.settings.showServices && activeTab === "services") setActiveTab("products");
-        if (!data.settings.showProducts && activeTab === "products") setActiveTab("services");
+        // Always keep products active for invoice
+        setActiveTab("products");
       }
 
       if (data.branches?.length > 0 && !selectedShopId) {
@@ -2283,7 +2282,8 @@ const UnifiedInvoiceEntry = () => {
       )
         return false;
       if (showOnlyProductFavourites && !product.isFavourite) return false;
-      if (activeProdCat && activeProdCat !== "" && activeProdCat !== "ALL" && product.category !== activeProdCat)
+      const prodCatName = product.category?.name || (typeof product.category === 'string' ? product.category : "");
+      if (activeProdCat && activeProdCat !== "" && activeProdCat !== "ALL" && prodCatName !== activeProdCat)
         return false;
       if (product.isSale === false) return false;
       return true;
@@ -3607,22 +3607,7 @@ const UnifiedInvoiceEntry = () => {
         >
           {/* Top Header */}
           <div className={`bg-white dark:bg-dark-surface p-3 shrink-0 space-y-2 ${viewMode === 'list' ? '' : 'border-b border-gray-100 dark:border-dark-border'}`}>
-            {/* Mobile: Departments on top */}
-            {activeTab === "services" && departments.length > 0 && (
-              <div ref={topMobileScrollRef} className="flex items-center gap-1 overflow-x-auto scrollbar-hide md:hidden">
-                {departments.map((dept) => (
-                  <button
-                    key={dept._id}
-                    onClick={() => setActiveDept(dept.name)}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeDept === dept.name ? "bg-brand-primary text-white border-brand-primary" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                  >
-                    {dept.name}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Search + Fav + Desktop Departments */}
+            {/* Search + Fav */}
             <div className="flex items-center gap-3">
               <div className="relative flex-1">
                 <SearchIcon
@@ -3631,65 +3616,27 @@ const UnifiedInvoiceEntry = () => {
                 />
                 <input
                   type="text"
-                  placeholder={
-                    activeTab === "services"
-                      ? "Search services..."
-                      : "Search products..."
-                  }
+                  placeholder="Search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-white dark:bg-dark-surface rounded-xl pl-9 pr-4 py-2 text-[12px] font-bold text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-dark-border focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-gray-300 dark:placeholder:text-gray-500"
                 />
               </div>
-              {activeTab === "services" && (
-                <button
-                  onClick={() => setShowOnlyFavourites(!showOnlyFavourites)}
-                  className={`p-2 rounded-xl transition-all border ${showOnlyFavourites ? "bg-red-50 text-red-500 border-red-100 shadow-sm" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                  title={
-                    showOnlyFavourites
-                      ? "Show all services"
-                      : "Show favourite services"
-                  }
-                >
-                  <Heart
-                    size={16}
-                    fill={showOnlyFavourites ? "currentColor" : "none"}
-                  />
-                </button>
-              )}
 
-              {activeTab === "products" && (
-                <button
-                  onClick={() => setShowOnlyProductFavourites(!showOnlyProductFavourites)}
-                  className={`p-2 rounded-xl transition-all border ${showOnlyProductFavourites ? "bg-red-50 text-red-500 border-red-100 shadow-sm" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                  title={
-                    showOnlyProductFavourites
-                      ? "Show all products"
-                      : "Show favourite products"
-                  }
-                >
-                  <Heart
-                    size={16}
-                    fill={showOnlyProductFavourites ? "currentColor" : "none"}
-                  />
-                </button>
-              )}
-
-              {(activeTab === "services" || activeTab === "products") && (activeTab === "services" ? shopSettings.showServices : shopSettings.showProducts) && (
-                <button
-                  onClick={() => {
-                    setBookingData({
-                      date: moment().format("YYYY-MM-DD"),
-                      time: "",
-                    });
-                    setIsBookingModalOpen(true);
-                  }}
-                  className="p-2 rounded-xl transition-all border bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-brand-primary dark:text-blue-400"
-                  title={activeTab === "services" ? "Book Appointment" : "Book Order"}
-                >
-                  <Calendar size={16} />
-                </button>
-              )}
+              <button
+                onClick={() => setShowOnlyProductFavourites(!showOnlyProductFavourites)}
+                className={`p-2 rounded-xl transition-all border ${showOnlyProductFavourites ? "bg-red-50 text-red-500 border-red-100 shadow-sm" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
+                title={
+                  showOnlyProductFavourites
+                    ? "Show all products"
+                    : "Show favourite products"
+                }
+              >
+                <Heart
+                  size={16}
+                  fill={showOnlyProductFavourites ? "currentColor" : "none"}
+                />
+              </button>
 
               {/* View Toggle */}
               <div className="relative">
@@ -3726,63 +3673,25 @@ const UnifiedInvoiceEntry = () => {
                   </>
                 )}
               </div>
-
-              {/* Desktop only: Departments inline */}
-              {activeTab === "services" && departments.length > 0 && (
-                <div className="hidden md:flex items-center gap-1">
-                  <div className="w-px h-7 bg-gray-200 dark:bg-dark-border mx-2 shrink-0" />
-                  {departments.map((dept) => (
-                    <button
-                      key={dept._id}
-                      onClick={() => setActiveDept(dept.name)}
-                      className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeDept === dept.name ? "bg-brand-primary text-white border-brand-primary" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                    >
-                      {dept.name}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
-            {/* Mobile: Categories below search bar */}
+            {/* Mobile: Product Categories below search bar */}
             <div ref={midMobileScrollRef} className="flex items-center gap-1 overflow-x-auto scrollbar-hide md:hidden">
-              {activeTab === "services" ? (
-                <>
-                  <button
-                    onClick={() => setActiveSvcCat("ALL")}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeSvcCat === "ALL" ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                  >
-                    ALL
-                  </button>
-                  {serviceCategories.map((cat) => (
-                    <button
-                      key={cat._id}
-                      onClick={() => setActiveSvcCat(cat.name)}
-                      className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeSvcCat === cat.name ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setActiveProdCat("ALL")}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === "ALL" ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                  >
-                    ALL
-                  </button>
-                  {productCategories.map((cat) => (
-                    <button
-                      key={cat._id}
-                      onClick={() => setActiveProdCat(cat.name)}
-                      className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === cat.name ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
-                </>
-              )}
+              <button
+                onClick={() => setActiveProdCat("ALL")}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === "ALL" ? "bg-brand-primary text-white border-brand-primary" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
+              >
+                ALL
+              </button>
+              {productCategories.map((cat) => (
+                <button
+                  key={cat._id}
+                  onClick={() => setActiveProdCat(cat.name)}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === cat.name ? "bg-brand-primary text-white border-brand-primary" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
+                >
+                  {cat.name}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -3796,36 +3705,7 @@ const UnifiedInvoiceEntry = () => {
               }
             }}
           >
-            {activeTab === "services" ? (
-              loading || isMetadataLoading ? (
-                viewMode === "list" ? <InvoiceListSkeleton count={8} /> : <ServicesSkeleton count={12} />
-              ) : filteredServices.length > 0 ? (
-                <div className={`${viewMode === 'list' ? 'flex flex-col bg-white dark:bg-dark-surface border-y border-gray-100 dark:border-dark-border mb-4' : 'grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(150px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 md:gap-4 pb-4'}`}>
-                  {filteredServices.slice(0, displayedItemsCount).map((service) => {
-                    const currentDeptId = departments?.find((d) => d.name === activeDept)?._id;
-                    return (
-                      <ServiceCard
-                        key={service._id}
-                        service={service}
-                        cart={cart}
-                        displayPrice={getServicePrice(service)}
-                        offerInfo={getOfferInfo(service, getServicePrice(service), "service", currentDeptId)}
-                        onAdd={stableAddService}
-                        onUpdateQty={updateQty}
-                        onRemove={removeFromCart}
-                        cardStyle={invoiceServiceCardView}
-                        viewMode={viewMode}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 opacity-60">
-                  <SearchIcon size={48} className="mb-4" />
-                  <p>No services found</p>
-                </div>
-              )
-            ) : loading || isMetadataLoading ? (
+            {loading || isMetadataLoading ? (
               viewMode === "list" ? <InvoiceListSkeleton count={8} /> : <ServicesSkeleton count={12} />
             ) : filteredProducts.length > 0 ? (
               <div className={`${viewMode === 'list' ? 'flex flex-col bg-white dark:bg-dark-surface border-y border-gray-100 dark:border-dark-border mb-4' : 'grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(150px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 md:gap-4 pb-4'}`}>
@@ -3849,85 +3729,31 @@ const UnifiedInvoiceEntry = () => {
                 })}
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 opacity-50">
+              <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 opacity-50 py-16">
                 <Package size={48} className="mb-4" />
                 <p>No products found in inventory</p>
               </div>
             )}
           </div>
 
-          {/* Desktop: Bottom Filter Card - Single Row */}
+          {/* Desktop: Bottom Filter Card - Product Categories */}
           <div className="hidden md:block sticky bottom-0 left-0 right-0 z-30 bg-white dark:bg-dark-surface border-t border-gray-100 dark:border-dark-border shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-3 py-2.5 max-lg:pb-5">
-            <div ref={bottomDesktopLeftScrollRef} className="flex items-center gap-0 overflow-x-auto scrollbar-hide">
-              {/* Services / Products Toggle */}
-              {(shopSettings.showServices && canSeeServices) && (shopSettings.showProducts && canSeeProducts) && (
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => {
-                      setActiveTab("services");
-                      setSearchQuery("");
-                    }}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeTab === "services" ? "bg-brand-primary text-white border-brand-primary shadow-sm" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-500 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-700 dark:text-gray-300"}`}
-                  >
-                    <FileText size={12} /> Services
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActiveTab("products");
-                      setSearchQuery("");
-                    }}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeTab === "products" ? "bg-brand-primary text-white border-brand-primary shadow-sm" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-500 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-700 dark:text-gray-300"}`}
-                  >
-                    <Package size={12} /> Products
-                  </button>
-                </div>
-              )}
-
-              {/* Vertical Divider - Only show if both are enabled and user has permissions */}
-              {(shopSettings.showServices && canSeeServices) && (shopSettings.showProducts && canSeeProducts) && (
-                <div className="w-px h-7 bg-gray-200 dark:bg-dark-border mx-2.5 shrink-0" />
-              )}
-
-              {/* Categories */}
-              <div ref={bottomDesktopRightScrollRef} className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
-                {activeTab === "services" ? (
-                  <>
-                    <button
-                      onClick={() => setActiveSvcCat("ALL")}
-                      className={`px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeSvcCat === "ALL" ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                    >
-                      ALL
-                    </button>
-                    {serviceCategories.map((cat) => (
-                      <button
-                        key={cat._id}
-                        onClick={() => setActiveSvcCat(cat.name)}
-                        className={`px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeSvcCat === cat.name ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                      >
-                        {cat.name}
-                      </button>
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => setActiveProdCat("ALL")}
-                      className={`px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === "ALL" ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                    >
-                      ALL
-                    </button>
-                    {productCategories.map((cat) => (
-                      <button
-                        key={cat._id}
-                        onClick={() => setActiveProdCat(cat.name)}
-                        className={`px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === cat.name ? "bg-brand-primary/10 text-brand-primary border-brand-primary/20" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-600 dark:text-gray-400"}`}
-                      >
-                        {cat.name}
-                      </button>
-                    ))}
-                  </>
-                )}
-              </div>
+            <div ref={bottomDesktopRightScrollRef} className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
+              <button
+                onClick={() => setActiveProdCat("ALL")}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === "ALL" ? "bg-brand-primary text-white border-brand-primary shadow-sm" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-500 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-700 dark:text-gray-300"}`}
+              >
+                ALL
+              </button>
+              {productCategories.map((cat) => (
+                <button
+                  key={cat._id}
+                  onClick={() => setActiveProdCat(cat.name)}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border ${activeProdCat === cat.name ? "bg-brand-primary text-white border-brand-primary shadow-sm" : "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-500 hover:bg-gray-50 dark:hover:bg-dark-card hover:text-gray-700 dark:text-gray-300"}`}
+                >
+                  {cat.name}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -3949,93 +3775,33 @@ const UnifiedInvoiceEntry = () => {
               <div
                 className={`md:hidden fixed z-[46] right-3 ${cart.length > 0 ? "bottom-[13.5rem]" : "bottom-[5.5rem]"} w-56 bg-white dark:bg-dark-surface rounded-xl shadow-2xl border border-gray-100 dark:border-dark-border p-3 space-y-3`}
               >
-                {/* Services / Products */}
-                {(shopSettings.showServices && canSeeServices) && (shopSettings.showProducts && canSeeProducts) && (
-                  <div className="space-y-1.5">
-                    <span className="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
-                      Type
-                    </span>
-                    <button
-                      onClick={() => {
-                        setActiveTab("services");
-                        setSearchQuery("");
-                      }}
-                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === "services" ? "bg-brand-primary text-white" : "bg-gray-50 dark:bg-dark-card text-gray-500 dark:text-gray-400"}`}
-                    >
-                      <FileText size={13} /> Services
-                    </button>
-                    <button
-                      onClick={() => {
-                        setActiveTab("products");
-                        setSearchQuery("");
-                      }}
-                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeTab === "products" ? "bg-brand-primary text-white" : "bg-gray-50 dark:bg-dark-card text-gray-500 dark:text-gray-400"}`}
-                    >
-                      <Package size={13} /> Products
-                    </button>
-                  </div>
-                )}
-
-
-                {(shopSettings.showServices && canSeeServices) && (shopSettings.showProducts && canSeeProducts) && (
-                  <div className="h-px bg-gray-100 dark:bg-dark-border" />
-                )}
-
-                {/* Categories */}
+                {/* Product Categories */}
                 <div className="space-y-1.5">
                   <span className="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
-                    Category
+                    Product Category
                   </span>
                   <div className="flex flex-col gap-1 max-h-48 overflow-y-auto scrollbar-hide">
-                    {activeTab === "services" ? (
-                      <>
-                        <button
-                          onClick={() => {
-                            setActiveSvcCat("ALL");
-                            setShowFilterPopup(false);
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeSvcCat === "ALL" ? "bg-brand-primary/10 text-brand-primary dark:text-blue-400" : "bg-gray-50 dark:bg-dark-card text-gray-400"}`}
-                        >
-                          ALL
-                        </button>
-                        {serviceCategories.map((cat) => (
-                          <button
-                            key={cat._id}
-                            onClick={() => {
-                              setActiveSvcCat(cat.name);
-                              setShowFilterPopup(false);
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeSvcCat === cat.name ? "bg-brand-primary/10 text-brand-primary dark:text-blue-400" : "bg-gray-50 dark:bg-dark-card text-gray-400"}`}
-                          >
-                            {cat.name}
-                          </button>
-                        ))}
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => {
-                            setActiveProdCat("ALL");
-                            setShowFilterPopup(false);
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeProdCat === "ALL" ? "bg-brand-primary/10 text-brand-primary dark:text-blue-400" : "bg-gray-50 dark:bg-dark-card text-gray-400"}`}
-                        >
-                          ALL
-                        </button>
-                        {productCategories.map((cat) => (
-                          <button
-                            key={cat._id}
-                            onClick={() => {
-                              setActiveProdCat(cat.name);
-                              setShowFilterPopup(false);
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeProdCat === cat.name ? "bg-brand-primary/10 text-brand-primary dark:text-blue-400" : "bg-gray-50 dark:bg-dark-card text-gray-400"}`}
-                          >
-                            {cat.name}
-                          </button>
-                        ))}
-                      </>
-                    )}
+                    <button
+                      onClick={() => {
+                        setActiveProdCat("ALL");
+                        setShowFilterPopup(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeProdCat === "ALL" ? "bg-brand-primary/10 text-brand-primary dark:text-blue-400" : "bg-gray-50 dark:bg-dark-card text-gray-400"}`}
+                    >
+                      ALL
+                    </button>
+                    {productCategories.map((cat) => (
+                      <button
+                        key={cat._id}
+                        onClick={() => {
+                          setActiveProdCat(cat.name);
+                          setShowFilterPopup(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${activeProdCat === cat.name ? "bg-brand-primary/10 text-brand-primary dark:text-blue-400" : "bg-gray-50 dark:bg-dark-card text-gray-400"}`}
+                      >
+                        {cat.name}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
