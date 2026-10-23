@@ -5,7 +5,7 @@ export const appointmentsSidebarConfig = [
     label: "HRM",
     path: "/admin/hrm",
     icon: UserCog,
-    roles: ["admin", "SHOP_ADMIN"],
+    roles: ["admin", "SHOP_ADMIN", "staff"],
     permission: "hrm",
   },
 ];

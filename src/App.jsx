@@ -229,6 +229,30 @@ function App() {
                       <Route path="staff" element={<StaffManager />} />
                       <Route path="attendance" element={<AttendanceManager />} />
                       <Route path="payroll" element={<PayrollPage />} />
+                      <Route
+                        path="security"
+                        element={
+                          <ProtectedRoute requiredPermission="settings:more:privileges:view">
+                            <PrivilegeManagement />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="security/new"
+                        element={
+                          <ProtectedRoute requiredPermission="settings:more:privileges:add">
+                            <PrivilegeForm />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="security/edit/:id"
+                        element={
+                          <ProtectedRoute requiredPermission="settings:more:privileges:edit">
+                            <PrivilegeForm />
+                          </ProtectedRoute>
+                        }
+                      />
                     </Route>
                   </Route>
                   <Route

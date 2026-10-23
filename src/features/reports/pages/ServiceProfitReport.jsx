@@ -254,25 +254,6 @@ const ServiceProfitReport = () => {
         onRefresh={fetchReport}
         isRefreshing={loading}
         onExport={hasPermission("reports:sales:service_profit_report:export") ? handleExport : undefined}
-        extraFilters={
-          branches.length > 0 ? (
-            <div className="w-48 md:w-56 shrink-0">
-              <CustomDropdown
-                value={selectedBranch}
-                onChange={(e) => setSelectedBranch(e.target.value)}
-                options={[
-                  { value: "", label: "All Branches" },
-                  ...branches.map((b) => ({
-                    value: b._id,
-                    label: `${b.name}${b.mapAddress || b.address ? ` - ${b.mapAddress || b.address}` : ""}`
-                  }))
-                ]}
-                variant="compact"
-                buttonClassName="h-9 text-[11px] font-bold border border-gray-100 dark:border-dark-border rounded-xl px-3 bg-white dark:bg-dark-card text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5 transition-all w-full flex items-center justify-between"
-              />
-            </div>
-          ) : null
-        }
         pagination={{ ...pagination, onPageChange }}
         searchQuery={searchTerm}
         onSearchChange={setSearchTerm}

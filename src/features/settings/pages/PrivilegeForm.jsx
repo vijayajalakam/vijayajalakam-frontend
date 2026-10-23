@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Shield,
   Check,
@@ -125,8 +125,13 @@ function filterCatalogForShop(groups, unrestricted, allowedList) {
 }
 
 const PrivilegeForm = () => {
-  const { id, shopSlug, portalRole } = useParams();
+  const { id, portalRole } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHrmSecurity = location.pathname.includes("/hrm/security");
+  const returnPath = isHrmSecurity
+    ? `/${portalRole || "admin"}/hrm/security`
+    : `/${portalRole || "admin"}/settings/more/privileges`;
   const isEditing = !!id;
   const shopPermLoaded = useRef(false);
   const scrollContainerRef = useRef(null);
@@ -263,7 +268,7 @@ const PrivilegeForm = () => {
       if (isEditing) await api.put(`/privileges/${id}`, payload);
       else await api.post("/privileges", payload);
       showSnack("Saved successfully", "success");
-      setTimeout(() => navigate(`/${shopSlug}/${portalRole}/settings/more/privileges`), 800);
+      setTimeout(() => navigate(returnPath), 800);
     } catch (err) { showSnack(err.response?.data?.message || "Failed to save", "error"); }
     finally { setSubmitting(false); }
   };
@@ -338,7 +343,7 @@ const PrivilegeForm = () => {
         <div className="h-[56px] md:h-[64px] flex items-center justify-between px-4 md:px-8">
           <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
              <button
-                onClick={() => navigate(`/${shopSlug}/${portalRole}/settings/more/privileges`)}
+                onClick={() => navigate(returnPath)}
                 className="text-gray-400 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-300 transition-colors shrink-0"
               >
                 <ArrowLeft size={20} />
@@ -350,7 +355,7 @@ const PrivilegeForm = () => {
           
           <div className="hidden md:flex items-center gap-3 shrink-0">
              <button
-                onClick={() => navigate(`/${shopSlug}/${portalRole}/settings/more/privileges`)}
+                onClick={() => navigate(returnPath)}
                 className="px-5 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
              >
                 Discard

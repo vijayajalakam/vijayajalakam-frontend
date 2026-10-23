@@ -551,11 +551,11 @@ const StaffManager = () => {
       color: "bg-emerald-50 text-emerald-600",
     },
     {
-      label: "Branches Active",
-      value: shopsCovered,
-      icon: Store,
+      label: "Active Staff",
+      value: staff?.filter((s) => s.isActive !== false).length || 0,
+      icon: Users,
       color: "bg-amber-50 text-amber-600",
-    }, // Replaced avg rating
+    },
     {
       label: "Services Offered",
       value: servicesOffered,
@@ -611,16 +611,6 @@ const StaffManager = () => {
               {s.employeeId}
             </p>
           )}
-          <div className="flex flex-col">
-            <p className="text-[10px] font-bold text-brand-primary dark:text-blue-400 uppercase tracking-widest opacity-80 mt-1">
-              {s.branchId?.name || s.shop?.name || "Main Branch"}
-            </p>
-            {(s.branchId?.address || s.shop?.address) && (
-              <p className="text-[9px] text-gray-400 dark:text-gray-500 font-medium truncate max-w-[180px]">
-                {s.branchId?.address || s.shop.address}
-              </p>
-            )}
-          </div>
         </div>
       ),
     },
@@ -852,89 +842,7 @@ const StaffManager = () => {
               )}
               </div>
             }
-            extraFilters={
-              <div className="relative">
-                <button
-                  onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className={`h-10 px-2.5 md:px-4 flex items-center justify-center gap-2 rounded-xl transition-all border text-xs font-bold shrink-0 ${selectedShop || isFilterOpen ? "bg-brand-primary/5 border-brand-primary/20 text-brand-primary dark:text-blue-400" : "bg-white dark:bg-dark-surface border-gray-100 dark:border-dark-border text-gray-500 hover:bg-gray-50 dark:hover:bg-dark-card hover:border-brand-primary/10"}`}
-                >
-                  <Filter size={16} />
-                  <span className="hidden md:inline">
-                    {selectedShop
-                      ? shops.find((s) => s._id === selectedShop)?.name
-                      : "Branch Filter"}
-                  </span>
-                  {selectedShop && (
-                    <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-                  )}
-                </button>
-
-                <AnimatePresence>
-                  {isFilterOpen && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-20"
-                        onClick={() => setIsFilterOpen(false)}
-                      />
-                      <Motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                        className="absolute right-0 md:right-auto md:left-0 mt-3 w-64 bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-4 z-50 flex flex-col gap-3 shadow-xl shadow-blue-900/10"
-                      >
-                        <div className="flex items-center justify-between px-1">
-                          <span className="text-[10px] font-black text-gray-900 dark:text-white uppercase tracking-widest">
-                            Shop Filter
-                          </span>
-                          {selectedShop && (
-                            <button
-                              onClick={() => {
-                                setSelectedShop("");
-                                setIsFilterOpen(false);
-                              }}
-                              className="text-[10px] font-bold text-red-500 hover:text-red-600 uppercase"
-                            >
-                              Clear
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="space-y-1 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
-                          {shops
-                            .filter((shop) => {
-                              if (user?.role !== "staff") return true;
-                              const userBranchId =
-                                user?.branchId?._id || user?.branchId;
-                              return shop._id === userBranchId;
-                            })
-                            .map((shop) => (
-                              <button
-                                key={shop._id}
-                                onClick={() => {
-                                  setSelectedShop(shop._id);
-                                  setIsFilterOpen(false);
-                                }}
-                                className={`w-full text-left px-3 py-2 rounded-xl transition-all ${selectedShop === shop._id ? "bg-brand-primary text-white" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-card dark:bg-dark-card"}`}
-                              >
-                                <p className="text-xs font-bold leading-tight">
-                                  {shop.name}
-                                </p>
-                                {(shop.mapAddress || shop.address) && (
-                                  <p
-                                    className={`text-[9px] truncate ${selectedShop === shop._id ? "text-white/70" : "text-gray-400 dark:text-gray-500 font-medium"}`}
-                                  >
-                                    {shop.mapAddress || shop.address}
-                                  </p>
-                                )}
-                              </button>
-                            ))}
-                        </div>
-                      </Motion.div>
-                    </>
-                  )}
-                </AnimatePresence>
-              </div>
-            }
+            extraFilters={null}
             mobileMapper={{
               leading: (s) => (
                 <div className="w-12 h-12 rounded-xl bg-gray-50 dark:bg-dark-card overflow-hidden border border-gray-100 dark:border-dark-border flex-shrink-0">
@@ -1468,42 +1376,7 @@ const StaffManager = () => {
                         <h3 className="text-xs font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest">
                           Employment Details
                         </h3>
-                        <CustomDropdown
-                          label="Assign Branch"
-                          icon={Store}
-                          placeholder="Select a Branch (Optional)"
-                          value={newStaff.shop}
-                          onChange={(e) => {
-                            const branchId = e.target.value;
-                            const branchServices = services
-                              .filter((s) => {
-                                if (!branchId) return true;
-                                if (!s.branches || s.branches.length === 0) return true;
-                                return s.branches.some((b) => (b._id || b) === branchId);
-                              })
-                              .map((s) => s._id);
-                            setNewStaff({
-                              ...newStaff,
-                              shop: branchId,
-                              services: branchServices,
-                            });
-                          }}
-                          options={shops
-                            .filter((shop) => {
-                              if (user?.role !== "staff") return true;
-                              const userBranchId = user?.branchId?._id || user?.branchId;
-                              return shop._id === userBranchId;
-                            })
-                            .map((shop) => ({
-                              value: shop._id,
-                              label: shop.name,
-                              description: shop.mapAddress || shop.address,
-                            }))}
-                          isSearchable={user?.role !== "staff"}
-                          className={
-                            user?.role === "staff" && shops.length === 1 ? "hidden" : ""
-                          }
-                        />
+
 
                         <CustomMultiSelect
                           label="Assigned Services"

@@ -327,68 +327,6 @@ const BookingDisplayPage = () => {
 
             {/* right controls */}
             <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 sm:pb-0 shrink-0">
-              {/* branch filter (admin only) */}
-              {!isStaff && (
-                <div className="relative">
-                  <button
-                    onClick={() => setBranchOpen((p) => !p)}
-                    className="flex items-center gap-2 h-10 px-4 rounded-xl bg-gray-50/80 border border-gray-100 dark:border-dark-border text-[13px] font-bold text-gray-700 dark:text-gray-300 hover:border-brand-primary/40 hover:bg-white dark:bg-dark-surface transition-all shadow-sm shadow-transparent hover:shadow-gray-100"
-                  >
-                    <Store size={14} className="text-brand-primary dark:text-blue-400/80" />
-                    <span className="max-w-[120px] truncate">
-                      {activeBranchName}
-                    </span>
-                    <ChevronDown size={14} className="text-gray-400 dark:text-gray-500" />
-                  </button>
-                  {branchOpen && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-10"
-                        onClick={() => setBranchOpen(false)}
-                      />
-                      <div className="absolute right-0 top-12 z-20 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-2xl shadow-xl shadow-gray-200/50 min-w-[200px] p-2 overflow-hidden">
-                        <button
-                          onClick={() => {
-                            setSelectedBranch("all");
-                            setBranchOpen(false);
-                          }}
-                          className={`w-full text-left px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all ${
-                            selectedBranch === "all"
-                              ? "bg-brand-primary/10 text-brand-primary"
-                              : "text-gray-600 hover:bg-gray-50 dark:hover:bg-dark-card dark:bg-dark-card hover:text-gray-900 dark:text-white"
-                          }`}
-                        >
-                          All Branches
-                        </button>
-                        <div className="h-px bg-gray-100 dark:bg-dark-card my-1 mx-2" />
-                        {branches.map((b) => (
-                          <button
-                            key={b._id}
-                            onClick={() => {
-                              setSelectedBranch(b._id);
-                              setBranchOpen(false);
-                            }}
-                            className={`w-full text-left px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all ${
-                              selectedBranch === b._id
-                                ? "bg-brand-primary/10 text-brand-primary"
-                                : "text-gray-600 hover:bg-gray-50 dark:hover:bg-dark-card dark:bg-dark-card hover:text-gray-900 dark:text-white"
-                            }`}
-                          >
-                            <div className="flex flex-col">
-                              <span>{b.name}</span>
-                              {(b.mapAddress || b.address) && (
-                                <span className="text-[10px] text-gray-400 dark:text-gray-500 font-normal mt-0.5">
-                                  {b.mapAddress || b.address}
-                                </span>
-                              )}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
 
               {/* date controls */}
               <div className="flex items-center gap-2">

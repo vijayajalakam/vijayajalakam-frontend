@@ -189,10 +189,10 @@ const AdminProfile = () => {
   const isShopAdmin = isAdmin || authUser?.role === "SHOP_ADMIN";
   const canEditProfile =
     isShopAdmin || hasPermission("settings:profile:general:edit");
-  const canAddBranch = isAdmin;
+  const canAddBranch = false;
   const canEditBranch =
-    isShopAdmin || hasPermission("settings:profile:branches:edit");
-  const canDeleteBranch = isAdmin;
+    isShopAdmin || hasPermission("settings:profile:general:edit");
+  const canDeleteBranch = false;
 
   useEffect(() => {
     if (profileData) {
@@ -564,9 +564,9 @@ const AdminProfile = () => {
         </Section>
       </form>
 
-      {/* Branches Section */}
+      {/* Salon Location & Contact Section */}
       <Section
-        title="Branches"
+        title="Salon Location & Contact"
         icon={Store}
         delay={0.3}
         cols={0}

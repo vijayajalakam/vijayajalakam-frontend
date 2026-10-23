@@ -479,13 +479,14 @@ const ProductMasterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-    if (!form.branches || form.branches.length === 0) { showSnack("Branch selection is required", "error"); return; }
     try {
       setIsSubmitting(true);
+      const defaultBranchId = shops.length > 0 ? shops[0]._id : (user?.branchId?._id || user?.branchId || null);
+      const branchesToSave = (form.branches && form.branches.length > 0) ? form.branches : (defaultBranchId ? [defaultBranchId] : []);
       const formData = new FormData();
       Object.keys(form).forEach((key) => {
         if (key === "variants") formData.append(key, JSON.stringify(form.useVariants ? form.variants : []));
-        else if (key === "branches") formData.append(key, JSON.stringify(form.branches || []));
+        else if (key === "branches") formData.append(key, JSON.stringify(branchesToSave));
         else if (key === "useVariants") formData.append(key, form.useVariants === true);
         else formData.append(key, form[key]);
       });
@@ -802,26 +803,9 @@ const ProductMasterPage = () => {
                       <span className="text-brand-primary dark:text-blue-400 font-black notranslate">{currencySymbol}{formatDisplayNumber(finalPrice)}</span>
                     </div>
                   </div>
-               </div>
-
-               {r.branchStock && r.branchStock.length > 0 && (
-                   <div className="col-span-1 md:col-span-2 lg:col-span-2 p-4 bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)]">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4 block">Branch Allocation</span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                         {r.branchStock.map((b, i) => (
-                             <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-card/80 rounded-xl border border-gray-100 dark:border-dark-border/80">
-                                 <div className="flex flex-col mr-3 overflow-hidden">
-                                     <span className="text-xs font-bold text-gray-600 dark:text-gray-400 truncate">{b.branchId?.name || "Branch"}</span>
-                                     {(b.branchId?.mapAddress || b.branchId?.address) && <span className="text-[9px] font-medium text-gray-400 dark:text-gray-500 truncate">{b.branchId.mapAddress || b.branchId.address}</span>}
-                                 </div>
-                                 <span className="text-sm font-black text-gray-900 dark:text-white shrink-0">{b.currentStock} <span className="text-[10px] font-bold text-gray-400 uppercase">{r.unit}</span></span>
-                             </div>
-                         ))}
-                      </div>
-                   </div>
-               )}
-           </div>
-        ) : (
+                </div>
+            </div>
+         ) : (
            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x items-start">
                {r.variants.map((v, vIdx) => {
                   const vName = v.variantId?.name || availableVariants.find((av) => av._id === (v.variantId?._id || v.variantId))?.name || "Unnamed Variant";
@@ -888,24 +872,8 @@ const ProductMasterPage = () => {
                                   </div>
                               </div>
 
-                              {v.branchStock && v.branchStock.length > 0 && (
-                                  <div className="flex flex-col mt-2">
-                                      <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 px-1">Branch Matrix</span>
-                                      <div className="flex flex-col gap-1 max-h-[140px] overflow-y-auto pr-1">
-                                          {v.branchStock.map((b, i) => (
-                                              <div key={i} className="flex items-center justify-between py-2 px-2.5 bg-gray-50 dark:bg-dark-card/50 rounded-lg border border-gray-100 dark:border-dark-border/80 hover:bg-gray-50 dark:hover:bg-dark-card dark:bg-dark-card transition-colors">
-                                                  <div className="flex flex-col mr-2 overflow-hidden">
-                                                      <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 truncate">{b.branchId?.name || "Branch"}</span>
-                                                      {(b.branchId?.mapAddress || b.branchId?.address) && <span className="text-[8px] font-medium text-gray-400 dark:text-gray-500 truncate">{b.branchId.mapAddress || b.branchId.address}</span>}
-                                                  </div>
-                                                  <span className="text-[11px] font-black text-gray-800 dark:text-gray-100 shrink-0 bg-white dark:bg-dark-surface px-2 py-0.5 rounded shadow-sm border border-gray-100 dark:border-dark-border">{b.currentStock}</span>
-                                              </div>
-                                          ))}
-                                      </div>
-                                  </div>
-                              )}
-                          </div>
-                      </div>
+                           </div>
+                       </div>
                   );
                })}
            </div>
@@ -1169,12 +1137,7 @@ const ProductMasterPage = () => {
                   onChange={(e) => setForm({ ...form, sku: e.target.value })} onKeyDown={(e) => handleKeyDown(e, hsnRef)} placeholder="e.g. SHP-001" />
                 <CustomTextField ref={hsnRef} label="HSN Code" icon={Tag} type="text" value={form.hsnCode}
                   onChange={(e) => setForm({ ...form, hsnCode: e.target.value })} onKeyDown={(e) => handleKeyDown(e, purchasePriceRef)} placeholder="e.g. 3305" />
-                <div className="md:col-span-2">
-                  <CustomMultiSelect label={<>Assign Branches <span className="text-red-500">*</span></>} icon={Store} placeholder="Select Branches"
-                    value={form.branches} onChange={(e) => setForm({ ...form, branches: e.target.value })}
-                    options={shops.filter((s) => { if (user?.role === "staff") { const id = typeof user.branchId === "string" ? user.branchId : user.branchId?._id; return s._id === id; } return true; }).map((s) => ({ value: s._id, label: s.name, description: s.mapAddress ? ` ${s.mapAddress}` : undefined }))}
-                    isSearchable showSelectAll={user?.role !== "staff"} />
-                </div>
+
               </div>
 
               {/* Enable Variants toggle */}

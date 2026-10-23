@@ -1,6 +1,6 @@
 import {
-    LayoutDashboard, FileText, CalendarDays, UserCog, Users, 
-    Truck, Package, Landmark, BarChart3, Settings, MessageSquare, Eye, ConciergeBell, Clock, Bell
+    LayoutDashboard, FileText, UserCog, Users, 
+    Package, Landmark, BarChart3, Settings, MessageSquare, Eye, Clock, Bell
 } from 'lucide-react';
 
 export const AVAILABLE_PERMISSIONS = [
@@ -77,22 +77,7 @@ export const AVAILABLE_PERMISSIONS = [
             }
         ]
     },
-    {
-        key: 'bookings',
-        label: 'Bookings',
-        icon: CalendarDays,
-        description: 'Manage appointments and schedule',
-        modules: [
-            {
-                key: 'general',
-                label: 'Appointment Management',
-                actions: [
-                    { key: 'view', label: 'View Bookings' },
-                    { key: 'reassign', label: 'Reassign Bookings' }
-                ]
-            }
-        ]
-    },
+
     {
         key: 'crm',
         label: 'CRM',
@@ -131,59 +116,7 @@ export const AVAILABLE_PERMISSIONS = [
             }
         ]
     },
-    {
-        key: 'services',
-        label: 'Services',
-        icon: ConciergeBell,
-        description: 'Manage shop services and pricing',
-        modules: [
-            {
-                key: 'general',
-                label: 'Service Management',
-                actions: [
-                    { key: 'view', label: 'View Services' },
-                    { key: 'add', label: 'Add Service' },
-                    { key: 'edit', label: 'Edit Service' },
-                    { key: 'delete', label: 'Delete Service' },
-                    { key: 'status', label: 'Toggle Status' },
-                    { key: 'image', label: 'AI Image Generation' }
-                ]
-            },
-            {
-                key: 'slots',
-                label: 'Slots',
-                modules: [
-                    {
-                        key: 'general',
-                        label: 'Slot Configuration',
-                        actions: [
-                            { key: 'view', label: 'View Slots' },
-                            { key: 'edit_schedule', label: 'Edit Schedule' },
-                            { key: 'block_slots', label: 'Block Slots' }
-                        ]
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        key: 'srm',
-        label: 'SRM',
-        icon: Truck,
-        description: 'Supplier Relationship Management',
-        modules: [
-            {
-                key: 'suppliers',
-                label: 'Manage Suppliers',
-                actions: [
-                    { key: 'view', label: 'View Suppliers' },
-                    { key: 'add', label: 'Add Supplier' },
-                    { key: 'edit', label: 'Edit Supplier' },
-                    { key: 'delete', label: 'Delete Supplier' }
-                ]
-            }
-        ]
-    },
+
     {
         key: 'stock',
         label: 'Stock',
@@ -234,16 +167,7 @@ export const AVAILABLE_PERMISSIONS = [
                     { key: 'delete', label: 'Delete Return' }
                 ]
             },
-            {
-                key: 'stock_transfer',
-                label: 'Stock Transfer',
-                actions: [
-                    { key: 'view', label: 'View Transfers' },
-                    { key: 'add', label: 'New Transfer' },
-                    { key: 'edit', label: 'Edit Transfer' },
-                    { key: 'delete', label: 'Delete Transfer' }
-                ]
-            },
+
             {
                 key: 'damage_entry',
                 label: 'Damage Entry',
@@ -437,35 +361,7 @@ export const AVAILABLE_PERMISSIONS = [
                             { key: 'settle', label: 'Settle Payment' }
                         ]
                     },
-                    {
-                        key: 'cancellation_report',
-                        label: 'Booking Cancellation Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' },
-                            { key: 'cancel', label: 'Cancel' },
-                            { key: 'call', label: 'Call Client' }
-                        ]
-                    },
-                    {
-                        key: 'bookings_report',
-                        label: 'Bookings Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'edit', label: 'Edit Booking' },
-                            { key: 'cancel', label: 'Cancel Booking' },
-                            { key: 'call', label: 'Call Client' },
-                            { key: 'confirm', label: 'Confirm Booking' }
-                        ]
-                    },
-                    {
-                        key: 'appointment_analytics',
-                        label: 'Appointment Analytics Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' }
-                        ]
-                    },
+
                     {
                         key: 'trash_invoices',
                         label: 'Trash Invoices',
@@ -688,15 +584,7 @@ export const AVAILABLE_PERMISSIONS = [
                         label: 'Purchase Return Report',
                         actions: [ { key: 'view', label: 'View' }, { key: 'export', label: 'Export' } ]
                     },
-                    {
-                        key: 'stock_transfer_report',
-                        label: 'Stock Transfer Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' },
-                            { key: 'edit', label: 'Edit' }
-                        ]
-                    },
+
                     {
                         key: 'damage_report',
                         label: 'Damage Report',
@@ -807,16 +695,7 @@ export const AVAILABLE_PERMISSIONS = [
                             { key: 'edit', label: 'Edit Profile' }
                         ]
                     },
-                    {
-                        key: 'branches',
-                        label: 'Branch Management',
-                        actions: [
-                            { key: 'view', label: 'View Branches' },
-                            { key: 'add', label: 'Add Branch' },
-                            { key: 'edit', label: 'Edit Branch' },
-                            { key: 'delete', label: 'Delete Branch' }
-                        ]
-                    }
+
                 ]
             },
             {
@@ -885,13 +764,7 @@ export const AVAILABLE_PERMISSIONS = [
                             { key: 'edit', label: 'Edit Settings' }
                         ]
                     },
-                    {
-                        key: 'booking_display',
-                        label: 'Booking Display',
-                        actions: [
-                            { key: 'view', label: 'View Booking Display' }
-                        ]
-                    },
+
                     {
                         key: 'previews',
                         label: 'Previews',

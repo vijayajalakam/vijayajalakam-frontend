@@ -69,14 +69,6 @@ const StockPage = () => {
       permission: "stock:stock_adjustment:view",
     },
     {
-      id: "stock-transfer",
-      label: "Stock Transfer",
-      icon: Truck,
-      path: getDynamicPortalPath("/admin/stock/stock-transfer"),
-      reportPath: getDynamicPortalPath("/admin/reports/transfer-report"),
-      permission: "stock:stock_transfer:view",
-    },
-    {
       id: "damage-entry",
       label: "Damage Entry",
       icon: AlertTriangle,

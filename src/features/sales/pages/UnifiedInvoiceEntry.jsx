@@ -3008,8 +3008,6 @@ const UnifiedInvoiceEntry = () => {
 
   const handleCheckout = async () => {
     if (cart.length === 0) return showSnack("Cart Empty", "Cart is empty.", "warning");
-    if (branches.length > 1 && !selectedShopId)
-      return showSnack("Selection", "Please select a branch.", "warning");
 
     const walletPayment = payments.find((p) => p.method === "WALLET");
     // Wallet Payment Logic - No longer blocking, just ensuring customer is selected
@@ -4086,40 +4084,10 @@ const UnifiedInvoiceEntry = () => {
           </div>
 
           {/* Header & Selectors */}
-          <div ref={headerRef} className={`relative p-4 bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border flex gap-3 ${((isAdmin || isStaff) && (branches.length > 1 || isSuperAdmin) && salonConfig?.showGlobalStaffSelection !== false) ? "flex-col" : "flex-row items-center"}`}>
-            {(isAdmin || isStaff) && ((branches.length > 1 || isSuperAdmin) || salonConfig?.showGlobalStaffSelection !== false) && (
-              <div className={`flex gap-2 ${((isAdmin || isStaff) && (branches.length > 1 || isSuperAdmin) && salonConfig?.showGlobalStaffSelection !== false) ? "" : "w-[150px] shrink-0"}`}>
-                {(branches.length > 1 || isSuperAdmin) && (
-                  <div className="flex-1 min-w-0">
-                    <CustomDropdown
-                      variant="compact"
-                      icon={Store}
-                      value={selectedShopId}
-                      onChange={(e) => setSelectedShopId(e.target.value)}
-                      matchWidthRef={headerRef}
-                      matchWidthPadding={16}
-                      options={branches
-                        .filter((shop) => {
-                          if (user?.role === "staff") {
-                            const userBranchId =
-                              typeof user.branchId === "string"
-                                ? user.branchId
-                                : user.branchId?._id;
-                            return shop._id === userBranchId;
-                          }
-                          return true;
-                        })
-                        .map((shop) => ({
-                          value: shop._id,
-                          label: shop.name,
-                          description: shop.mapAddress || shop.address,
-                        }))}
-                      placeholder="Select Branch"
-                    />
-                  </div>
-                )}
-                {(isAdmin || isStaff) && salonConfig?.showGlobalStaffSelection !== false && (
-                  <div className="flex-1 min-w-0">
+          <div ref={headerRef} className="relative p-4 bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border flex items-center gap-3">
+            {(isAdmin || isStaff) && salonConfig?.showGlobalStaffSelection !== false && (
+              <div className="flex gap-2 w-full max-w-[200px]">
+                <div className="flex-1 min-w-0">
                     <CustomDropdown
                       variant="compact"
                       icon={Users}
@@ -4136,7 +4104,6 @@ const UnifiedInvoiceEntry = () => {
                       placeholder="Select Staff"
                     />
                   </div>
-                )}
               </div>
             )}
 
@@ -5340,8 +5307,8 @@ const UnifiedInvoiceEntry = () => {
               )}
             </div>
 
-            {/* Branch & Staff */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Staff Assignment */}
+            <div>
               <CustomDropdown
                 label="Assign Staff"
                 options={[
@@ -5353,25 +5320,6 @@ const UnifiedInvoiceEntry = () => {
                 value={selectedStaffId}
                 onChange={(e) => setSelectedStaffId(e.target.value)}
                 icon={Users}
-              />
-              <CustomDropdown
-                label="Branch"
-                options={branches.map((b) => ({
-                  label: (
-                    <div className="flex items-center justify-between w-full">
-                      <span>{b.name}</span>
-                      {(b.mapAddress || b.address) && (
-                        <span className="text-[10px] text-gray-400 dark:text-gray-500">
-                          {b.mapAddress || b.address}
-                        </span>
-                      )}
-                    </div>
-                  ),
-                  value: b._id,
-                }))}
-                value={selectedShopId}
-                onChange={(e) => setSelectedShopId(e.target.value)}
-                icon={Store}
               />
             </div>
           </div>

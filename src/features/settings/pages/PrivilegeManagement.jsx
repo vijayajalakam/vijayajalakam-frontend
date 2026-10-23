@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   Plus,
   Edit3,
@@ -20,7 +20,14 @@ import { TableSkeleton, ManagerCardSkeleton } from "../../../components/shared/S
 
 const PrivilegeManagement = () => {
   const navigate = useNavigate();
-  const { shopSlug, portalRole } = useParams();
+  const location = useLocation();
+  const { portalRole } = useParams();
+  const isHrmSecurity = location.pathname.includes("/hrm/security");
+  const getNavPath = (subPath) => {
+    const role = portalRole || "admin";
+    const base = isHrmSecurity ? `/${role}/hrm/security` : `/${role}/settings/more/privileges`;
+    return subPath ? `${base}/${subPath}` : base;
+  };
   const [privileges, setPrivileges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -139,11 +146,7 @@ const PrivilegeManagement = () => {
       render: (privilege) => (
         <div className="flex justify-end gap-1.5 pr-2">
           <button
-            onClick={() =>
-              navigate(
-                `/${shopSlug}/${portalRole}/settings/more/privileges/edit/${privilege._id}`,
-              )
-            }
+            onClick={() => navigate(getNavPath(`edit/${privilege._id}`))}
             className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-brand-primary dark:text-blue-400 hover:bg-brand-primary/5 rounded-xl transition-all active:scale-90"
             title="Edit Configuration"
           >
@@ -223,11 +226,7 @@ const PrivilegeManagement = () => {
                 {/* Actions */}
                 <div className="flex items-center gap-1 shrink-0">
                   <button
-                    onClick={() =>
-                      navigate(
-                        `/${shopSlug}/${portalRole}/settings/more/privileges/edit/${privilege._id}`,
-                      )
-                    }
+                    onClick={() => navigate(getNavPath(`edit/${privilege._id}`))}
                     className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-brand-primary dark:text-blue-400 hover:bg-brand-primary/5 rounded-xl transition-all active:scale-90"
                   >
                     <Edit3 size={16} />
@@ -320,7 +319,7 @@ const PrivilegeManagement = () => {
                  />
                </div>
                <button
-                 onClick={() => navigate(`/${shopSlug}/${portalRole}/settings/more/privileges/new`)}
+                 onClick={() => navigate(getNavPath("new"))}
                  className="shrink-0 h-10 px-4 md:px-5 bg-brand-primary text-white rounded-xl text-sm font-bold hover:bg-brand-primary/90 transition-all flex items-center gap-2"
                >
                  <span className="text-lg leading-none mb-[2px]">+</span>

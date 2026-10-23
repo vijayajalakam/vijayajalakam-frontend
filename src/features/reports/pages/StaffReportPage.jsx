@@ -192,7 +192,7 @@ const StaffReportPage = () => {
   return (
     <ReportLayout
       title="Staff Report"
-      subtitle="View and manage staff across branches"
+      subtitle="View and manage salon staff"
     >
       <ReportSummaryCard
         title="Staff Summary"

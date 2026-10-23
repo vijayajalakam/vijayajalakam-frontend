@@ -1,7 +1,6 @@
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import UserNavbar from '../../components/user/UserNavbar';
 import UserBottomNav from './UserBottomNav';
-import BranchSelector from '../../components/user/BranchSelector';
 import CartDrawer from '../../components/user/CartDrawer';
 import '../../styles/user-premium.css';
 import { useEffect } from 'react';
@@ -50,7 +49,6 @@ const UserLayout = () => {
 
     return (
         <div className="min-h-screen user-premium-body flex flex-col antialiased" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            <BranchSelector />
             {!hideTopNav && <UserNavbar />}
             <CartDrawer />
             

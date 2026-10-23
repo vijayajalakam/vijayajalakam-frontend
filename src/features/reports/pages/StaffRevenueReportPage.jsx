@@ -158,7 +158,7 @@ const StaffRevenueReportPage = () => {
       onFilterChange={setFilters}
       searchTerm={searchTerm}
       onSearchChange={setSearchTerm}
-      showBranchFilter={true}
+      showBranchFilter={false}
     >
       <div className="space-y-6">
         <ReportSummaryCard

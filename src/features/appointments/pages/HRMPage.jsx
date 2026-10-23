@@ -6,7 +6,7 @@ import {
   useParams,
   Navigate,
 } from "react-router-dom";
-import { Users, Clock, FileBarChart, Wallet } from "lucide-react";
+import { Users, Clock, FileBarChart, Wallet, Shield } from "lucide-react";
 import { useAuth } from "../../auth/hooks/useAuth";
 
 const HRMPage = () => {
@@ -44,6 +44,13 @@ const HRMPage = () => {
       path: getDynamicPortalPath("/admin/hrm/payroll"),
       reportPath: getDynamicPortalPath("/admin/reports/payroll-report"),
       permission: "hrm:payroll:view",
+    },
+    {
+      id: "security",
+      label: "Security",
+      icon: Shield,
+      path: getDynamicPortalPath("/admin/hrm/security"),
+      permission: "settings:more:privileges:view",
     },
   ];
 

@@ -329,13 +329,6 @@ const ReportsPage = () => {
           permission: "reports:stock:purchase_return_report"
         },
         {
-          id: "stock-transfer",
-          label: "Stock Transfer Report",
-          icon: Truck,
-          path: getDynamicPortalPath("/admin/reports/transfer-report"),
-          permission: "reports:stock:stock_transfer_report"
-        },
-        {
           id: "damage",
           label: "Damage Report",
           icon: AlertTriangle,

@@ -37,7 +37,6 @@ const InvoiceFilterModal = ({
       paymentMethod: [],
       services: [],
       products: [],
-      branches: [],
       staff: [],
       customers: [],
     },
@@ -65,7 +64,6 @@ const InvoiceFilterModal = ({
     { id: "services", label: "Services", icon: Scissors },
     { id: "products", label: "Products", icon: Package },
     { id: "staff", label: "Completed By", icon: User },
-    { id: "branches", label: "Branches", icon: Store },
     { id: "customers", label: "Customers", icon: User },
   ];
 
@@ -86,7 +84,6 @@ const InvoiceFilterModal = ({
       paymentMethod: [],
       services: [],
       products: [],
-      branches: [],
       staff: [],
       customers: [],
     });
@@ -216,7 +213,6 @@ const InvoiceFilterModal = ({
                 "payment",
                 "services",
                 "products",
-                "branches",
                 "staff",
               ].includes(activeTab) && (
                 <div className="grid grid-cols-1 gap-3">
@@ -231,9 +227,7 @@ const InvoiceFilterModal = ({
                       ? services
                       : activeTab === "products"
                         ? products
-                        : activeTab === "staff"
-                          ? staff
-                          : branches
+                        : staff
                   ).map((item) => {
                     const id = typeof item === "string" ? item : item._id;
                     const label = typeof item === "string" ? item : item.name;
