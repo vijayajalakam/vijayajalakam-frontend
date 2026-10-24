@@ -37,11 +37,11 @@ const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
     if (!active) return "";
     switch (sidebarStyle) {
       case "dark":
-        return "bg-white dark:bg-dark-surface/10 text-white shadow-lg";
+        return "bg-white text-brand-primary shadow-lg font-bold";
       case "glass":
         return "bg-brand-primary/10 text-brand-primary shadow-none border border-brand-primary/10";
       case "gradient":
-        return "bg-white dark:bg-dark-surface/20 text-white shadow-none";
+        return "bg-white/20 text-white shadow-none";
       case "solid":
         return "bg-brand-primary text-white shadow-md";
       case "navy":
@@ -69,7 +69,7 @@ const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
 
   const getIconClasses = (active) => {
     if (active) {
-      if (sidebarStyle === "dark" || sidebarStyle === "gradient" || sidebarStyle === "solid" || sidebarStyle === "navy") return "text-white";
+      if (sidebarStyle === "gradient" || sidebarStyle === "solid" || sidebarStyle === "navy") return "text-white";
       return "text-brand-primary";
     }
     switch (sidebarStyle) {

@@ -524,7 +524,7 @@ const SIDEBAR_STYLES = [
     description: "Deep dark theme with primary indicators",
     bg: "bg-[#0f172a]",
     text: "text-gray-400 dark:text-gray-500",
-    active: "bg-white dark:bg-dark-surface/10 text-white",
+    active: "bg-white text-brand-primary shadow-lg font-bold",
     border: "border-gray-800",
     indicator: true
   },
@@ -564,7 +564,7 @@ const SIDEBAR_STYLES = [
     description: "Vibrant gradient using brand colors",
     bg: "bg-gradient-to-b from-brand-primary to-brand-secondary",
     text: "text-white/70",
-    active: "bg-white dark:bg-dark-surface/20 text-white",
+    active: "bg-white/20 text-white shadow-none",
     border: "border-white/10",
     indicator: false
   }
