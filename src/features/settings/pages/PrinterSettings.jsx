@@ -104,13 +104,13 @@ const PrinterSettings = () => {
         showItemName: parsed.showItemName ?? true,
         showQuantity: parsed.showQuantity ?? true,
         showPrice: parsed.showPrice ?? true,
-        showTaxColumn: parsed.showTaxColumn ?? true,
+        showTaxColumn: false,
         showItemDiscount: parsed.showItemDiscount ?? true,
         showSubTotal: parsed.showSubTotal ?? true,
         showDiscount: parsed.showDiscount ?? true,
-        showTaxSummary: parsed.showTaxSummary ?? true,
-        showCGST: parsed.showCGST ?? false,
-        showSGST: parsed.showSGST ?? false,
+        showTaxSummary: false,
+        showCGST: false,
+        showSGST: false,
         showUPIID: parsed.showUPIID ?? false,
         showGreetingMessage: parsed.showGreetingMessage ?? true,
         showCustomer: parsed.showCustomer ?? true,
@@ -138,10 +138,10 @@ const PrinterSettings = () => {
       showItemName: true,
       showQuantity: true,
       showPrice: true,
-      showTaxColumn: true,
+      showTaxColumn: false,
       showSubTotal: true,
       showDiscount: true,
-      showTaxSummary: true,
+      showTaxSummary: false,
       showCGST: false,
       showSGST: false,
       showUPIID: false,
@@ -172,21 +172,21 @@ const PrinterSettings = () => {
     staffName: profile?.business?.ownerName || "Vijayajalakam Admin",
     invoiceNumber: "INV-1772898412676",
     cart: [
-      { name: "Educational Book Vol. 1", quantity: 1, price: "200.00", tax: 20.0, taxRate: 5, taxName: "GST", discount: 10, total: "210.00", hsnCode: "4901" },
-      { name: "Facial", quantity: 1, price: "150.00", tax: 7.5, taxRate: 15, taxName: "VAT", discount: 0, total: "157.50", hsnCode: "99012" },
+      { name: "Educational Book Vol. 1", quantity: 1, price: "200.00", tax: 0, taxRate: 0, taxName: "", discount: 10, total: "190.00", hsnCode: "4901" },
+      { name: "Literature Guide Vol. 2", quantity: 1, price: "150.00", tax: 0, taxRate: 0, taxName: "", discount: 0, total: "150.00", hsnCode: "4901" },
     ],
     customerName: "LOCAL CUSTOMER",
     subTotal: "350.00",
-    discount: "20.00",
-    taxAmount: "27.50",
-    finalTotal: 357.50,
+    discount: "10.00",
+    taxAmount: "0.00",
+    finalTotal: 340.00,
     // Sample payment breakdown for preview
     payments: [
       { method: "CASH", amount: 200 },
       { method: "UPI", amount: 100 },
       { method: "WALLET", amount: 30 },
     ],
-    dueAmount: 27.50,
+    dueAmount: 10.00,
     overpaidAmount: 0,
     paymentStatus: "PARTIAL",
     logoUrl: profile?.logo || "",
@@ -548,11 +548,6 @@ const PrinterSettings = () => {
                       onChange={(v) => toggleSetting("showPrice", v)}
                     />
                     <ModernSwitch
-                      label="Tax Column"
-                      checked={settings.showTaxColumn}
-                      onChange={(v) => toggleSetting("showTaxColumn", v)}
-                    />
-                    <ModernSwitch
                       label="Discount Column (per item)"
                       checked={settings.showItemDiscount}
                       onChange={(v) => toggleSetting("showItemDiscount", v)}
@@ -573,21 +568,6 @@ const PrinterSettings = () => {
                       label="Sub Total Row"
                       checked={settings.showSubTotal}
                       onChange={(v) => toggleSetting("showSubTotal", v)}
-                    />
-                    <ModernSwitch
-                      label="Tax Summary Row"
-                      checked={settings.showTaxSummary}
-                      onChange={(v) => toggleSetting("showTaxSummary", v)}
-                    />
-                    <ModernSwitch
-                      label="CGST Row"
-                      checked={settings.showCGST}
-                      onChange={(v) => toggleSetting("showCGST", v)}
-                    />
-                    <ModernSwitch
-                      label="SGST Row"
-                      checked={settings.showSGST}
-                      onChange={(v) => toggleSetting("showSGST", v)}
                     />
                     <ModernSwitch
                       label="Total Discount Row"

@@ -104,8 +104,8 @@ const InvoicePrintLayout = ({
     ? moment(invoiceDate).format("DD/MM/YY hh:mm A")
     : moment().format("DD/MM/YY hh:mm A");
 
-  // Check if any item has tax or discount to show those columns
-  const hasTaxColumn = showTaxColumn && displayItems.some(i => i.taxName || i.taxRate || i.taxPercent || i.taxPercentage || i.tax > 0);
+  // Books have no tax
+  const hasTaxColumn = false;
   const hasDiscColumn = showItemDiscount && displayItems.some(i => (Number(i.discount) || 0) > 0);
 
   return (
@@ -259,12 +259,11 @@ const InvoicePrintLayout = ({
             <table className="receipt-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed', fontSize: '11px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px dotted black', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold' }}>
-                  <th style={{ textAlign: 'left', padding: '0 1px 4px 0', width: showQuantity || showPrice || hasTaxColumn || hasDiscColumn ? '30%' : '50%' }}>ITEM</th>
-                  {showQuantity && <th style={{ textAlign: 'right', padding: '0 1px 4px', width: '12%' }}>QTY</th>}
-                  {showPrice && <th style={{ textAlign: 'right', padding: '0 1px 4px', width: '18%' }}>PRICE</th>}
-                  {hasTaxColumn && <th style={{ textAlign: 'right', padding: '0 1px 4px', width: '12%' }}>TAX</th>}
-                  {hasDiscColumn && <th style={{ textAlign: 'right', padding: '0 1px 4px', width: '14%' }}>DISC</th>}
-                  <th style={{ textAlign: 'right', padding: '0 0 4px 1px', width: '20%' }}>AMT</th>
+                  <th style={{ textAlign: 'left', padding: '0 1px 4px 0', width: showQuantity || showPrice || hasDiscColumn ? '40%' : '60%' }}>ITEM</th>
+                  {showQuantity && <th style={{ textAlign: 'right', padding: '0 1px 4px', width: '15%' }}>QTY</th>}
+                  {showPrice && <th style={{ textAlign: 'right', padding: '0 1px 4px', width: '20%' }}>PRICE</th>}
+                  {hasDiscColumn && <th style={{ textAlign: 'right', padding: '0 1px 4px', width: '15%' }}>DISC</th>}
+                  <th style={{ textAlign: 'right', padding: '0 0 4px 1px', width: '25%' }}>AMT</th>
                 </tr>
               </thead>
               <tbody>
@@ -284,7 +283,6 @@ const InvoicePrintLayout = ({
                           1 +
                           (showQuantity ? 1 : 0) +
                           (showPrice ? 1 : 0) +
-                          (hasTaxColumn ? 1 : 0) +
                           (hasDiscColumn ? 1 : 0) +
                           1
                         } style={{ padding: '4px 0 0 0', fontWeight: 'bold', fontSize: '13px', lineHeight: '1.2' }}>
@@ -318,17 +316,6 @@ const InvoicePrintLayout = ({
                             {formatDisplayNumber(itemPrice)}
                           </td>
                         )}
-                        {hasTaxColumn && (
-                          <td style={{ textAlign: 'right', padding: '0 1px 4px', fontSize: '12px' }}>
-                            {(item.taxPercent || item.taxPercentage)
-                              ? `${item.taxPercent || item.taxPercentage}%`
-                              : item.taxRate
-                                ? `${item.taxRate}%`
-                                : item.tax > 0
-                                  ? `${Math.round((item.tax / (itemPrice * itemQty)) * 100)}%`
-                                  : "-"}
-                          </td>
-                        )}
                         {hasDiscColumn && (
                           <td style={{ textAlign: 'right', padding: '0 1px 4px', fontSize: '12px', fontWeight: itemDisc > 0 ? 'bold' : 'normal' }}>
                             {itemDisc > 0 ? `-${formatDisplayNumber(itemDisc)}` : "-"}
@@ -354,24 +341,6 @@ const InvoicePrintLayout = ({
                 <tr>
                   <td style={{ textAlign: 'left', padding: '2px 0', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '-0.05em' }}>SUB TOTAL</td>
                   <td style={{ textAlign: 'right', padding: '2px 0', fontSize: '14px', fontWeight: 'bold' }}>{formatDisplayNumber(subTotal)}</td>
-                </tr>
-              )}
-              {showCGST && taxAmount > 0 && (
-                <tr>
-                  <td style={{ textAlign: 'left', padding: '2px 0', fontSize: '14px', fontWeight: 'bold' }}>CGST</td>
-                  <td style={{ textAlign: 'right', padding: '2px 0', fontSize: '14px', fontWeight: 'bold' }}>+{formatDisplayNumber(taxAmount / 2)}</td>
-                </tr>
-              )}
-              {showSGST && taxAmount > 0 && (
-                <tr>
-                  <td style={{ textAlign: 'left', padding: '2px 0', fontSize: '14px', fontWeight: 'bold' }}>SGST</td>
-                  <td style={{ textAlign: 'right', padding: '2px 0', fontSize: '14px', fontWeight: 'bold' }}>+{formatDisplayNumber(taxAmount / 2)}</td>
-                </tr>
-              )}
-              {showTaxSummary && taxAmount > 0 && (
-                <tr>
-                  <td style={{ textAlign: 'left', padding: '2px 0', fontSize: '14px', fontWeight: 'bold' }}>Tax</td>
-                  <td style={{ textAlign: 'right', padding: '2px 0', fontSize: '14px', fontWeight: 'bold' }}>+{formatDisplayNumber(taxAmount)}</td>
                 </tr>
               )}
               {showDiscount && (() => {

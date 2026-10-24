@@ -76,13 +76,6 @@ const ReportsPage = () => {
           permission: "reports:sales:margin_report"
         },
         {
-          id: "sales-tax",
-          label: "Sales Tax Report",
-          icon: PieChart,
-          path: getDynamicPortalPath("/admin/reports/sales-tax"),
-          permission: "reports:sales:sales_tax_report"
-        },
-        {
           id: "pending-invoices",
           label: "Pending Invoices",
           icon: ClipboardList,
@@ -312,20 +305,6 @@ const ReportsPage = () => {
           icon: TrendingUp,
           path: getDynamicPortalPath("/admin/reports/profit-loss"),
           permission: "reports:accounts:profit_loss"
-        },
-        {
-          id: "vat-in",
-          label: "VAT IN",
-          icon: ArrowDownCircle,
-          path: getDynamicPortalPath("/admin/reports/vat-in-report"),
-          permission: "reports:accounts:vat_in_report"
-        },
-        {
-          id: "vat-out",
-          label: "VAT OUT",
-          icon: ArrowUpCircle,
-          path: getDynamicPortalPath("/admin/reports/vat-out-report"),
-          permission: "reports:accounts:vat_out_report"
         },
         {
           id: "business-status-report",

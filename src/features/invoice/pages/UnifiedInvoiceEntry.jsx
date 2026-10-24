@@ -239,11 +239,6 @@ const ServiceCard = memo(({ service, displayPrice, onAdd, onUpdateQty, viewMode 
           <h4 className={`font-bold text-gray-800 dark:text-gray-200 text-[14px] mb-1.5 line-clamp-2 leading-tight group-hover:text-brand-primary transition-colors text-left`}>
             {service.name}
           </h4>
-          {viewMode === 'list' && taxPct > 0 && (
-            <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 w-fit">
-              {taxPct}% Tax
-            </span>
-          )}
         </div>
 
         <div className={`flex ${viewMode === 'list' ? 'flex-row items-center gap-6' : 'mt-auto flex-col items-start justify-start gap-1 w-full'}`}>
@@ -253,11 +248,6 @@ const ServiceCard = memo(({ service, displayPrice, onAdd, onUpdateQty, viewMode 
             </div>
             
             <div className={`flex items-center gap-1.5 w-full ${viewMode === 'list' ? 'justify-end' : 'justify-start flex-wrap'}`}>
-              {viewMode === 'grid' && taxPct > 0 && (
-                <span className="text-[8px] font-black text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 whitespace-nowrap">
-                  {taxPct}% Tax
-                </span>
-              )}
               {offerInfo?.hasOffer && (
                 <>
                   <span className="text-gray-400 dark:text-gray-500 text-[10px] line-through font-bold truncate">
@@ -269,11 +259,6 @@ const ServiceCard = memo(({ service, displayPrice, onAdd, onUpdateQty, viewMode 
                       : `${currencySymbol}${offerInfo.discountValue} OFF`}
                   </span>
                 </>
-              )}
-              {taxPct > 0 && !offerInfo?.hasOffer && (
-                <span className="text-[8px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tight whitespace-nowrap">
-                  Incl. Tax
-                </span>
               )}
             </div>
           </div>
@@ -496,11 +481,6 @@ const ProductCard = memo(({
               <span className={`text-[10px] font-black uppercase tracking-tight px-2 py-0.5 rounded-lg border w-fit ${availableStock <= 5 ? "bg-red-50 text-red-600 border-red-100" : "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-100"}`}>
                 {availableStock} Stock
               </span>
-              {taxPct > 0 && (
-                <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 w-fit">
-                  {taxPct}% Tax
-                </span>
-              )}
             </div>
           )}
         </div>
@@ -519,11 +499,6 @@ const ProductCard = memo(({
                   {availableStock} Stock
                 </span>
               )}
-              {viewMode === 'grid' && taxPct > 0 && (
-                <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 whitespace-nowrap">
-                  {taxPct}% Tax
-                </span>
-              )}
               {offerInfo?.hasOffer && !hasVariants && (
                 <>
                   <span className="text-gray-400 dark:text-gray-500 text-[9px] line-through font-bold truncate">
@@ -535,11 +510,6 @@ const ProductCard = memo(({
                       : `${currencySymbol}${offerInfo.discountValue} OFF`}
                   </span>
                 </>
-              )}
-              {taxPct > 0 && !(offerInfo?.hasOffer && !hasVariants) && (
-                <span className="text-[8px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tight whitespace-nowrap">
-                  Incl. Tax
-                </span>
               )}
             </div>
           </div>
@@ -917,11 +887,6 @@ const VariantSelectionModal = ({
                           )}
                           {formatDisplayNumber(finalPrice)}
                         </div>
-                        {taxPercentage > 0 && (
-                          <span className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tight mt-0.5">
-                            Incl. {taxPercentage}% Tax
-                          </span>
-                        )}
                       </div>
 
                       {isSelected && item.itemType === "product" && (
@@ -1030,48 +995,14 @@ const CartItemRow = memo(({
 
   const lineTotal = item.price * item.qty;
   const itemDisc = Number(item.discount) || 0;
-  let lineTax = 0,
-    lineDisplay = lineTotal;
-  let taxableAmount = lineTotal;
+  const lineTax = 0;
+  const lineDisplay = lineTotal - itemDisc;
+  const taxableAmount = lineTotal;
   const originalLineTotal = (item.originalPrice && item.originalPrice > item.price) ? item.originalPrice * item.qty : lineTotal;
-
-  if (item.itemType === "service") {
-    const taxPct = item.taxPercentage !== undefined ? item.taxPercentage : (item.taxPercent || 0);
-    if (taxPct > 0) {
-      if (item.isTaxInclusive) {
-        lineTax = lineTotal - (lineTotal / (1 + taxPct / 100));
-        taxableAmount = lineTotal - lineTax;
-        lineDisplay = lineTotal - itemDisc;
-      } else {
-        lineTax = (lineTotal - itemDisc) * (taxPct / 100);
-        taxableAmount = lineTotal;
-        lineDisplay = lineTotal - itemDisc + lineTax;
-      }
-    } else {
-      lineDisplay = lineTotal - itemDisc;
-      taxableAmount = lineTotal;
-    }
-  } else {
-    const taxPct = item.taxPercent !== undefined ? item.taxPercent : (item.taxPercentage || 0);
-    if (taxPct > 0) {
-      if (item.isTaxInclusive) {
-        lineTax = lineTotal - (lineTotal / (1 + taxPct / 100));
-        taxableAmount = lineTotal - lineTax;
-        lineDisplay = lineTotal - itemDisc;
-      } else {
-        lineTax = (lineTotal - itemDisc) * (taxPct / 100);
-        taxableAmount = lineTotal;
-        lineDisplay = lineTotal - itemDisc + lineTax;
-      }
-    } else {
-      lineDisplay = lineTotal - itemDisc;
-      taxableAmount = lineTotal;
-    }
-  }
 
   const displayAmount = applyPrecision(lineDisplay, shopSettings);
   const displayOriginalAmount = item.originalPrice && item.originalPrice > item.price
-    ? applyPrecision(originalLineTotal + lineTax, shopSettings) // approximation
+    ? applyPrecision(originalLineTotal, shopSettings)
     : null;
 
   const showFooter = (shopConfig?.showItemStaff !== false) || (shopConfig?.showItemDiscount !== false);
@@ -1088,17 +1019,6 @@ const CartItemRow = memo(({
             )}
           </h4>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            {/* Tax Percentage Badge */}
-            {((item.itemType === "service" && (item.taxPercentage || 0) > 0) ||
-              (item.itemType === "product" && (item.taxPercent || item.taxPercentage || 0) > 0)) && (
-                <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 flex items-center">
-                  {item.itemType === "service"
-                    ? (item.taxName?.includes("%") ? item.taxName : `${item.taxName || "Tax"} ${item.taxPercentage}%`)
-                    : (item.taxName?.includes("%") ? item.taxName : `${item.taxName || "Tax"} ${item.taxPercent || item.taxPercentage}%`)}
-                  {item.isTaxInclusive ? " incl." : ""}
-                </span>
-              )}
-
             {/* Stock Badge */}
             {item.itemType === "product" && item.currentStock !== undefined && (
               <span className="text-[7px] font-bold px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 border border-amber-100">
@@ -1158,18 +1078,6 @@ const CartItemRow = memo(({
               >
                 {formatNumber(displayAmount, shopSettings)}
               </p>
-              {(lineTax > 0 || (item.taxPercent > 0) || (item.taxPercentage > 0)) && (
-                <div className="flex flex-col items-end mt-1.5 opacity-80">
-                  <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest leading-tight">
-                    Base: <span className="notranslate text-gray-700 dark:text-gray-300">{formatNumber(taxableAmount, shopSettings)}</span>
-                  </span>
-                  {lineTax > 0 && (
-                    <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest leading-tight">
-                      Tax: <span className="notranslate text-emerald-600 dark:text-emerald-400">+{formatNumber(lineTax, shopSettings)}</span>
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -2381,7 +2289,7 @@ const UnifiedInvoiceEntry = () => {
     }
   }, [customerSearch, customers]);
 
-  // --- Cart Calculations (handles both service and product tax models) ---
+  // --- Cart Calculations (without tax for books) ---
   const cartCalc = useMemo(() => {
     const result = calculateCartTotals({
       items: cart,
@@ -2391,16 +2299,16 @@ const UnifiedInvoiceEntry = () => {
 
     return {
       subtotal: result.subtotal,
-      totalTax: result.totalTax,
+      totalTax: 0,
       totalItemDiscount: result.totalItemDiscount,
-      totalCommission: 0, // Will calculate separately
-      hasInclusiveTax: cart.some(item => item.isTaxInclusive)
+      totalCommission: 0,
+      hasInclusiveTax: false
     };
   }, [cart, shopSettings]);
 
   // Calculate cart total with precision
   const cartTotal = applyPrecision(
-    cartCalc.subtotal + cartCalc.totalTax - cartCalc.totalItemDiscount,
+    cartCalc.subtotal - cartCalc.totalItemDiscount,
     shopSettings
   );
 
@@ -4203,18 +4111,11 @@ const UnifiedInvoiceEntry = () => {
             {/* Totals - Always show when cart has items */}
             {cart.length > 0 && (
               <div className="flex flex-col gap-2">
-              <div className={`grid gap-2 ${shopSettings?.enableRoundOff ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                <div className={`grid gap-2 ${shopSettings?.enableRoundOff ? 'grid-cols-3' : 'grid-cols-2'}`}>
                   <div className="flex items-center justify-between bg-white dark:bg-dark-surface px-3 py-1.5 rounded-lg border border-gray-100 dark:border-dark-border">
                     <span className="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Sub</span>
                     <span className="text-[11.5px] font-black text-gray-800 dark:text-gray-200 notranslate">
                       {currencySymbol}{formatNumber(cartCalc.subtotal, shopSettings)}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-lg border border-emerald-100 dark:border-emerald-800/30">
-                    <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Tax</span>
-                    <span className="text-[11.5px] font-black text-emerald-600 dark:text-emerald-400 notranslate">
-                      {cartCalc.totalTax > 0 ? `${cartCalc.hasInclusiveTax ? "" : "+"}${currencySymbol}${formatNumber(cartCalc.totalTax, shopSettings)}` : `${currencySymbol}0`}
                     </span>
                   </div>
 
@@ -5015,13 +4916,9 @@ const UnifiedInvoiceEntry = () => {
                     <span>Subtotal</span>
                     <span className="notranslate">{formatNumber(cartCalc.subtotal, shopSettings)}</span>
                   </div>
-                  <div className="flex justify-between items-center text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-                    <span>Tax Amount</span>
-                    <span className="notranslate">{formatNumber(cartCalc.totalTax, shopSettings)}</span>
-                  </div>
                   <div className="flex justify-between items-center text-[12px] font-black text-gray-900 dark:text-gray-100 pt-1">
                     <span>TOTAL PAYABLE</span>
-                    <span className="text-brand-primary dark:text-blue-400 notranslate">{currencySymbol}{formatNumber(cartCalc.subtotal + (cartCalc.hasInclusiveTax ? 0 : cartCalc.totalTax), shopSettings)}</span>
+                    <span className="text-brand-primary dark:text-blue-400 notranslate">{currencySymbol}{formatNumber(cartCalc.subtotal, shopSettings)}</span>
                   </div>
                 </div>
               )}

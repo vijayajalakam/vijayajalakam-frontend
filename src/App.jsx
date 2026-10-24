@@ -60,8 +60,6 @@ import MorePage from "./features/settings/pages/MorePage";
 import DocumentSettings from "./features/settings/pages/DocumentSettings";
 import PrivilegeManagement from "./features/settings/pages/PrivilegeManagement";
 import PrivilegeForm from "./features/settings/pages/PrivilegeForm";
-import SalesTaxReport from "./features/reports/pages/SalesTaxReport";
-import SalesVatReport from "./features/reports/pages/SalesVatReport";
 import ItemProfitReport from "./features/reports/pages/ItemProfitReport";
 import QrCodePage from "./features/settings/pages/QrCodePage";
 import BusinessStatusReportPage from "./features/reports/pages/BusinessStatusReportPage";
@@ -80,7 +78,6 @@ import ProductMasterPage from "./features/stock/pages/ProductMasterPage";
 import StockReportPage from "./features/stock/pages/StockReportPage";
 import DamageBooksReportPage from "./features/stock/pages/DamageBooksReportPage";
 import ConsumptionBooksReportPage from "./features/stock/pages/ConsumptionBooksReportPage";
-import PurchaseVatReport from "./features/purchases/pages/PurchaseVatReport";
 
 // Accounts Module
 import AccountsPage from "./features/accounts/pages/AccountsPage";
@@ -404,19 +401,11 @@ function App() {
                       />
                       <Route
                         path="sales-tax"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:sales:sales_tax_report">
-                            <SalesTaxReport />
-                          </ProtectedRoute>
-                        }
+                        element={<Navigate to="../" replace />}
                       />
                       <Route
                         path="vat-out"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:sales:sales_vat_report">
-                            <SalesVatReport />
-                          </ProtectedRoute>
-                        }
+                        element={<Navigate to="../" replace />}
                       />
                       <Route
                         path="pending-invoices"
@@ -598,11 +587,7 @@ function App() {
                       />
                       <Route
                         path="vat-in"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:accounts:vat_in_report">
-                            <PurchaseVatReport />
-                          </ProtectedRoute>
-                        }
+                        element={<Navigate to="../" replace />}
                       />
 
                       <Route
@@ -674,19 +659,11 @@ function App() {
 
                       <Route
                         path="vat-in-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:accounts:vat_in_report">
-                            <PurchaseVatReport />
-                          </ProtectedRoute>
-                        }
+                        element={<Navigate to="../" replace />}
                       />
                       <Route
                         path="vat-out-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:accounts:vat_out_report">
-                            <SalesVatReport />
-                          </ProtectedRoute>
-                        }
+                        element={<Navigate to="../" replace />}
                       />
                       <Route
                         path="day-report"
@@ -863,19 +840,11 @@ function App() {
 
                       <Route
                         path="vat-in-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:stock:vat_in">
-                            <PurchaseVatReport />
-                          </ProtectedRoute>
-                        }
+                        element={<Navigate to="../" replace />}
                       />
                       <Route
                         path="vat-out-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:sales:vat_out">
-                            <SalesVatReport />
-                          </ProtectedRoute>
-                        }
+                        element={<Navigate to="../" replace />}
                       />
                       <Route
                         path="day-report"

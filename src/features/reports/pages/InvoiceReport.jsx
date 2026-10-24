@@ -101,8 +101,6 @@ const InvoiceReport = () => {
         params.append("paymentStatus", "Partial,Pending");
       } else if (activeTab === "Paid") {
         params.append("paymentStatus", "Paid");
-      } else if (activeTab === "tax-info") {
-        params.append("hasTax", "true");
       } else if (activeTab === "discount-info") {
         params.append("hasDiscount", "true");
       } else {
@@ -356,9 +354,7 @@ const InvoiceReport = () => {
         });
 
         const customSummary = {
-           "Total Taxable": `${currencySymbol} ${formatDisplayNumber(totalTaxable)}`,
            "Total Discount": `${currencySymbol} ${formatDisplayNumber(totalDiscount)}`,
-           "Total Tax": `${currencySymbol} ${formatDisplayNumber(totalTax)}`,
            "Total Invoice": String(exportData.length),
            "Total Return": String(totalReturn),
            "Round Off": `${currencySymbol} ${formatDisplayNumber(totalRoundOff)}`,
@@ -413,17 +409,7 @@ const InvoiceReport = () => {
         });
       }
 
-      // Add Tax and Discount as informative segments (not in progress bar)
-      if (reportSummary.tax > 0) {
-        extraSegments.push({
-          id: "tax-info",
-          label: "Tax",
-          value: reportSummary.tax,
-          count: reportSummary.counts?.tax || 0,
-          color: "#10b981", // Emerald
-          inProgressBar: false,
-        });
-      }
+      // Add Discount as informative segment (not in progress bar)
       if (reportSummary.discount > 0) {
         extraSegments.push({
           id: "discount-info",
@@ -536,9 +522,6 @@ const InvoiceReport = () => {
                 <th className="py-3 px-6 text-right">Qty</th>
                 <th className="py-3 px-6 text-right">Price</th>
                 <th className="py-3 px-6 text-right">Discount</th>
-                <th className="py-3 px-6 text-right">Taxable</th>
-                <th className="py-3 px-6 text-right">Tax %</th>
-                <th className="py-3 px-6 text-right">Tax Amt</th>
                 <th className="py-3 px-6 text-right">Total</th>
               </tr>
             </thead>
@@ -548,16 +531,7 @@ const InvoiceReport = () => {
                 const price = item.price || 0;
                 const amount = item.amount || (price * qty);
                 const discount = item.discount || 0;
-                
-                const tPct = getItemTaxPercent(item);
-                let taxableAmount = amount;
-                if (item.isTaxInclusive) {
-                  taxableAmount = amount / (1 + tPct / 100);
-                }
-                taxableAmount = taxableAmount - discount;
-                
-                const taxAmount = item.taxAmount || 0;
-                const totalItemAmount = taxableAmount + taxAmount;
+                const totalItemAmount = amount - discount;
 
                 const adminName = row.createdBy?.name || "Owner";
                 let itemStaffName = "";
@@ -588,13 +562,6 @@ const InvoiceReport = () => {
                     <td className="py-3 px-6 text-right text-gray-500">x{qty}</td>
                     <td className="py-3 px-6 text-right text-gray-600 dark:text-gray-400 notranslate">{currencySymbol}{formatDisplayNumber(price)}</td>
                     <td className="py-3 px-6 text-right text-red-500 notranslate">{discount > 0 ? `-${currencySymbol}${formatDisplayNumber(discount)}` : "-"}</td>
-                    <td className="py-3 px-6 text-right text-gray-700 dark:text-gray-300 notranslate">{currencySymbol}{formatDisplayNumber(taxableAmount)}</td>
-                    <td className="py-3 px-6 text-right">
-                      <span className="text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-500/10 px-2 py-0.5 rounded font-bold text-xs">
-                        {tPct}%
-                      </span>
-                    </td>
-                    <td className="py-3 px-6 text-right text-amber-600 dark:text-amber-500 font-bold notranslate">{currencySymbol}{formatDisplayNumber(taxAmount)}</td>
                     <td className="py-3 px-6 text-right text-emerald-600 dark:text-emerald-400 font-black notranslate">{currencySymbol}{formatDisplayNumber(totalItemAmount)}</td>
                   </tr>
                 );
@@ -702,11 +669,6 @@ const InvoiceReport = () => {
               {currencySymbol}
               {formatDisplayNumber(totalPayable)}
             </span>
-            {taxVal > 0 && (
-              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 notranslate mt-0.5">
-                Tax: {currencySymbol}{formatDisplayNumber(taxVal)}
-              </span>
-            )}
             {discVal > 0 && (
               <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 notranslate">
                 Disc: {currencySymbol}{formatDisplayNumber(discVal)}

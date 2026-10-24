@@ -281,24 +281,6 @@ export const AVAILABLE_PERMISSIONS = [
                         ]
                     },
                     {
-                        key: 'sales_tax_report',
-                        label: 'Sales Tax Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' },
-                            { key: 'download', label: 'Download PDF' }
-                        ]
-                    },
-                    {
-                        key: 'sales_vat_report',
-                        label: 'Sales VAT Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' },
-                            { key: 'download', label: 'Download PDF' }
-                        ]
-                    },
-                    {
                         key: 'day_closing_report',
                         label: 'Day Closing Report',
                         actions: [
@@ -490,11 +472,6 @@ export const AVAILABLE_PERMISSIONS = [
                         actions: [ { key: 'view', label: 'View' }, { key: 'export', label: 'Export' } ]
                     },
                     {
-                        key: 'purchase_tax_report',
-                        label: 'Purchase Tax Report',
-                        actions: [ { key: 'view', label: 'View' }, { key: 'export', label: 'Export' } ]
-                    },
-                    {
                         key: 'purchase_return_report',
                         label: 'Purchase Return Report',
                         actions: [ { key: 'view', label: 'View' }, { key: 'export', label: 'Export' } ]
@@ -553,20 +530,6 @@ export const AVAILABLE_PERMISSIONS = [
                         key: 'profit_loss',
                         label: 'Profit & Loss',
                         actions: [ { key: 'view', label: 'View' }, { key: 'export', label: 'Export' } ]
-                    },
-                    {
-                        key: 'vat_in_report',
-                        label: 'VAT IN',
-                        actions: [ { key: 'view', label: 'View' }, { key: 'export', label: 'Export' } ]
-                    },
-                    {
-                        key: 'vat_out_report',
-                        label: 'VAT OUT',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' },
-                            { key: 'download', label: 'Download PDF' }
-                        ]
                     },
                     {
                         key: 'business_status_report',

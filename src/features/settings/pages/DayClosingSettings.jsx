@@ -117,29 +117,7 @@ const DayClosingSettings = () => {
             {isDayClosingEnabled && <CheckCircle2 size={16} className="ml-auto text-brand-primary dark:text-blue-400" />}
           </button>
 
-          <button
-            onClick={() => {
-              if (!canEdit) return;
-              isUserChange.current = true;
-              setDayClosingIncludeTax(prev => !prev);
-            }}
-            className={`p-4 rounded-2xl border transition-all flex items-center gap-4 group ${
-              dayClosingIncludeTax 
-                ? "bg-brand-primary/5 border-brand-primary shadow-sm ring-1 ring-brand-primary/10" 
-                : "bg-white dark:bg-dark-surface border-gray-100 dark:border-dark-border opacity-60 hover:opacity-100"
-            }`}
-          >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-              dayClosingIncludeTax ? "bg-brand-primary text-white" : "bg-gray-100 dark:bg-dark-border text-gray-400 dark:text-gray-500"
-            }`}>
-              <Receipt size={20} />
-            </div>
-            <div className="text-left">
-              <div className={`text-sm font-bold ${dayClosingIncludeTax ? "text-brand-primary" : "text-gray-400 group-hover:text-gray-600 dark:text-gray-400"}`}>Include Tax in Sales</div>
-              <div className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">Calculate totals with tax included</div>
-            </div>
-            {dayClosingIncludeTax && <CheckCircle2 size={16} className="ml-auto text-brand-primary dark:text-blue-400" />}
-          </button>
+
         </div>
       </motion.div>
     </div>

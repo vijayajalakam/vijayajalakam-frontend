@@ -106,31 +106,15 @@ const ProductCheckout = () => {
         return activeVariant ? (activeVariant.sellingPrice || product.sellingPrice) : product.sellingPrice;
     }, [product, activeVariant]);
 
-    const taxPct = product?.taxId?.percentage || product?.taxPercent || 0;
-    const isInc = product?.isTaxInclusive || false;
+    const taxPct = 0;
+    const isInc = false;
     
-    // Calculate proper price breakdown
+    // Books have no tax
     const basePrice = currentBasePrice;
     const lineTotal = basePrice * quantity;
-    
-    let taxableAmount, taxAmount, finalAmount;
-    
-    if (isInc && taxPct > 0) {
-        // Tax-inclusive: extract tax from the price
-        taxAmount = lineTotal - (lineTotal / (1 + (taxPct / 100)));
-        taxableAmount = lineTotal - taxAmount;
-        finalAmount = lineTotal;
-    } else if (!isInc && taxPct > 0) {
-        // Tax-exclusive: add tax to the price
-        taxableAmount = lineTotal;
-        taxAmount = lineTotal * (taxPct / 100);
-        finalAmount = lineTotal + taxAmount;
-    } else {
-        // No tax
-        taxableAmount = lineTotal;
-        taxAmount = 0;
-        finalAmount = lineTotal;
-    }
+    const taxableAmount = lineTotal;
+    const taxAmount = 0;
+    const finalAmount = lineTotal;
     const handlePlaceOrder = async () => {
         try {
             setSubmitting(true);
@@ -426,23 +410,6 @@ const ProductCheckout = () => {
                                 <p className="font-black text-user-gold mt-1 text-lg">
                                     {currencySymbol} {formatDisplayNumber(finalAmount)}
                                 </p>
-                                {/* Tax breakdown display */}
-                                {taxPct > 0 && (
-                                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 space-y-0.5">
-                                        <div className="flex justify-between">
-                                            <span>Base Price:</span>
-                                            <span>{currencySymbol} {formatDisplayNumber(taxableAmount)}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>Tax ({taxPct}%):</span>
-                                            <span>{currencySymbol} {formatDisplayNumber(taxAmount)}</span>
-                                        </div>
-                                        <div className="flex justify-between font-bold border-t pt-0.5">
-                                            <span>Total:</span>
-                                            <span>{currencySymbol} {formatDisplayNumber(finalAmount)}</span>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </section>
@@ -480,18 +447,6 @@ const ProductCheckout = () => {
                                 <span className="text-xs font-bold uppercase tracking-widest">Subtotal</span>
                                 <span className="font-bold">{currencySymbol} {formatDisplayNumber(taxableAmount)}</span>
                             </div>
-                            
-                            {/* Tax Row */}
-                            {taxPct > 0 && (
-                                <div className="flex justify-between items-center text-emerald-600 dark:text-emerald-400">
-                                    <span className="text-xs font-bold uppercase tracking-widest">
-                                        Tax {isInc ? "Included" : ""} ({taxPct}%)
-                                    </span>
-                                    <span className="font-bold">
-                                        {isInc ? "" : "+"}{currencySymbol} {formatDisplayNumber(taxAmount)}
-                                    </span>
-                                </div>
-                            )}
 
                             <div className="flex justify-between items-center text-user-text-muted">
                                 <span className="text-xs font-bold uppercase tracking-widest">Shipping</span>
