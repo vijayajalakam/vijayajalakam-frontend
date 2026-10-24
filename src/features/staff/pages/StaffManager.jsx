@@ -309,7 +309,7 @@ const StaffManager = () => {
       phone: staffMember.phone,
       password: "", // Leave blank to keep existing
       commissionPercentage: staffMember.commissionPercentage || "",
-      services: (staffMember.services || []).map((s) => s._id),
+      services: (staffMember.services || []).map((s) => (typeof s === "object" ? s?._id : s)).filter(Boolean),
       shop: staffMember.shop?._id || "",
       gender: staffMember.gender || "",
       dateOfBirth: staffMember.dateOfBirth ? new Date(staffMember.dateOfBirth).toISOString().split('T')[0] : "",
@@ -525,9 +525,6 @@ const StaffManager = () => {
     }
   };
 
-  const shopsCovered =
-    new Set(staff?.map((s) => s.shop?._id).filter(Boolean)).size || 0;
-
   const stats = [
     {
       label: "Total Team",
@@ -542,9 +539,9 @@ const StaffManager = () => {
       color: "bg-emerald-50 text-emerald-600",
     },
     {
-      label: "Branches",
-      value: shopsCovered,
-      icon: Users,
+      label: "Roles & Privileges",
+      value: (privileges || []).length,
+      icon: ShieldCheck,
       color: "bg-amber-50 text-amber-600",
     },
     {
@@ -778,12 +775,13 @@ const StaffManager = () => {
                 </button>
                 {canAdd && (
                   <button
+                  type="button"
                   onClick={() => {
                     const defaultShop = user?.branchId
                       ? typeof user.branchId === "string"
                         ? user.branchId
                         : user.branchId._id
-                      : "";
+                      : (shops[0]?._id || "6adb7c1ef7a3179b5e9082be");
                     setEditingStaff(null);
                     setNewStaff({
                       name: "",
@@ -791,7 +789,7 @@ const StaffManager = () => {
                       phone: "",
                       password: "",
                       commissionPercentage: "",
-                      services: services.map((s) => s._id), // Default to all services
+                      services: [], // Default to empty array
                       shop: defaultShop,
                       gender: "",
                       dateOfBirth: "",
@@ -962,7 +960,7 @@ const StaffManager = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[70]"
               onClick={() => setIsModalOpen(false)}
             />
 
@@ -972,7 +970,7 @@ const StaffManager = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-full max-w-[800px] bg-white dark:bg-dark-surface shadow-2xl z-50 flex flex-col"
+              className="fixed top-0 right-0 h-full w-full max-w-[800px] bg-white dark:bg-dark-surface shadow-2xl z-[70] flex flex-col"
             >
               {/* Header */}
               <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface shrink-0">
