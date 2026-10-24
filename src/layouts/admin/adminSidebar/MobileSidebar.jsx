@@ -50,15 +50,15 @@ const MobileSidebar = ({ isOpen, onClose, menuItems = adminMenu }) => {
   const getInActiveItemClasses = () => {
     switch (sidebarStyle) {
       case "dark":
-        return "text-gray-400 dark:text-gray-500 hover:bg-white dark:bg-dark-surface/5 hover:text-white";
+        return "text-gray-400 hover:bg-white/10 hover:text-white";
       case "glass":
-        return "text-gray-600 dark:text-gray-400 hover:bg-brand-primary/5 hover:text-brand-primary";
+        return "text-gray-600 dark:text-gray-400 hover:bg-brand-primary/10 hover:text-brand-primary";
       case "gradient":
-        return "text-white/70 hover:bg-white dark:bg-dark-surface/10 hover:text-white";
+        return "text-white/70 hover:bg-white/15 hover:text-white";
       case "navy":
-        return "text-white/60 hover:bg-white dark:bg-dark-surface/5 hover:text-white";
+        return "text-white/60 hover:bg-white/10 hover:text-white";
       default:
-        return "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:bg-dark-card dark:hover:bg-dark-card hover:text-gray-900 dark:hover:text-white";
+        return "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-card hover:text-gray-900 dark:hover:text-white";
     }
   };
 

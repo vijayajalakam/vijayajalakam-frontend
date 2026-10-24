@@ -523,7 +523,7 @@ const SIDEBAR_STYLES = [
     name: "Sleek Dark",
     description: "Deep dark theme with primary indicators",
     bg: "bg-[#0f172a]",
-    text: "text-gray-400 dark:text-gray-500",
+    text: "text-gray-400 hover:text-white hover:bg-white/10",
     active: "bg-white text-brand-primary shadow-lg font-bold",
     border: "border-gray-800",
     indicator: true
@@ -533,7 +533,7 @@ const SIDEBAR_STYLES = [
     name: "Navy Executive",
     description: "Deep dark sidebar with primary buttons",
     bg: "bg-[#0f172a]",
-    text: "text-white/60",
+    text: "text-white/60 hover:text-white hover:bg-white/10",
     active: "bg-brand-primary text-white shadow-lg",
     border: "border-white/5",
     indicator: false
@@ -543,7 +543,7 @@ const SIDEBAR_STYLES = [
     name: "Primary Solid",
     description: "Bold primary background with white text",
     bg: "bg-white dark:bg-dark-surface",
-    text: "text-gray-600 dark:text-gray-400",
+    text: "text-gray-600 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900",
     active: "bg-brand-primary text-white shadow-md",
     border: "border-gray-100 dark:border-dark-border",
     indicator: false
@@ -553,7 +553,7 @@ const SIDEBAR_STYLES = [
     name: "Glassmorphism",
     description: "Elegant translucent blurred background",
     bg: "bg-white dark:bg-dark-surface/70 backdrop-blur-md",
-    text: "text-gray-700 dark:text-gray-300",
+    text: "text-gray-700 dark:text-gray-300 hover:bg-brand-primary/10 hover:text-brand-primary",
     active: "bg-brand-primary/20 text-brand-primary border-brand-primary/20",
     border: "border-white/20",
     indicator: false
@@ -563,7 +563,7 @@ const SIDEBAR_STYLES = [
     name: "Brand Gradient",
     description: "Vibrant gradient using brand colors",
     bg: "bg-gradient-to-b from-brand-primary to-brand-secondary",
-    text: "text-white/70",
+    text: "text-white/70 hover:text-white hover:bg-white/15",
     active: "bg-white/20 text-white shadow-none",
     border: "border-white/10",
     indicator: false
