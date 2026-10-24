@@ -3,7 +3,7 @@ import { X, Download, Sun, Moon, Eye, Share2, Loader2, Printer } from "lucide-re
 import { useGetInvoiceByIdQuery } from "../../store/api/tenantEndpoints";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 
-import InvoicePrintLayout from "../../features/sales/components/InvoicePrintLayout";
+import InvoicePrintLayout from "../../features/invoice/components/InvoicePrintLayout";
 import { printReceipt } from "../../utils/flutterPrinter";
 import toast from "react-hot-toast";
 import jsPDF from "jspdf";

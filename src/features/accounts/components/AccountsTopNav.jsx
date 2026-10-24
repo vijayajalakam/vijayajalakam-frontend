@@ -11,7 +11,7 @@ import {
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { getDynamicPortalPath } from "../../../utils/portalUtils";
 
-const AccountingTopNav = () => {
+const AccountsTopNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { shopSlug } = useParams();
@@ -84,4 +84,5 @@ const AccountingTopNav = () => {
   );
 };
 
-export default AccountingTopNav;
+export { AccountsTopNav as AccountingTopNav };
+export default AccountsTopNav;

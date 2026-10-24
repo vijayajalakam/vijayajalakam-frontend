@@ -23,6 +23,7 @@ import {
   Users,
   UserCheck,
   UserPlus,
+  Briefcase,
   Trash2,
   Mail,
   Phone,
@@ -1193,7 +1194,9 @@ const StaffManager = () => {
                                   placeholder="Select position"
                                   value={newStaff.designation}
                                   onChange={(e) => setNewStaff({ ...newStaff, designation: e.target.value })}
-                                  options={designations.map((d) => ({ value: d.name, label: d.name }))}
+                                  options={(Array.isArray(designations) ? designations : [])
+                                    .filter(Boolean)
+                                    .map((d) => ({ value: d.name, label: d.name }))}
                                   required
                                 />
                               </div>
@@ -1380,21 +1383,22 @@ const StaffManager = () => {
 
                         <CustomMultiSelect
                           label="Assigned Services"
-                          icon={Scissors}
+                          icon={Briefcase}
                           placeholder="Select Services"
                           value={newStaff.services}
                           onChange={(e) =>
                             setNewStaff({ ...newStaff, services: e.target.value })
                           }
-                          options={services
+                          options={(Array.isArray(services) ? services : [])
+                            .filter(Boolean)
                             .filter((s) => {
                               if (!newStaff.shop) return true;
                               if (!s.branches || s.branches.length === 0) return true;
                               return s.branches.some(
-                                (b) => (b._id || b) === newStaff.shop,
+                                (b) => (b?._id || b) === newStaff.shop,
                               );
                             })
-                            .map((s) => ({ value: s._id, label: s.name }))}
+                            .map((s) => ({ value: s._id, label: s.name || "Service" }))}
                           isSearchable={true}
                           showSelectAll={true}
                         />
@@ -1825,7 +1829,7 @@ const StaffManager = () => {
                             onChange={(e) =>
                               setNewStaff({ ...newStaff, privilegeId: e.target.value })
                             }
-                            options={privileges.map((priv) => ({
+                            options={(Array.isArray(privileges) ? privileges : []).map((priv) => ({
                               value: priv._id,
                               label: priv.name,
                               description: priv.description || `${priv.permissions?.length || 0} permissions`,
@@ -1844,7 +1848,7 @@ const StaffManager = () => {
                           )}
                         </div>
 
-                        {newStaff.privilegeId && privileges.length > 0 && (
+                        {newStaff.privilegeId && Array.isArray(privileges) && privileges.length > 0 && (
                           <div className="bg-gray-50 dark:bg-dark-card rounded-xl p-4 space-y-3 border border-gray-200 dark:border-dark-border">
                             <div className="flex items-center justify-between">
                               <p className="text-xs font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
@@ -1861,7 +1865,7 @@ const StaffManager = () => {
                               </button>
                             </div>
                             {(() => {
-                              const selectedPriv = privileges.find(p => p._id === newStaff.privilegeId);
+                              const selectedPriv = (Array.isArray(privileges) ? privileges : []).find(p => p._id === newStaff.privilegeId);
                               if (!selectedPriv) {
                                 return (
                                   <div className="text-xs text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
@@ -2216,7 +2220,7 @@ const StaffManager = () => {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  const newShifts = [...newStaff.shifts];
+                                  const newShifts = [...(newStaff.shifts || [])];
                                   newShifts[index] = { ...newShifts[index], active: !newShifts[index].active };
                                   setNewStaff({ ...newStaff, shifts: newShifts });
                                 }}
@@ -2234,7 +2238,7 @@ const StaffManager = () => {
                                   disabled={!shift.active}
                                   value={shift.shiftType}
                                   onChange={(e) => {
-                                    const newShifts = [...newStaff.shifts];
+                                    const newShifts = [...(newStaff.shifts || [])];
                                     newShifts[index] = { ...newShifts[index], shiftType: e.target.value };
                                     setNewStaff({ ...newStaff, shifts: newShifts });
                                   }}
@@ -2253,7 +2257,7 @@ const StaffManager = () => {
                                   disabled={!shift.active}
                                   value={shift.startTime}
                                   onChange={(e) => {
-                                    const newShifts = [...newStaff.shifts];
+                                    const newShifts = [...(newStaff.shifts || [])];
                                     newShifts[index] = { ...newShifts[index], startTime: e.target.value };
                                     setNewStaff({ ...newStaff, shifts: newShifts });
                                   }}
@@ -2265,7 +2269,7 @@ const StaffManager = () => {
                                   disabled={!shift.active}
                                   value={shift.endTime}
                                   onChange={(e) => {
-                                    const newShifts = [...newStaff.shifts];
+                                    const newShifts = [...(newStaff.shifts || [])];
                                     newShifts[index] = { ...newShifts[index], endTime: e.target.value };
                                     setNewStaff({ ...newStaff, shifts: newShifts });
                                   }}

@@ -40,7 +40,7 @@ import { motion as Motion, AnimatePresence } from "framer-motion";
 import Snackbar from "../../../components/shared/Snackbar";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { useNavigate, useParams } from "react-router-dom";
-import StaffCalendarView from "../../../features/appointments/components/StaffCalendarView";
+import StaffCalendarView from "../components/StaffCalendarView";
 
 const BookingsTimeline = () => {
   const { shopSlug } = useParams();

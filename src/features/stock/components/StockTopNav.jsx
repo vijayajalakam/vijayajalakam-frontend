@@ -14,7 +14,7 @@ import {
 
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 
-const InventoryTopNav = () => {
+const StockTopNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { shopSlug } = useParams();
@@ -168,4 +168,5 @@ const InventoryTopNav = () => {
   );
 };
 
-export default InventoryTopNav;
+export { StockTopNav as InventoryTopNav };
+export default StockTopNav;

@@ -6,6 +6,7 @@ import { store } from "./store/store";
 import "./index.css";
 import App from "./App.jsx";
 import { Toaster } from "react-hot-toast";
+import ErrorBoundary from "./components/shared/ErrorBoundary";
 
 // Google Translate Crash Fix
 // This prevents React from crashing when Google Translate modifies the DOM text nodes
@@ -45,23 +46,23 @@ if (typeof Node === "function" && Node.prototype) {
 console.log(import.meta.env.VITE_GOOGLE_CLIENT_ID, "this is tghe id")
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-        <Toaster
-      position="top-right"
-      toastOptions={{
-        duration: 3000,
-        style: {
-          background: '#333',
-          color: '#fff',
-        },
-      }}
-    />
+    <ErrorBoundary>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+        }}
+      />
 
-    <Provider store={store}>
-      <GoogleOAuthProvider 
-      clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
-      >
-        <App />
-      </GoogleOAuthProvider>
-    </Provider>
+      <Provider store={store}>
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+          <App />
+        </GoogleOAuthProvider>
+      </Provider>
+    </ErrorBoundary>
   </StrictMode>,
 );

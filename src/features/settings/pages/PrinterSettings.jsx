@@ -9,7 +9,7 @@ import ScanPrinterPopup from "../../../components/shared/ScanPrinterPopup";
 import CustomDropdown from "../../../components/shared/CustomDropdown";
 import { PrinterSkeleton } from "../../../components/shared/Skeleton";
 import ConfirmModal from "../../../components/shared/ConfirmModal";
-import InvoicePrintLayout from "../../sales/components/InvoicePrintLayout";
+import InvoicePrintLayout from "../../invoice/components/InvoicePrintLayout";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import {
   isFlutterWebView,

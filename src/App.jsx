@@ -15,19 +15,19 @@ import Login from "./features/auth/pages/Login";
 import Register from "./features/auth/pages/Register";
 
 import Dashboard from "./features/dashboard/pages/Dashboard";
-import StaffManager from "./features/appointments/pages/StaffManager";
-import HRMPage from "./features/appointments/pages/HRMPage";
-import PayrollPage from "./features/appointments/pages/PayrollPage";
-import AttendanceManager from "./features/appointments/pages/AttendanceManager";
-import ServicesManager from "./features/appointments/pages/ServicesManager";
-import BookingsPage from "./features/appointments/pages/BookingsPage";
-import SlotManager from "./features/appointments/pages/SlotManager";
-import ServicePage from "./features/appointments/pages/ServicePage";
-import InvoicesPage from "./features/sales/pages/InvoicesPage";
-import CustomerManager from "./features/crm/pages/CustomerManager";
-import CRMPage from "./features/crm/pages/CRMPage";
-import CustomerGroupManager from "./features/crm/pages/CustomerGroupManager";
-import LoyaltyPointsManager from "./features/crm/pages/LoyaltyPointsManager";
+import StaffManager from "./features/staff/pages/StaffManager";
+import StaffPage, { HRMPage } from "./features/staff/pages/StaffPage";
+import PayrollPage from "./features/staff/pages/PayrollPage";
+import AttendanceManager from "./features/staff/pages/AttendanceManager";
+import ServicesManager from "./features/staff/pages/ServicesManager";
+import BookingsPage from "./features/staff/pages/BookingsPage";
+import SlotManager from "./features/staff/pages/SlotManager";
+import ServicePage from "./features/staff/pages/ServicePage";
+import InvoicesPage from "./features/invoice/pages/InvoicesPage";
+import BuyerManager, { CustomerManager } from "./features/buyer/pages/BuyerManager";
+import BuyerPage, { CRMPage } from "./features/buyer/pages/BuyerPage";
+import BuyerGroupManager, { CustomerGroupManager } from "./features/buyer/pages/BuyerGroupManager";
+import LoyaltyPointsManager from "./features/buyer/pages/LoyaltyPointsManager";
 import ShopManager from "./features/settings/pages/ShopManager";
 import PrinterSettings from "./features/settings/pages/PrinterSettings";
 import DayClosingSettings from "./features/settings/pages/DayClosingSettings";
@@ -69,7 +69,7 @@ import StaffCreditReportPage from "./features/reports/pages/StaffCreditReportPag
 import SupplierCreditReportPage from "./features/reports/pages/SupplierCreditReportPage";
 import TrashInvoiceReport from "./features/reports/pages/TrashInvoiceReport";
 import StaffSettlementReport from "./features/reports/pages/StaffSettlementReport";
-import ServiceAttributes from "./features/appointments/pages/ServiceAttributes";
+import ServiceAttributes from "./features/staff/pages/ServiceAttributes";
 import AppointmentAnalyticsReport from "./features/reports/pages/AppointmentAnalyticsReport";
 import MorePage from "./features/settings/pages/MorePage";
 import DocumentSettings from "./features/settings/pages/DocumentSettings";
@@ -91,52 +91,52 @@ import PreviewsPage from "./features/settings/pages/PreviewsPage";
 
 
 // Stock Module
-import StockPage from "./features/inventory/pages/StockPage";
+import StockPage from "./features/stock/pages/StockPage";
 import PurchaseInvoicePage from "./features/purchases/pages/PurchaseInvoicePage";
 import PurchaseReturnPage from "./features/purchases/pages/PurchaseReturnPage";
-import DamageEntryPage from "./features/inventory/pages/DamageEntryPage";
-import ConsumptionEntryPage from "./features/inventory/pages/ConsumptionEntryPage";
-import StockAdjustmentPage from "./features/inventory/pages/StockAdjustmentPage";
-import ProductMasterPage from "./features/inventory/pages/ProductMasterPage";
+import DamageEntryPage from "./features/stock/pages/DamageEntryPage";
+import ConsumptionEntryPage from "./features/stock/pages/ConsumptionEntryPage";
+import StockAdjustmentPage from "./features/stock/pages/StockAdjustmentPage";
+import ProductMasterPage from "./features/stock/pages/ProductMasterPage";
 import SupplierManager from "./features/purchases/pages/SupplierManager";
-import StockReportPage from "./features/inventory/pages/StockReportPage";
+import StockReportPage from "./features/stock/pages/StockReportPage";
 import PurchaseReportPage from "./features/purchases/pages/PurchaseReportPage";
 import PurchaseReturnReportPage from "./features/purchases/pages/PurchaseReturnReportPage";
 import SupplierCreditReportPageLegacy from "./features/purchases/pages/SupplierCreditReportPage";
 import SupplierStatementPage from "./features/purchases/pages/SupplierStatementPage";
-import DamageReportPage from "./features/inventory/pages/DamageReportPage";
-import StockTransferPage from "./features/inventory/pages/StockTransferPage";
+import DamageReportPage from "./features/stock/pages/DamageReportPage";
+import StockTransferPage from "./features/stock/pages/StockTransferPage";
 import PurchaseOrderPage from "./features/purchases/pages/PurchaseOrderPage";
 import PurchaseEntryForm from "./features/purchases/pages/PurchaseEntryForm";
 import PurchaseReturnForm from "./features/purchases/pages/PurchaseReturnForm";
 import PurchaseOrderForm from "./features/purchases/pages/PurchaseOrderForm";
-import StockTransferReportPage from "./features/inventory/pages/StockTransferReportPage";
-import ConsumptionReportPage from "./features/inventory/pages/ConsumptionReportPage";
+import StockTransferReportPage from "./features/stock/pages/StockTransferReportPage";
+import ConsumptionReportPage from "./features/stock/pages/ConsumptionReportPage";
 import PurchaseTaxReport from "./features/purchases/pages/PurchaseTaxReport";
 import PurchaseVatReport from "./features/purchases/pages/PurchaseVatReport";
 
 // Accounts Module
-import AccountsPage from "./features/accounting/pages/AccountsPage";
-import ChartOfAccountsPage from "./features/accounting/pages/ChartOfAccountsPage";
+import AccountsPage from "./features/accounts/pages/AccountsPage";
+import ChartOfAccountsPage from "./features/accounts/pages/ChartOfAccountsPage";
 import {
   ReceiptPage,
   PaymentVoucherPage,
   ContraPage,
   JournalPage,
-} from "./features/accounting/pages/TransactionPage";
-import AccountStatementPage from "./features/accounting/pages/AccountStatementPage";
-import TrialBalancePage from "./features/accounting/pages/TrialBalancePage";
-import BalanceSheetPage from "./features/accounting/pages/BalanceSheetPage";
-import ProfitLossPage from "./features/accounting/pages/ProfitLossPage";
-import ReceiptReportPage from "./features/accounting/pages/ReceiptReportPage";
-import PaymentReportPage from "./features/accounting/pages/PaymentReportPage";
-import ContraReportPage from "./features/accounting/pages/ContraReportPage";
-import JournalReportPage from "./features/accounting/pages/JournalReportPage";
-import GSTReportPage from "./features/accounting/pages/GSTReportPage";
-import DayReportPage from "./features/accounting/pages/DayReportPage";
+} from "./features/accounts/pages/TransactionPage";
+import AccountStatementPage from "./features/accounts/pages/AccountStatementPage";
+import TrialBalancePage from "./features/accounts/pages/TrialBalancePage";
+import BalanceSheetPage from "./features/accounts/pages/BalanceSheetPage";
+import ProfitLossPage from "./features/accounts/pages/ProfitLossPage";
+import ReceiptReportPage from "./features/accounts/pages/ReceiptReportPage";
+import PaymentReportPage from "./features/accounts/pages/PaymentReportPage";
+import ContraReportPage from "./features/accounts/pages/ContraReportPage";
+import JournalReportPage from "./features/accounts/pages/JournalReportPage";
+import GSTReportPage from "./features/accounts/pages/GSTReportPage";
+import DayReportPage from "./features/accounts/pages/DayReportPage";
 
-import BookingsTimeline from "./features/appointments/pages/Bookings";
-import UnifiedInvoiceEntry from "./features/sales/pages/UnifiedInvoiceEntry";
+import BookingsTimeline from "./features/staff/pages/Bookings";
+import UnifiedInvoiceEntry from "./features/invoice/pages/UnifiedInvoiceEntry";
 import BookAppointment from "./features/booking/pages/BookAppointment";
 import MyBookings from "./features/booking/pages/MyBookings";
 import UserHome from "./features/booking/pages/UserHome";

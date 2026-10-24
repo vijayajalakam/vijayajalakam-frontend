@@ -1,6 +1,6 @@
 import { UserCog } from "lucide-react";
 
-export const appointmentsSidebarConfig = [
+export const staffSidebarConfig = [
   {
     label: "Staff",
     path: "/admin/hrm",
@@ -9,3 +9,5 @@ export const appointmentsSidebarConfig = [
     permission: "hrm",
   },
 ];
+
+export const appointmentsSidebarConfig = staffSidebarConfig;

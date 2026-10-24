@@ -9,7 +9,7 @@ import {
 import { Users, UsersRound, BarChart3, Gift } from "lucide-react";
 import { useAuth } from "../../auth/hooks/useAuth";
 
-const CRMPage = () => {
+const BuyerPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { shopSlug } = useParams();
@@ -103,4 +103,5 @@ const CRMPage = () => {
   );
 };
 
-export default CRMPage;
+export { BuyerPage as CRMPage };
+export default BuyerPage;

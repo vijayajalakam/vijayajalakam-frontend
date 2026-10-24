@@ -1,9 +1,11 @@
 import { FileText } from "lucide-react";
 
-export const salesSidebarConfig = {
+export const invoiceSidebarConfig = {
   label: "Invoice",
-  path: "/invoice",  // Remove role prefix, getDynamicPortalPath will add it
+  path: "/invoice",
   icon: FileText,
   roles: ["staff", "admin", "SHOP_ADMIN"],
   permission: "invoice",
 };
+
+export const salesSidebarConfig = invoiceSidebarConfig;

@@ -27,7 +27,7 @@ const getGroupColor = (groupId) => {
   return GROUP_COLORS[index];
 };
 
-const CustomerGroupManager = () => {
+const BuyerGroupManager = () => {
   const [groups, setGroups] = useState([]);
   const [customers, setCustomers] = useState([]);
   
@@ -429,4 +429,5 @@ const CustomerGroupManager = () => {
   );
 };
 
-export default CustomerGroupManager;
+export { BuyerGroupManager as CustomerGroupManager };
+export default BuyerGroupManager;

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, Share2, Printer, X, Loader2 } from "lucide-react";
 import moment from "moment";
 import html2canvas from "html2canvas";
-import InvoicePrintLayout from "../../features/sales/components/InvoicePrintLayout";
+import InvoicePrintLayout from "../../features/invoice/components/InvoicePrintLayout";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useCurrency } from "../../hooks/useCurrency";
 import api from "../../api/axiosInstance";

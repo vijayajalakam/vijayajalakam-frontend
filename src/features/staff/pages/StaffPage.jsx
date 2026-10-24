@@ -9,7 +9,7 @@ import {
 import { Users, Clock, FileBarChart, Wallet, Shield } from "lucide-react";
 import { useAuth } from "../../auth/hooks/useAuth";
 
-const HRMPage = () => {
+const StaffPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { shopSlug } = useParams();
@@ -157,4 +157,5 @@ const HRMPage = () => {
   );
 };
 
-export default HRMPage;
+export { StaffPage as HRMPage };
+export default StaffPage;

@@ -57,7 +57,7 @@ import api from "../../../api/axiosInstance";
 import CustomerStyleModal from "../components/CustomerStyleModal";
 import CustomerStylesTab from "../components/CustomerStylesTab";
 
-const CustomerManager = () => {
+const BuyerManager = () => {
   const { hasPermission, isAdmin } = useAuth();
   const canAdd = isAdmin || hasPermission("crm:customers:add");
   const canEdit = isAdmin || hasPermission("crm:customers:edit");
@@ -1572,4 +1572,5 @@ const CustomerManager = () => {
   );
 };
 
-export default CustomerManager;
+export { BuyerManager as CustomerManager };
+export default BuyerManager;
