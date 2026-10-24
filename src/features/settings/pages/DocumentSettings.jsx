@@ -5,12 +5,9 @@ import {
   Save,
   Receipt,
   CreditCard,
-  FileCheck,
-  ShoppingCart,
-  RotateCcw,
-  Package,
-  Trash2,
+  AlertTriangle,
   TrendingDown,
+  ClipboardCheck,
   HandCoins,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -20,20 +17,82 @@ import { TableSkeleton } from "../../../components/shared/Skeleton";
 import { useAuth } from "../../auth/hooks/useAuth";
 
 const DocumentSettings = () => {
-  const { hasPermission, refreshConfig } = useAuth();
+  const { user, hasPermission, refreshConfig } = useAuth();
+  const isAdmin = user?.role === "admin" || user?.role === "SUPER_ADMIN" || user?.role === "SHOP_ADMIN";
+  const canEdit = isAdmin || hasPermission("settings:more:documents:edit");
   
+  // Only the active, valid document types used in Vijayajalakam Bookstore
   const documentTypes = [
-    { key: 'invoice', label: 'Invoice', icon: FileText, prefix: 'INV/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'receipt', label: 'Receipt', icon: Receipt, prefix: 'REC/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'payment', label: 'Payment', icon: CreditCard, prefix: 'PAY/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'bill', label: 'Bill', icon: FileCheck, prefix: 'BILL/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'purchaseInvoice', label: 'Purchase Invoice', icon: ShoppingCart, prefix: 'PI/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'purchaseReturn', label: 'Purchase Return', icon: RotateCcw, prefix: 'PR/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'purchaseOrder', label: 'Purchase Order', icon: Package, prefix: 'PO/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'stockTransfer', label: 'Stock Transfer', icon: Package, prefix: 'ST/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'damageEntry', label: 'Damage Books', icon: Trash2, prefix: 'DMG/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'consumptionEntry', label: 'Consumption Books', icon: TrendingDown, prefix: 'CON/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'settlement', label: 'Settlement', icon: HandCoins, prefix: 'SETTLE/', suffix: '', length: 5, nextNumber: 1 },
+    { 
+      key: 'invoice', 
+      label: 'Invoice', 
+      icon: FileText, 
+      prefix: 'INV/', 
+      suffix: '', 
+      length: 5, 
+      nextNumber: 1,
+      badge: 'Sales POS'
+    },
+    { 
+      key: 'receipt', 
+      label: 'Receipt', 
+      icon: Receipt, 
+      prefix: 'REC/', 
+      suffix: '', 
+      length: 5, 
+      nextNumber: 1,
+      badge: 'Accounts'
+    },
+    { 
+      key: 'payment', 
+      label: 'Payment', 
+      icon: CreditCard, 
+      prefix: 'PAY/', 
+      suffix: '', 
+      length: 5, 
+      nextNumber: 1,
+      badge: 'Accounts'
+    },
+    { 
+      key: 'damageEntry', 
+      label: 'Damage Books', 
+      icon: AlertTriangle, 
+      prefix: 'DMG/', 
+      suffix: '', 
+      length: 5, 
+      nextNumber: 1,
+      badge: 'Stock'
+    },
+    { 
+      key: 'consumptionEntry', 
+      label: 'Consumption Books', 
+      icon: TrendingDown, 
+      prefix: 'CON/', 
+      suffix: '', 
+      length: 5, 
+      nextNumber: 1,
+      badge: 'Stock'
+    },
+    { 
+      key: 'stockAdjustment', 
+      label: 'Adjust Books', 
+      icon: ClipboardCheck, 
+      prefix: 'ADJ/', 
+      suffix: '', 
+      length: 5, 
+      nextNumber: 1,
+      badge: 'Stock'
+    },
+    { 
+      key: 'settlement', 
+      label: 'Settlement', 
+      icon: HandCoins, 
+      prefix: 'SETTLE/', 
+      suffix: '', 
+      length: 5, 
+      nextNumber: 1,
+      badge: 'Staff'
+    },
   ];
 
   const [formData, setFormData] = useState({});
@@ -49,11 +108,12 @@ const DocumentSettings = () => {
 
   const fetchSettings = async () => {
     try {
+      setFetching(true);
       const res = await api.get("/admin/profile");
       if (res.data.success) {
         const bData = res.data.data;
-        const business = bData?.businessProfile || bData?.business;
-        const { shopCreatedYear: year, currentNumbers: backendCurrentNumbers } = res.data.data;
+        const business = bData?.businessProfile || bData?.business || {};
+        const { shopCreatedYear: year, currentNumbers: backendCurrentNumbers } = bData;
         
         const data = {};
         const original = {};
@@ -64,20 +124,27 @@ const DocumentSettings = () => {
           const lengthKey = `${doc.key}Length`;
           const nextNumberKey = `${doc.key}NextNumber`;
           
-          data[prefixKey] = business[prefixKey] || doc.prefix;
-          data[suffixKey] = business[suffixKey] || (year ? `/${year}` : "");
-          data[lengthKey] = business[lengthKey] || doc.length;
-          data[nextNumberKey] = business[nextNumberKey] || doc.nextNumber;
+          data[prefixKey] = business[prefixKey] !== undefined && business[prefixKey] !== null
+            ? business[prefixKey] 
+            : doc.prefix;
+          data[suffixKey] = business[suffixKey] !== undefined && business[suffixKey] !== null
+            ? business[suffixKey] 
+            : (year ? `/${year}` : doc.suffix);
+          data[lengthKey] = business[lengthKey] !== undefined && business[lengthKey] !== null
+            ? business[lengthKey] 
+            : doc.length;
+          data[nextNumberKey] = business[nextNumberKey] !== undefined && business[nextNumberKey] !== null
+            ? business[nextNumberKey] 
+            : doc.nextNumber;
           
           original[prefixKey] = data[prefixKey];
           original[suffixKey] = data[suffixKey];
+          original[nextNumberKey] = data[nextNumberKey];
         });
         
         setFormData(data);
         setOriginalData(original);
         setShopCreatedYear(year || "");
-        
-        // Set current numbers from backend
         setCurrentNumbers(backendCurrentNumbers || {});
       }
     } catch (err) {
@@ -99,10 +166,11 @@ const DocumentSettings = () => {
       const extractedSuffix = firstSuffix.startsWith("/") ? firstSuffix.substring(1) : firstSuffix;
       setGlobalSuffix(extractedSuffix || shopCreatedYear);
     }
-  }, [fetching, formData]);
+  }, [fetching, formData, shopCreatedYear, globalSuffix]);
 
   const handleGlobalSuffixChange = (value) => {
-    setGlobalSuffix(value);
+    const cleanValue = value.replace(/^\/+/, "");
+    setGlobalSuffix(cleanValue);
     
     // Update all document suffixes with the new global suffix
     setFormData((prev) => {
@@ -112,11 +180,13 @@ const DocumentSettings = () => {
         const nextNumberKey = `${doc.key}NextNumber`;
         
         // Update suffix
-        newData[suffixKey] = value ? `/${value}` : "";
+        newData[suffixKey] = cleanValue ? `/${cleanValue}` : "";
         
-        // Reset next number to 1 if suffix changed
+        // Reset next number to 1 if suffix changed from original saved state
         if (newData[suffixKey] !== originalData[suffixKey]) {
           newData[nextNumberKey] = 1;
+        } else {
+          newData[nextNumberKey] = originalData[nextNumberKey] || 1;
         }
       });
       return newData;
@@ -133,10 +203,18 @@ const DocumentSettings = () => {
       const suffixKey = `${docKey}Suffix`;
       const nextNumberKey = `${docKey}NextNumber`;
       
-      if (field === 'prefix' && value !== originalData[prefixKey]) {
-        newData[nextNumberKey] = 1;
-      } else if (field === 'suffix' && value !== originalData[suffixKey]) {
-        newData[nextNumberKey] = 1;
+      if (field === 'prefix') {
+        if (value !== originalData[prefixKey]) {
+          newData[nextNumberKey] = 1;
+        } else {
+          newData[nextNumberKey] = originalData[nextNumberKey] || 1;
+        }
+      } else if (field === 'suffix') {
+        if (value !== originalData[suffixKey]) {
+          newData[nextNumberKey] = 1;
+        } else {
+          newData[nextNumberKey] = originalData[nextNumberKey] || 1;
+        }
       }
       
       return newData;
@@ -144,7 +222,7 @@ const DocumentSettings = () => {
   };
 
   const handleSave = async () => {
-    if (!hasPermission("settings:more:documents:edit")) {
+    if (!canEdit) {
       showSnack("You don't have permission to edit settings", "error");
       return;
     }
@@ -164,8 +242,10 @@ const DocumentSettings = () => {
         documentTypes.forEach(doc => {
           const prefixKey = `${doc.key}Prefix`;
           const suffixKey = `${doc.key}Suffix`;
+          const nextNumberKey = `${doc.key}NextNumber`;
           newOriginal[prefixKey] = formData[prefixKey];
           newOriginal[suffixKey] = formData[suffixKey];
+          newOriginal[nextNumberKey] = formData[nextNumberKey];
         });
         setOriginalData(newOriginal);
         
@@ -186,10 +266,10 @@ const DocumentSettings = () => {
     const lengthKey = `${docKey}Length`;
     const nextNumberKey = `${docKey}NextNumber`;
     
-    const prefix = formData[prefixKey] || "";
-    const suffix = formData[suffixKey] || "";
-    const length = formData[lengthKey] || 5;
-    const nextNumber = formData[nextNumberKey] || 1;
+    const prefix = formData[prefixKey] !== undefined ? formData[prefixKey] : "";
+    const suffix = formData[suffixKey] !== undefined ? formData[suffixKey] : "";
+    const length = Math.max(1, Math.min(10, Number(formData[lengthKey]) || 5));
+    const nextNumber = Math.max(1, Number(formData[nextNumberKey]) || 1);
     
     const formattedNumber = String(nextNumber).padStart(length, '0');
     return `${prefix}${formattedNumber}${suffix}`;
@@ -198,12 +278,10 @@ const DocumentSettings = () => {
   if (fetching) {
     return (
       <div className="p-6 h-full">
-        <TableSkeleton rows={8} cols={7} />
+        <TableSkeleton rows={7} cols={7} />
       </div>
     );
   }
-
-  const canEdit = hasPermission("settings:more:documents:edit");
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -213,19 +291,19 @@ const DocumentSettings = () => {
         onClose={() => setSnack({ ...snack, message: "" })}
       />
 
-      {/* Custom Header */}
-      <div className="flex items-center justify-between mb-6 px-6 py-4 bg-white dark:bg-dark-card rounded-xl">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6 px-6 py-4 bg-white dark:bg-dark-card rounded-xl border border-gray-100 dark:border-dark-border">
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Document Settings</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Configure numbering formats for all document types
+            Configure numbering formats for all active document types
           </p>
         </div>
         <div className="flex-shrink-0 ml-4">
           <button
             onClick={handleSave}
             disabled={saving || !canEdit}
-            className={`flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-white rounded-xl font-semibold text-sm hover:bg-brand-secondary transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-white rounded-xl font-semibold text-sm hover:bg-brand-secondary transition-all shadow-sm ${
               (saving || !canEdit) ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -252,7 +330,7 @@ const DocumentSettings = () => {
       >
         <div className="overflow-x-auto">
           <table className="w-full text-start bg-white dark:bg-dark-surface border-separate border-spacing-0">
-            <thead className="bg-gray-50/30 dark:bg-dark-card/50 border-b border-gray-100 dark:border-dark-border">
+            <thead className="bg-gray-50/50 dark:bg-dark-card/50 border-b border-gray-100 dark:border-dark-border">
               <tr>
                 <th className="px-6 py-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] border-b border-gray-100 dark:border-dark-border text-start">
                   Document Type
@@ -271,7 +349,7 @@ const DocumentSettings = () => {
                     <span>Suffix</span>
                     <input
                       type="text"
-                      maxLength="4"
+                      maxLength="6"
                       value={globalSuffix}
                       onChange={(e) => handleGlobalSuffixChange(e.target.value)}
                       disabled={!canEdit}
@@ -302,16 +380,19 @@ const DocumentSettings = () => {
                     key={doc.key}
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.01, duration: 0.2 }}
+                    transition={{ delay: idx * 0.02, duration: 0.2 }}
                     className="hover:bg-gray-50 dark:bg-dark-card/50 dark:hover:bg-dark-card/50 transition-colors group"
                   >
                     {/* Document Type */}
                     <td className="px-6 py-4 border-b border-gray-50/50 dark:border-dark-border/50">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gradient-to-br from-brand-primary/10 to-blue-50 dark:from-brand-primary/20 dark:to-dark-surface rounded-lg">
-                          <Icon size={16} className="text-brand-primary dark:text-blue-400" />
+                        <div className="p-2.5 bg-gradient-to-br from-brand-primary/10 to-blue-50 dark:from-brand-primary/20 dark:to-dark-surface rounded-xl flex-shrink-0">
+                          <Icon size={18} className="text-brand-primary dark:text-blue-400" />
                         </div>
-                        <span className="text-[13px] font-bold text-gray-900 dark:text-white">{doc.label}</span>
+                        <div>
+                          <span className="text-[13px] font-bold text-gray-900 dark:text-white block leading-tight">{doc.label}</span>
+                          <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{doc.badge}</span>
+                        </div>
                       </div>
                     </td>
                     
@@ -322,7 +403,7 @@ const DocumentSettings = () => {
                           type="number"
                           min="1"
                           max="10"
-                          value={formData[lengthKey] || 5}
+                          value={formData[lengthKey] !== undefined ? formData[lengthKey] : 5}
                           onChange={(e) => handleChange(doc.key, 'length', Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
                           disabled={!canEdit}
                           className="w-16 px-2 py-1.5 text-center bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-lg text-[12px] font-semibold text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -335,7 +416,7 @@ const DocumentSettings = () => {
                       <input
                         type="text"
                         maxLength="10"
-                        value={formData[prefixKey] || ""}
+                        value={formData[prefixKey] !== undefined ? formData[prefixKey] : ""}
                         onChange={(e) => handleChange(doc.key, 'prefix', e.target.value)}
                         disabled={!canEdit}
                         placeholder={doc.prefix}
@@ -349,7 +430,7 @@ const DocumentSettings = () => {
                         <input
                           type="number"
                           min="1"
-                          value={formData[nextNumberKey] || 1}
+                          value={formData[nextNumberKey] !== undefined ? formData[nextNumberKey] : 1}
                           onChange={(e) => handleChange(doc.key, 'nextNumber', Math.max(1, parseInt(e.target.value) || 1))}
                           disabled={!canEdit}
                           className="w-20 px-2 py-1.5 text-center bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-lg text-[12px] font-semibold text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -362,10 +443,10 @@ const DocumentSettings = () => {
                       <input
                         type="text"
                         maxLength="10"
-                        value={formData[suffixKey] || ""}
+                        value={formData[suffixKey] !== undefined ? formData[suffixKey] : ""}
                         onChange={(e) => handleChange(doc.key, 'suffix', e.target.value)}
                         disabled={!canEdit}
-                        placeholder={`/${shopCreatedYear}`}
+                        placeholder={shopCreatedYear ? `/${shopCreatedYear}` : ""}
                         className="w-full px-3 py-1.5 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-lg text-[12px] font-semibold text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </td>
@@ -374,7 +455,7 @@ const DocumentSettings = () => {
                     <td className="px-6 py-4 border-b border-gray-50/50 dark:border-dark-border/50">
                       <div className="flex justify-center">
                         <span className="inline-flex items-center px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-900/30 rounded-lg text-[11px] font-black text-emerald-700 dark:text-emerald-400">
-                          {currentNumbers[doc.key] || 0}
+                          {currentNumbers[doc.key] !== undefined ? currentNumbers[doc.key] : 0}
                         </span>
                       </div>
                     </td>
@@ -382,7 +463,7 @@ const DocumentSettings = () => {
                     {/* Sample */}
                     <td className="px-6 py-4 border-b border-gray-50/50 dark:border-dark-border/50">
                       <div className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-brand-primary/10 via-blue-50 to-indigo-50 dark:from-brand-primary/20 dark:via-dark-surface dark:to-dark-border border border-brand-primary/30 rounded-lg">
-                        <span className="text-[11px] font-black text-brand-primary dark:text-blue-400 tracking-wide">
+                        <span className="text-[11px] font-black text-brand-primary dark:text-blue-400 tracking-wide font-mono">
                           {generateSample(doc.key)}
                         </span>
                       </div>
@@ -399,11 +480,11 @@ const DocumentSettings = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.15 }}
         className="mt-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-2xl border border-blue-200 dark:border-blue-800/30 p-6"
       >
         <div className="flex items-start gap-4">
-          <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+          <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex-shrink-0">
             <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1">
@@ -419,9 +500,9 @@ const DocumentSettings = () => {
                   What is Document Settings?
                 </h4>
                 <p className="ml-4 leading-relaxed">
-                  Document Settings allows you to customize the numbering format for all types of documents in your system. 
-                  Each document type (Invoice, Receipt, Payment, etc.) can have its own unique numbering pattern with a prefix, 
-                  number length, and suffix.
+                  Document Settings allows you to customize numbering formats for all documents across the software. 
+                  Each active document type (Invoice, Receipt, Payment, Damage Books, Consumption Books, Adjust Books, and Settlement) 
+                  can have its own unique numbering format with a prefix, digit length, and suffix.
                 </p>
               </div>
 
@@ -434,38 +515,37 @@ const DocumentSettings = () => {
                 <ul className="ml-4 space-y-2 leading-relaxed">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span><strong>Prefix:</strong> Text that appears before the number (e.g., "INV/", "REC/")</span>
+                    <span><strong>Prefix:</strong> Text that appears before the number (e.g., &quot;INV/&quot;, &quot;REC/&quot;, &quot;DMG/&quot;)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span><strong>Length:</strong> Number of digits in the document number (padded with zeros)</span>
+                    <span><strong>Length:</strong> Number of digits in the document number (padded with leading zeros, e.g., 5 digits &rarr; 00001)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span><strong>Next No:</strong> The next number that will be used for new documents</span>
+                    <span><strong>Next No:</strong> The sequence number that will be assigned to the next document created</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span><strong>Suffix:</strong> Text that appears after the number (e.g., "/24" for year 2024)</span>
+                    <span><strong>Suffix:</strong> Text appended to the number (e.g., &quot;/26&quot; for year 2026)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span><strong>Current:</strong> Shows the last used number in the system</span>
+                    <span><strong>Current:</strong> Displays the highest/last recorded document number in the database</span>
                   </li>
                 </ul>
               </div>
 
-              {/* Number Reset Feature */}
+              {/* Automatic Number Reset */}
               <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded-xl p-4">
                 <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2 flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-amber-600 dark:bg-amber-400 rounded-full"></span>
-                  Automatic Number Reset
+                  Automatic Number Reset on Suffix or Prefix Change
                 </h4>
                 <p className="ml-4 leading-relaxed text-amber-800 dark:text-amber-200">
-                  When you change the <strong>Prefix</strong> or <strong>Suffix</strong> of any document type, 
-                  the "Next No" will automatically reset to <strong>1</strong>. This ensures a fresh numbering sequence 
-                  for the new format. For example, if you change the suffix from "/24" to "/25" (for a new year), 
-                  the numbering will start from 1 again with the new suffix.
+                  When you update the <strong>Prefix</strong> or <strong>Suffix</strong> of any document type, 
+                  the &quot;Next No&quot; automatically resets to <strong>1</strong>. For example, when changing the year suffix from 
+                  &quot;/25&quot; to &quot;/26&quot;, numbering seamlessly begins from 1 again for the new financial period.
                 </p>
               </div>
 
@@ -473,61 +553,13 @@ const DocumentSettings = () => {
               <div>
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
-                  Global Suffix Update
+                  Global Suffix Quick-Update
                 </h4>
                 <p className="ml-4 leading-relaxed">
-                  Use the input box in the "Suffix" column header to change the suffix for <strong>all document types at once</strong>. 
-                  This is useful when starting a new financial year. Simply enter the new year (e.g., "25" for 2025) and all 
-                  document suffixes will be updated to "/25", and all "Next No" values will reset to 1.
+                  Use the quick input in the <strong>Suffix</strong> column header to update all document suffixes simultaneously. 
+                  Typing a new year (e.g., &quot;26&quot;) will instantly update all document suffixes to &quot;/26&quot; and reset 
+                  their next numbers to 1.
                 </p>
-              </div>
-
-              {/* Example */}
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 rounded-xl p-4">
-                <h4 className="font-semibold text-green-900 dark:text-green-300 mb-2 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-green-600 dark:bg-green-400 rounded-full"></span>
-                  Example Scenario
-                </h4>
-                <div className="ml-4 space-y-2 text-green-800 dark:text-green-200">
-                  <p className="leading-relaxed">
-                    <strong>Current Setup:</strong> Invoice format is "INV/00027/24" (Prefix: INV/, Next No: 27, Suffix: /24)
-                  </p>
-                  <p className="leading-relaxed">
-                    <strong>Action:</strong> You change the global suffix from "24" to "25" for the new year
-                  </p>
-                  <p className="leading-relaxed">
-                    <strong>Result:</strong> Invoice format becomes "INV/00001/25" (Next No automatically resets to 1)
-                  </p>
-                  <p className="leading-relaxed">
-                    <strong>Benefit:</strong> Fresh numbering sequence for the new year without manual reset
-                  </p>
-                </div>
-              </div>
-
-              {/* Tips */}
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
-                  Tips
-                </h4>
-                <ul className="ml-4 space-y-2 leading-relaxed">
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span>The "Sample" column shows how your next document number will look</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span>You can manually set "Next No" to any number if needed (e.g., to continue from a previous system)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span>Changes take effect immediately after clicking "Save Changes"</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 dark:text-blue-400 font-bold mt-0.5">•</span>
-                    <span>The "Current" number shows the last document number used in your system</span>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
