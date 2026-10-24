@@ -3233,7 +3233,7 @@ const UnifiedInvoiceEntry = () => {
               services: serviceItemsPayload,
             },
           }).unwrap();
-          responseData = res?.data;
+          responseData = res?.data || res;
         } else if (bookingId) {
           const res = await completeApptMut({
             id: bookingId,
@@ -3257,10 +3257,10 @@ const UnifiedInvoiceEntry = () => {
               razorpayPaymentId,
             },
           }).unwrap();
-          responseData = res?.data;
+          responseData = res?.data || res;
         } else {
           const res = await createApptMut(finalPayload).unwrap();
-          responseData = res?.data;
+          responseData = res?.data || res;
         }
         return responseData;
       };
@@ -3383,10 +3383,12 @@ const UnifiedInvoiceEntry = () => {
 
 
       function handleCheckoutSuccess(responseData) {
-
+        const invoiceObj = responseData?.invoice || responseData?.data?.invoice || responseData?.data || responseData;
         const invoiceNo =
+          invoiceObj?.invoiceNumber ||
           responseData?.invoice?.invoiceNumber ||
           responseData?.invoiceNumber ||
+          responseData?.data?.invoiceNumber ||
           (isEditing ? editInvoiceNumber : null) ||
           responseData?.appointmentNumber ||
           "N/A";
@@ -3418,7 +3420,7 @@ const UnifiedInvoiceEntry = () => {
         const totalPaidNow = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
         setSuccessData({
-          amount: totalPaidNow > 0 ? totalPaidNow : (responseData?.finalAmount || finalTotal),
+          amount: totalPaidNow > 0 ? totalPaidNow : (invoiceObj?.finalAmount || invoiceObj?.totalAmount || responseData?.finalAmount || finalTotal),
           invoiceNo,
           paymentMethod: payload.paymentMethod,
           paymentTime: invoiceDate

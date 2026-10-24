@@ -34,6 +34,7 @@ export const {
   useCancelInvoiceMutation,
   useCompleteAppointmentMutation,
   useCreateAppointmentMutation,
+  useCreateInvoiceMutation,
   useCancelAppointmentMutation,
   useCreateAdminCustomerMutation,
   useToggleProductFavouriteMutation,
@@ -222,15 +223,64 @@ export const {
     }),
 
     completeAppointment: builder.mutation({
-      queryFn: () => ({ data: {} }),
+      query: (body) => ({
+        url: "/invoices",
+        method: "POST",
+        data: body,
+      }),
+      transformResponse: asData,
+      invalidatesTags: [
+        { type: "Invoice", id: "LIST" },
+        "InvoiceMetadata",
+        "Product",
+        "Dashboard",
+        "CounterSession",
+      ],
     }),
 
     createAppointment: builder.mutation({
-      queryFn: () => ({ data: {} }),
+      query: (body) => ({
+        url: "/invoices",
+        method: "POST",
+        data: body,
+      }),
+      transformResponse: asData,
+      invalidatesTags: [
+        { type: "Invoice", id: "LIST" },
+        "InvoiceMetadata",
+        "Product",
+        "Dashboard",
+        "CounterSession",
+      ],
+    }),
+
+    createInvoice: builder.mutation({
+      query: (body) => ({
+        url: "/invoices",
+        method: "POST",
+        data: body,
+      }),
+      transformResponse: asData,
+      invalidatesTags: [
+        { type: "Invoice", id: "LIST" },
+        "InvoiceMetadata",
+        "Product",
+        "Dashboard",
+        "CounterSession",
+      ],
     }),
 
     cancelAppointment: builder.mutation({
-      queryFn: () => ({ data: {} }),
+      query: (id) => ({
+        url: `/invoices/${id}/cancel`,
+        method: "PUT",
+      }),
+      invalidatesTags: (result, error, id) => [
+        { type: "Invoice", id },
+        { type: "Invoice", id: "LIST" },
+        "Dashboard",
+        "CounterSession",
+      ],
     }),
 
     createAdminCustomer: builder.mutation({
