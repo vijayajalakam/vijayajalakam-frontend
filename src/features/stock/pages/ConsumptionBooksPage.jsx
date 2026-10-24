@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import api from "../../../api/axiosInstance";
 import CustomTable from "../../../components/shared/CustomTable";
 import Modal from "../../../components/shared/Modal";
@@ -6,7 +6,7 @@ import CustomTextField from "../../../components/shared/CustomTextField";
 import CustomDropdown from "../../../components/shared/CustomDropdown";
 import ConfirmModal from "../../../components/shared/ConfirmModal";
 import {
-  AlertTriangle,
+  MinusCircle,
   Trash2,
   Package,
   DollarSign,
@@ -26,12 +26,12 @@ import {
 } from "../../../components/shared/Skeleton";
 import Snackbar from "../../../components/shared/Snackbar";
 
-const DamageEntryPage = () => {
+const ConsumptionBooksPage = () => {
   const { user, currencySymbol, hasPermission } = useAuth();
   const isAdmin = user?.role === "SUPER_ADMIN";
-  const canAdd = isAdmin || hasPermission("stock:damage_entry:add");
-  const canEdit = isAdmin || hasPermission("stock:damage_entry:edit");
-  const canDelete = isAdmin || hasPermission("stock:damage_entry:delete");
+  const canAdd = isAdmin || hasPermission("stock:consumption_entry:add");
+  const canEdit = isAdmin || hasPermission("stock:consumption_entry:edit");
+  const canDelete = isAdmin || hasPermission("stock:consumption_entry:delete");
   const [entries, setEntries] = useState([]);
   const [products, setProducts] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -83,7 +83,7 @@ const DamageEntryPage = () => {
     </span>
   );
 
-  const fetchData = React.useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -91,19 +91,23 @@ const DamageEntryPage = () => {
       if (filters.endDate) params.append("endDate", filters.endDate);
 
       const [entRes, prodRes, branchRes] = await Promise.all([
-        api.get(`/damages?${params.toString()}`),
+        api.get(`/consumptions?${params.toString()}`),
         api.get("/products"),
         api.get("/shops"),
       ]);
       if (entRes.data.success) setEntries(entRes.data.data);
       if (prodRes.data.success) setProducts(prodRes.data.data);
       if (branchRes.data.success) setBranches(branchRes.data.data);
-    } catch (_err) {
-      console.error(_err);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
   }, [filters]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     if (user?.branchId && !editingId) {
@@ -112,18 +116,15 @@ const DamageEntryPage = () => {
       setForm((prev) => ({ ...prev, branchId: bId }));
     }
   }, [user, editingId]);
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
       if (editingId) {
-        await api.put(`/damages/${editingId}`, form);
+        await api.put(`/consumptions/${editingId}`, form);
       } else {
-        await api.post("/damages", form);
+        await api.post("/consumptions", form);
       }
       setShowModal(false);
       setForm({
@@ -137,9 +138,9 @@ const DamageEntryPage = () => {
       });
       setEditingId(null);
       fetchData();
-    } catch (_err) {
+    } catch (err) {
       showSnack(
-        _err.response?.data?.message || "Error creating damage entry",
+        err.response?.data?.message || "Error recording consumption books",
         "error",
       );
     } finally {
@@ -155,7 +156,7 @@ const DamageEntryPage = () => {
   const handleDelete = async () => {
     if (!entryToDelete) return;
     try {
-      await api.delete(`/damages/${entryToDelete._id}`);
+      await api.delete(`/consumptions/${entryToDelete._id}`);
       fetchData();
       setIsDeleteModalOpen(false);
       setEntryToDelete(null);
@@ -164,7 +165,7 @@ const DamageEntryPage = () => {
     }
   };
 
-  const totalLoss = entries.reduce((sum, e) => sum + (e.lossAmount || 0), 0);
+  const totalCost = entries.reduce((sum, e) => sum + (e.costAmount || 0), 0);
   const totalQty = entries.reduce((sum, e) => sum + e.quantity, 0);
   const filtered = entries.filter(
     (e) =>
@@ -174,6 +175,7 @@ const DamageEntryPage = () => {
       e.product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       e.branchId?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
   const selectedProduct = products.find((p) => p._id === form.product);
   const selectedVariant = selectedProduct?.variants?.find(
     (v) =>
@@ -194,7 +196,7 @@ const DamageEntryPage = () => {
     return bStock ? bStock.currentStock : 0;
   })();
 
-  const estimatedLoss = selectedVariant
+  const estimatedCost = selectedVariant
     ? (selectedVariant.purchasePrice || selectedProduct.purchasePrice) *
       Number(form.quantity)
     : selectedProduct
@@ -203,27 +205,27 @@ const DamageEntryPage = () => {
 
   const stats = [
     {
-      label: "Total Entries",
+      label: "Total Consumptions",
       value: entries.length,
       icon: Package,
       color: "bg-blue-50 text-blue-600",
     },
     {
-      label: "Total Qty Damaged",
+      label: "Items Consumed",
       value: totalQty,
-      icon: AlertTriangle,
-      color: "bg-red-50 text-red-600",
+      icon: MinusCircle,
+      color: "bg-orange-50 text-orange-600",
     },
     {
-      label: "Total Loss",
+      label: "Total Value",
       value: (
         <span className="notranslate">
           {currencySymbol}
-          {totalLoss.toLocaleString()}
+          {totalCost.toLocaleString()}
         </span>
       ),
       icon: DollarSign,
-      color: "bg-amber-50 text-amber-600",
+      color: "bg-emerald-50 text-emerald-600",
     },
   ];
 
@@ -231,20 +233,24 @@ const DamageEntryPage = () => {
     {
       header: "Entry #",
       render: (r) => (
-        <span className="font-mono text-xs text-gray-500 dark:text-gray-400">{r.entryNumber}</span>
+        <span className="font-mono text-xs font-bold text-gray-500 dark:text-gray-400">
+          {r.entryNumber}
+        </span>
       ),
     },
     {
       header: "Date",
       render: (r) => (
-        <span className="text-sm">{new Date(r.date).toLocaleDateString()}</span>
+        <span className="text-sm font-medium">
+          {new Date(r.date).toLocaleDateString()}
+        </span>
       ),
     },
     {
       header: "Product",
       render: (r) => (
-        <div className="flex flex-col">
-          <span className="text-sm font-medium">
+        <div>
+          <span className="text-sm font-bold block">
             {r.product?.name || r.productName || "N/A"}
           </span>
           {r.variantName && (
@@ -270,21 +276,23 @@ const DamageEntryPage = () => {
     },
     {
       header: "Quantity",
-      render: (r) => <span className="text-sm font-bold">{r.quantity}</span>,
+      render: (r) => (
+        <span className="text-sm font-black text-orange-600 dark:text-orange-400">{r.quantity}</span>
+      ),
     },
     {
-      header: "Loss Amount",
+      header: "Cost Value",
       render: (r) => (
-        <span className="text-sm font-bold text-red-600 notranslate">
+        <span className="text-sm font-bold text-gray-700 dark:text-gray-300 notranslate">
           {currencySymbol}
-          {(r.lossAmount || 0).toLocaleString()}
+          {(r.costAmount || 0).toLocaleString()}
         </span>
       ),
     },
     {
-      header: "Reason",
+      header: "Reason given",
       render: (r) => (
-        <span className="text-sm text-gray-500 dark:text-gray-400">{r.reason || "—"}</span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">{r.reason || "—"}</span>
       ),
     },
     {
@@ -343,7 +351,7 @@ const DamageEntryPage = () => {
         }
         className={`flex-1 px-4 py-2.5 text-white font-bold rounded-xl transition-all active:scale-95 text-sm cursor-pointer ${isSubmitting ? "bg-gray-400" : "bg-brand-primary hover:bg-brand-secondary"}`}
       >
-        {isSubmitting ? "Processing..." : "Record Damage"}
+        {isSubmitting ? "Processing..." : "Record Consumption Books"}
       </button>
     </div>
   );
@@ -364,13 +372,14 @@ const DamageEntryPage = () => {
         ) : (
           <>
             <StatsGrid stats={stats} />
+
             <CustomTable
               columns={columns}
               data={filtered}
               loading={loading}
               searchQuery={searchTerm}
               onSearchChange={setSearchTerm}
-              searchPlaceholder="Search damage entries..."
+              searchPlaceholder="Search consumption books..."
               startDate={filters.startDate}
               endDate={filters.endDate}
               onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
@@ -379,18 +388,18 @@ const DamageEntryPage = () => {
                 canAdd ? (
                   <button
                     onClick={() => openEdit({})}
-                    className="h-9 w-9 md:w-auto md:px-4 flex items-center justify-center gap-2 bg-brand-primary text-white font-bold rounded-xl transition-all hover:bg-brand-primary-dark active:scale-95 text-[10px] uppercase tracking-[0.15em] shrink-0 shadow-sm"
+                    className="h-9 px-4 flex items-center gap-2 bg-brand-primary text-white font-bold rounded-xl transition-all hover:bg-brand-primary-dark active:scale-95 text-[10px] uppercase tracking-[0.15em] shrink-0 shadow-sm"
                   >
                     <Plus size={14} />
-                    <span className="hidden md:inline">Record Damage</span>
+                    <span className="hidden sm:inline">Record Consumption Books</span>
                   </button>
                 ) : null
               }
-              emptyMessage="No damage entries yet."
+              emptyMessage="No consumption books recorded yet."
               mobileMapper={{
                 leading: () => (
-                  <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-red-400 border border-red-100">
-                    <AlertTriangle size={22} />
+                  <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-400 border border-orange-100">
+                    <MinusCircle size={22} />
                   </div>
                 ),
                 title: (r) => (
@@ -406,7 +415,7 @@ const DamageEntryPage = () => {
                 subtitle: (r) => (
                   <div className="flex flex-col mt-0.5">
                     <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 truncate">
-                      {r.reason || "Inventory Damage"} •{" "}
+                      {r.reason || "Manual Consumption"} •{" "}
                       {r.branchId?.name || "N/A"} •{" "}
                       {new Date(r.date).toLocaleDateString()}
                     </p>
@@ -420,11 +429,10 @@ const DamageEntryPage = () => {
                 trailing: (r) => (
                   <div className="text-right">
                     <p className="text-[8px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest leading-none mb-0.5">
-                      Loss
+                      Qty
                     </p>
-                    <p className="text-[13px] font-black text-red-600 notranslate">
-                      {currencySymbol}
-                      {(r.lossAmount || 0).toLocaleString()}
+                    <p className="text-[13px] font-black text-orange-600 dark:text-orange-400">
+                      {r.quantity}
                     </p>
                   </div>
                 ),
@@ -475,7 +483,7 @@ const DamageEntryPage = () => {
             date: new Date().toISOString().split("T")[0],
           });
         }}
-        title={editingId ? "Edit Damage Entry" : "New Damage Entry"}
+        title={editingId ? "Edit Consumption Books" : "New Consumption Books"}
         footer={footerContent}
         position="right"
         size="lg"
@@ -486,7 +494,9 @@ const DamageEntryPage = () => {
               label="Branch"
               icon={Store}
               value={form.branchId}
-              onChange={(e) => setForm({ ...form, branchId: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, branchId: e.target.value, quantity: 1 })
+              }
               options={branches
                 .filter((b) => {
                   if (user?.role !== "staff") return true;
@@ -532,7 +542,7 @@ const DamageEntryPage = () => {
                         String(b.branchId?._id || b.branchId) ===
                         String(form.branchId),
                     );
-                    stockLabel = `(Stock: ${bStock ? bStock.currentStock : 0})`;
+                    stockLabel = `(Stock: ${bStock ? bStock.currentStock : 0} ${p.unit})`;
                   }
                 }
                 return {
@@ -541,7 +551,7 @@ const DamageEntryPage = () => {
                   searchLabel: p.name,
                 };
               })}
-              placeholder="Select Product"
+              placeholder="Select Product..."
               required
               isSearchable
             />
@@ -596,7 +606,7 @@ const DamageEntryPage = () => {
           <div className="grid grid-cols-2 gap-4">
             <CustomTextField
               label="Quantity *"
-              icon={AlertTriangle}
+              icon={MinusCircle}
               type="number"
               value={form.quantity}
               onChange={(e) =>
@@ -620,18 +630,18 @@ const DamageEntryPage = () => {
           </div>
 
           <CustomTextField
-            label="Reason / Remarks"
+            label="Reason / Notes"
             icon={Info}
             value={form.reason}
             onChange={(e) => setForm({ ...form, reason: e.target.value })}
-            placeholder="e.g. Broken during transit..."
+            placeholder="e.g. Used for staff training..."
           />
 
           {selectedProduct && form.quantity > 0 && (
-            <div className="px-5 py-4 bg-red-50/50 border border-red-100 rounded-2xl flex items-center justify-between">
+            <div className="px-5 py-4 bg-brand-primary/5 border border-brand-primary/10 rounded-2xl flex items-center justify-between">
               <div>
-                <div className="text-[10px] font-bold uppercase text-red-500 tracking-widest">
-                  Estimated Loss
+                <div className="text-[10px] font-bold uppercase text-brand-primary dark:text-blue-400 tracking-widest">
+                  Estimated Value
                 </div>
                 <div className="text-[10px] text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
                   {selectedProduct.name}{" "}
@@ -643,9 +653,9 @@ const DamageEntryPage = () => {
                     : selectedProduct.purchasePrice}
                 </div>
               </div>
-              <div className="text-xl font-black text-red-600 notranslate">
+              <div className="text-xl font-black text-brand-primary dark:text-blue-400 notranslate">
                 {currencySymbol}
-                {estimatedLoss.toLocaleString()}
+                {estimatedCost.toLocaleString()}
               </div>
             </div>
           )}
@@ -656,11 +666,12 @@ const DamageEntryPage = () => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
-        title="Delete Damage Entry"
-        message="Are you sure you want to delete this injury? Stock levels will be reversed automatically."
+        title="Delete Consumption Books"
+        message="Are you sure you want to delete this record? Stock levels will be reversed automatically."
       />
     </>
   );
 };
 
-export default DamageEntryPage;
+export { ConsumptionBooksPage as ConsumptionEntryPage };
+export default ConsumptionBooksPage;

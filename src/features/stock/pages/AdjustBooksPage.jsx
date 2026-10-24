@@ -19,7 +19,7 @@ import {
 import StatsGrid from "../../../components/shared/StatsGrid";
 import Snackbar from "../../../components/shared/Snackbar";
 
-const StockAdjustmentPage = () => {
+const AdjustBooksPage = () => {
   const { user, hasPermission } = useAuth();
   const isAdmin = user?.role === "SUPER_ADMIN";
   const canAdd = isAdmin || hasPermission("stock:stock_adjustment:add");
@@ -472,4 +472,5 @@ const StockAdjustmentPage = () => {
   );
 };
 
-export default StockAdjustmentPage;
+export { AdjustBooksPage as StockAdjustmentPage };
+export default AdjustBooksPage;

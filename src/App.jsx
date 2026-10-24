@@ -92,16 +92,16 @@ import PreviewsPage from "./features/settings/pages/PreviewsPage";
 
 // Stock Module
 import StockPage from "./features/stock/pages/StockPage";
-import DamageEntryPage from "./features/stock/pages/DamageEntryPage";
-import ConsumptionEntryPage from "./features/stock/pages/ConsumptionEntryPage";
-import StockAdjustmentPage from "./features/stock/pages/StockAdjustmentPage";
+import DamageBooksPage from "./features/stock/pages/DamageBooksPage";
+import ConsumptionBooksPage from "./features/stock/pages/ConsumptionBooksPage";
+import AdjustBooksPage from "./features/stock/pages/AdjustBooksPage";
 import ProductMasterPage from "./features/stock/pages/ProductMasterPage";
 import SupplierManager from "./features/purchases/pages/SupplierManager";
 import StockReportPage from "./features/stock/pages/StockReportPage";
 import SupplierCreditReportPageLegacy from "./features/purchases/pages/SupplierCreditReportPage";
 import SupplierStatementPage from "./features/purchases/pages/SupplierStatementPage";
-import DamageReportPage from "./features/stock/pages/DamageReportPage";
-import ConsumptionReportPage from "./features/stock/pages/ConsumptionReportPage";
+import DamageBooksReportPage from "./features/stock/pages/DamageBooksReportPage";
+import ConsumptionBooksReportPage from "./features/stock/pages/ConsumptionBooksReportPage";
 import PurchaseVatReport from "./features/purchases/pages/PurchaseVatReport";
 
 // Accounts Module
@@ -744,7 +744,7 @@ function App() {
                         path="damage-report"
                         element={
                           <ProtectedRoute requiredPermission="reports:stock:damage_report">
-                            <DamageReportPage />
+                            <DamageBooksReportPage />
                           </ProtectedRoute>
                         }
                       />
@@ -752,7 +752,7 @@ function App() {
                         path="consumption-report"
                         element={
                           <ProtectedRoute requiredPermission="reports:stock:consumption_report">
-                            <ConsumptionReportPage />
+                            <ConsumptionBooksReportPage />
                           </ProtectedRoute>
                         }
                       />
@@ -890,7 +890,15 @@ function App() {
                         path="damage-entry"
                         element={
                           <ProtectedRoute requiredPermission="stock:damage_entry:view">
-                            <DamageEntryPage />
+                            <DamageBooksPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="damage-books"
+                        element={
+                          <ProtectedRoute requiredPermission="stock:damage_entry:view">
+                            <DamageBooksPage />
                           </ProtectedRoute>
                         }
                       />
@@ -898,7 +906,15 @@ function App() {
                         path="consumption-entry"
                         element={
                           <ProtectedRoute requiredPermission="stock:consumption_entry:view">
-                            <ConsumptionEntryPage />
+                            <ConsumptionBooksPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="consumption-books"
+                        element={
+                          <ProtectedRoute requiredPermission="stock:consumption_entry:view">
+                            <ConsumptionBooksPage />
                           </ProtectedRoute>
                         }
                       />
@@ -906,7 +922,15 @@ function App() {
                         path="stock-adjustment"
                         element={
                           <ProtectedRoute requiredPermission="stock:stock_adjustment:view">
-                            <StockAdjustmentPage />
+                            <AdjustBooksPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="adjust-books"
+                        element={
+                          <ProtectedRoute requiredPermission="stock:stock_adjustment:view">
+                            <AdjustBooksPage />
                           </ProtectedRoute>
                         }
                       />
@@ -924,11 +948,11 @@ function App() {
                       />
                       <Route
                         path="damage-report"
-                        element={<DamageReportPage />}
+                        element={<DamageBooksReportPage />}
                       />
                       <Route
                         path="consumption-report"
-                        element={<ConsumptionReportPage />}
+                        element={<ConsumptionBooksReportPage />}
                       />
                     </Route>
                   </Route>

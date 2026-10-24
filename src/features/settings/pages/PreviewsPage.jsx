@@ -659,21 +659,21 @@ const PreviewsPage = () => {
     },
     {
       id: "stock-adjustment",
-      label: "Stock Adjustment",
+      label: "Adjust Books",
       icon: CheckCircle2,
       reportLabel: "Stock Report"
     },
     {
       id: "damage-entry",
-      label: "Damage Entry",
+      label: "Damage Books",
       icon: AlertTriangle,
-      reportLabel: "Damage Report"
+      reportLabel: "Damage Books Report"
     },
     {
       id: "consumption-entry",
-      label: "Consumption Entry",
+      label: "Consumption Books",
       icon: MinusCircle,
-      reportLabel: "Consumption Report"
+      reportLabel: "Consumption Books Report"
     },
   ];
 

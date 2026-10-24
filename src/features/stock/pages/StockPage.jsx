@@ -34,7 +34,7 @@ const StockPage = () => {
     },
     {
       id: "stock-adjustment",
-      label: "Stock Adjustment",
+      label: "Adjust Books",
       icon: ClipboardCheck,
       path: getDynamicPortalPath("/admin/stock/stock-adjustment"),
       reportPath: getDynamicPortalPath("/admin/reports/stock-report"),
@@ -42,7 +42,7 @@ const StockPage = () => {
     },
     {
       id: "damage-entry",
-      label: "Damage Entry",
+      label: "Damage Books",
       icon: AlertTriangle,
       path: getDynamicPortalPath("/admin/stock/damage-entry"),
       reportPath: getDynamicPortalPath("/admin/reports/damage-report"),
@@ -50,7 +50,7 @@ const StockPage = () => {
     },
     {
       id: "consumption-entry",
-      label: "Consumption Entry",
+      label: "Consumption Books",
       icon: MinusCircle,
       path: getDynamicPortalPath("/admin/stock/consumption-entry"),
       reportPath: getDynamicPortalPath("/admin/reports/consumption-report"),

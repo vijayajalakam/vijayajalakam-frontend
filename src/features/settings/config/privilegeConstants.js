@@ -170,32 +170,32 @@ export const AVAILABLE_PERMISSIONS = [
 
             {
                 key: 'damage_entry',
-                label: 'Damage Entry',
+                label: 'Damage Books',
                 actions: [
                     { key: 'view', label: 'View Records' },
-                    { key: 'add', label: 'Record Damage' },
-                    { key: 'edit', label: 'Edit Damage' },
-                    { key: 'delete', label: 'Delete Damage' }
+                    { key: 'add', label: 'Record Damage Books' },
+                    { key: 'edit', label: 'Edit Damage Books' },
+                    { key: 'delete', label: 'Delete Damage Books' }
                 ]
             },
             {
                 key: 'consumption_entry',
-                label: 'Consumption Entry',
+                label: 'Consumption Books',
                 actions: [
                     { key: 'view', label: 'View Records' },
-                    { key: 'add', label: 'Record Consumption' },
-                    { key: 'edit', label: 'Edit Consumption' },
-                    { key: 'delete', label: 'Delete Consumption' }
+                    { key: 'add', label: 'Record Consumption Books' },
+                    { key: 'edit', label: 'Edit Consumption Books' },
+                    { key: 'delete', label: 'Delete Consumption Books' }
                 ]
             },
             {
                 key: 'stock_adjustment',
-                label: 'Stock Adjustment',
+                label: 'Adjust Books',
                 actions: [
-                    { key: 'view', label: 'View Adjustments' },
-                    { key: 'add', label: 'New Adjustment' },
-                    { key: 'edit', label: 'Edit Adjustment' },
-                    { key: 'delete', label: 'Delete Adjustment' }
+                    { key: 'view', label: 'View Adjust Books' },
+                    { key: 'add', label: 'New Adjust Books' },
+                    { key: 'edit', label: 'Edit Adjust Books' },
+                    { key: 'delete', label: 'Delete Adjust Books' }
                 ]
             }
         ]
@@ -587,7 +587,7 @@ export const AVAILABLE_PERMISSIONS = [
 
                     {
                         key: 'damage_report',
-                        label: 'Damage Report',
+                        label: 'Damage Books Report',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' },
@@ -596,7 +596,7 @@ export const AVAILABLE_PERMISSIONS = [
                     },
                     {
                         key: 'consumption_report',
-                        label: 'Consumption Report',
+                        label: 'Consumption Books Report',
                         actions: [
                             { key: 'view', label: 'View' },
                             { key: 'export', label: 'Export' },

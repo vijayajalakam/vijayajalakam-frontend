@@ -280,14 +280,14 @@ const ReportsPage = () => {
         },
         {
           id: "damage",
-          label: "Damage Report",
+          label: "Damage Books Report",
           icon: AlertTriangle,
           path: getDynamicPortalPath("/admin/reports/damage-report"),
           permission: "reports:stock:damage_report"
         },
         {
           id: "consumption-report",
-          label: "Consumption Report",
+          label: "Consumption Books Report",
           icon: MinusCircle,
           path: getDynamicPortalPath("/admin/reports/consumption-report"),
           permission: "reports:stock:consumption_report"

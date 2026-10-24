@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../api/axiosInstance";
 import CustomTable from "../../../components/shared/CustomTable";
-import { AlertTriangle, Package } from "lucide-react";
+import { MinusCircle, Package, Info } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { usePagination } from "../../../hooks/usePagination";
 import ReportLayout from "../../../components/shared/ReportLayout";
 import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 
-const DamageReportPage = () => {
+const ConsumptionBooksReportPage = () => {
   const { currencySymbol } = useAuth();
   const [data, setData] = useState([]);
   const [summary, setSummary] = useState(null);
@@ -30,7 +30,7 @@ const DamageReportPage = () => {
       if (endDate) params.append("endDate", endDate);
       if (searchTerm) params.append("search", searchTerm);
 
-      const res = await api.get(`/damages/report?${params}`);
+      const res = await api.get(`/consumptions/report?${params}`);
       if (res.data.success) {
         setData(res.data.data);
         setSummary(res.data.summary);
@@ -67,7 +67,7 @@ const DamageReportPage = () => {
       if (endDate) params.append("endDate", endDate);
       if (searchTerm) params.append("search", searchTerm);
 
-      const res = await api.get(`/damages/report?${params.toString()}`);
+      const res = await api.get(`/consumptions/report?${params.toString()}`);
       return res.data.success ? res.data.data : [];
     } catch (err) {
       console.error("Export fetch failed", err);
@@ -82,13 +82,13 @@ const DamageReportPage = () => {
       count: summary.totalEntries,
       segments: [
         {
-          label: "Total Inventory Loss",
+          label: "Total Consumption Cost",
           value: summary.totalValue,
-          color: "#ef4444",
+          color: "#f97316",
           inProgressBar: true,
         },
         {
-          label: "Log Entries",
+          label: "Aggregate Entries",
           value: summary.totalEntries,
           color: "#94a3b8",
           inProgressBar: true,
@@ -99,7 +99,7 @@ const DamageReportPage = () => {
 
   const columns = [
     {
-      header: "Entry Details",
+      header: "Date & Entry",
       render: (row) => (
         <div className="flex flex-col">
           <span className="text-sm font-bold text-gray-900 dark:text-white leading-tight">
@@ -127,17 +127,17 @@ const DamageReportPage = () => {
     {
       header: "Quantity",
       render: (row) => (
-        <span className="text-sm font-bold text-gray-900 dark:text-white">
+        <span className="text-sm font-bold text-orange-600 dark:text-orange-400">
           {row.quantity} {row.product?.unit}
         </span>
       ),
     },
     {
-      header: "Value Loss",
+      header: "Total Cost",
       render: (row) => (
-        <span className="text-sm font-black text-rose-600 dark:text-rose-400 notranslate">
+        <span className="text-sm font-black text-gray-900 dark:text-white notranslate">
           {currencySymbol}
-          {(row.lossAmount || 0).toLocaleString()}
+          {(row.costAmount || 0).toLocaleString()}
         </span>
       ),
     },
@@ -145,18 +145,21 @@ const DamageReportPage = () => {
       header: "Reason",
       align: "right",
       render: (row) => (
-        <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-tight">
-          {row.reason || "Damage / Expired"}
-        </span>
+        <div className="flex items-center justify-end gap-1.5">
+          <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-tight italic">
+            {row.reason || "General"}
+          </span>
+          <Info size={12} className="text-gray-300" />
+        </div>
       ),
     },
   ];
 
   return (
-    <ReportLayout title="Damage Report" subtitle="Monitor inventory losses and damage logs">
+    <ReportLayout title="Consumption Books Report" subtitle="Analyze material usage and book consumption logs">
       {summaryData && (
         <ReportSummaryCard
-          title="Loss Summary"
+          title="Consumption Summary"
           totalValue={summaryData.total}
           totalCount={summaryData.count}
           segments={summaryData.segments}
@@ -179,11 +182,11 @@ const DamageReportPage = () => {
           ...pagination,
           onPageChange,
         }}
-        emptyMessage="No damage records found for the selected period."
+        emptyMessage="No consumption history for this period."
         mobileMapper={{
           leading: () => (
-            <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center text-rose-400 border border-rose-100">
-              <AlertTriangle size={22} />
+            <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-400 border border-orange-100">
+              <MinusCircle size={22} />
             </div>
           ),
           title: (row) => (
@@ -193,18 +196,17 @@ const DamageReportPage = () => {
           ),
           subtitle: (row) => (
             <div className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest mt-0.5">
-              {row.reason || "Damage"} •{" "}
+              {row.reason || "Consumption"} •{" "}
               {new Date(row.date).toLocaleDateString()}
             </div>
           ),
           trailing: (row) => (
             <div className="text-right">
-              <div className="text-sm font-black text-rose-600 dark:text-rose-400">
-                {currencySymbol}
-                {(row.lossAmount || 0).toLocaleString()}
+              <div className="text-sm font-black text-orange-600 dark:text-orange-400">
+                {row.quantity}
               </div>
               <span className="text-[8px] text-gray-400 dark:text-gray-500 font-bold uppercase">
-                Loss Value
+                {row.product?.unit || "Units"}
               </span>
             </div>
           ),
@@ -214,4 +216,5 @@ const DamageReportPage = () => {
   );
 };
 
-export default DamageReportPage;
+export { ConsumptionBooksReportPage as ConsumptionReportPage };
+export default ConsumptionBooksReportPage;

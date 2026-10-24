@@ -35,8 +35,8 @@ const DocumentSettings = () => {
     { key: 'contra', label: 'Contra', icon: ArrowLeftRight, prefix: 'CV/', suffix: '', length: 5, nextNumber: 1 },
     { key: 'purchaseOrder', label: 'Purchase Order', icon: Package, prefix: 'PO/', suffix: '', length: 5, nextNumber: 1 },
     { key: 'stockTransfer', label: 'Stock Transfer', icon: Package, prefix: 'ST/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'damageEntry', label: 'Damage Entry', icon: Trash2, prefix: 'DMG/', suffix: '', length: 5, nextNumber: 1 },
-    { key: 'consumptionEntry', label: 'Consumption Entry', icon: TrendingDown, prefix: 'CON/', suffix: '', length: 5, nextNumber: 1 },
+    { key: 'damageEntry', label: 'Damage Books', icon: Trash2, prefix: 'DMG/', suffix: '', length: 5, nextNumber: 1 },
+    { key: 'consumptionEntry', label: 'Consumption Books', icon: TrendingDown, prefix: 'CON/', suffix: '', length: 5, nextNumber: 1 },
     { key: 'settlement', label: 'Settlement', icon: HandCoins, prefix: 'SETTLE/', suffix: '', length: 5, nextNumber: 1 },
   ];
 
