@@ -21,7 +21,7 @@ import { rtkErrorMessage } from "../../../store/api/rtkUtils";
 import StatsGrid from "../../../components/shared/StatsGrid";
 import {
   Users,
-  Scissors,
+  UserCheck,
   UserPlus,
   Trash2,
   Mail,
@@ -528,7 +528,7 @@ const StaffManager = () => {
   };
 
   // Calculate real stats
-  const activeStylists =
+  const activeServiceProviders =
     staff?.filter((s) => s.services && s.services.length > 0).length || 0;
   const shopsCovered =
     new Set(staff?.map((s) => s.shop?._id).filter(Boolean)).size || 0;
@@ -546,8 +546,8 @@ const StaffManager = () => {
     },
     {
       label: "Service Providers",
-      value: activeStylists,
-      icon: Scissors,
+      value: activeServiceProviders,
+      icon: UserCheck,
       color: "bg-emerald-50 text-emerald-600",
     },
     {
@@ -1210,7 +1210,7 @@ const StaffManager = () => {
                               <div className="flex gap-2 mt-2">
                                 <input
                                   type="text"
-                                  placeholder="e.g. Hairstylist, Chef..."
+                                  placeholder="e.g. Educator, Author, Instructor..."
                                   value={newDesignationName}
                                   onChange={(e) => setNewDesignationName(e.target.value)}
                                   className="flex-1 h-[38px] px-3 rounded-lg border border-gray-200 dark:border-dark-border text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
