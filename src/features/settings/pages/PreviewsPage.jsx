@@ -29,7 +29,6 @@ import {
   CreditCard,
   BarChart3,
   FileText,
-  Truck,
   AlertTriangle,
   MinusCircle,
   Scissors,
@@ -659,28 +658,10 @@ const PreviewsPage = () => {
       reportLabel: "Stock Report"
     },
     {
-      id: "purchase-order",
-      label: "Purchase Orders",
-      icon: ClipboardList,
-      reportLabel: "Purchase Report"
-    },
-    {
-      id: "purchase-entry",
-      label: "Purchase Entry",
-      icon: FileText,
-      reportLabel: "Purchase Report"
-    },
-    {
-      id: "purchase-return",
-      label: "Purchase Returns",
-      icon: RotateCcw,
-      reportLabel: "Return Report"
-    },
-    {
-      id: "stock-transfer",
-      label: "Stock Transfer",
-      icon: Truck,
-      reportLabel: "Transfer Report"
+      id: "stock-adjustment",
+      label: "Stock Adjustment",
+      icon: CheckCircle2,
+      reportLabel: "Stock Report"
     },
     {
       id: "damage-entry",
@@ -693,12 +674,6 @@ const PreviewsPage = () => {
       label: "Consumption Entry",
       icon: MinusCircle,
       reportLabel: "Consumption Report"
-    },
-    {
-      id: "stock-adjustment",
-      label: "Stock Adjustment",
-      icon: CheckCircle2,
-      reportLabel: "Stock Report"
     },
   ];
 

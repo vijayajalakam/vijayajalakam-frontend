@@ -92,27 +92,16 @@ import PreviewsPage from "./features/settings/pages/PreviewsPage";
 
 // Stock Module
 import StockPage from "./features/stock/pages/StockPage";
-import PurchaseInvoicePage from "./features/purchases/pages/PurchaseInvoicePage";
-import PurchaseReturnPage from "./features/purchases/pages/PurchaseReturnPage";
 import DamageEntryPage from "./features/stock/pages/DamageEntryPage";
 import ConsumptionEntryPage from "./features/stock/pages/ConsumptionEntryPage";
 import StockAdjustmentPage from "./features/stock/pages/StockAdjustmentPage";
 import ProductMasterPage from "./features/stock/pages/ProductMasterPage";
 import SupplierManager from "./features/purchases/pages/SupplierManager";
 import StockReportPage from "./features/stock/pages/StockReportPage";
-import PurchaseReportPage from "./features/purchases/pages/PurchaseReportPage";
-import PurchaseReturnReportPage from "./features/purchases/pages/PurchaseReturnReportPage";
 import SupplierCreditReportPageLegacy from "./features/purchases/pages/SupplierCreditReportPage";
 import SupplierStatementPage from "./features/purchases/pages/SupplierStatementPage";
 import DamageReportPage from "./features/stock/pages/DamageReportPage";
-import StockTransferPage from "./features/stock/pages/StockTransferPage";
-import PurchaseOrderPage from "./features/purchases/pages/PurchaseOrderPage";
-import PurchaseEntryForm from "./features/purchases/pages/PurchaseEntryForm";
-import PurchaseReturnForm from "./features/purchases/pages/PurchaseReturnForm";
-import PurchaseOrderForm from "./features/purchases/pages/PurchaseOrderForm";
-import StockTransferReportPage from "./features/stock/pages/StockTransferReportPage";
 import ConsumptionReportPage from "./features/stock/pages/ConsumptionReportPage";
-import PurchaseTaxReport from "./features/purchases/pages/PurchaseTaxReport";
 import PurchaseVatReport from "./features/purchases/pages/PurchaseVatReport";
 
 // Accounts Module
@@ -712,34 +701,10 @@ function App() {
                         }
                       />
                       <Route
-                        path="purchase-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:stock:purchase_report">
-                            <PurchaseReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="purchase-tax"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:stock:purchase_tax_report">
-                            <PurchaseTaxReport />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
                         path="vat-in"
                         element={
                           <ProtectedRoute requiredPermission="reports:accounts:vat_in_report">
                             <PurchaseVatReport />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="return-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:stock:purchase_return_report">
-                            <PurchaseReturnReportPage />
                           </ProtectedRoute>
                         }
                       />
@@ -780,14 +745,6 @@ function App() {
                         element={
                           <ProtectedRoute requiredPermission="reports:stock:damage_report">
                             <DamageReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="transfer-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:stock:stock_transfer_report">
-                            <StockTransferReportPage />
                           </ProtectedRoute>
                         }
                       />
@@ -930,38 +887,6 @@ function App() {
                         }
                       />
                       <Route
-                        path="purchase-order"
-                        element={
-                          <ProtectedRoute requiredPermission="stock:purchase_orders:view">
-                            <PurchaseOrderPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="purchase-invoice"
-                        element={
-                          <ProtectedRoute requiredPermission="stock:purchase_invoices:view">
-                            <PurchaseInvoicePage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="purchase-return"
-                        element={
-                          <ProtectedRoute requiredPermission="stock:purchase_returns:view">
-                            <PurchaseReturnPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="stock-transfer"
-                        element={
-                          <ProtectedRoute requiredPermission="stock:stock_transfer:view">
-                            <StockTransferPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
                         path="damage-entry"
                         element={
                           <ProtectedRoute requiredPermission="stock:damage_entry:view">
@@ -986,40 +911,8 @@ function App() {
                         }
                       />
                       <Route
-                        path="purchase-invoice/new"
-                        element={<PurchaseEntryForm />}
-                      />
-                      <Route
-                        path="purchase-invoice/edit/:id"
-                        element={<PurchaseEntryForm />}
-                      />
-                      <Route
-                        path="purchase-return/new"
-                        element={<PurchaseReturnForm />}
-                      />
-                      <Route
-                        path="purchase-return/edit/:id"
-                        element={<PurchaseReturnForm />}
-                      />
-                      <Route
-                        path="purchase-order/new"
-                        element={<PurchaseOrderForm />}
-                      />
-                      <Route
-                        path="purchase-order/edit/:id"
-                        element={<PurchaseOrderForm />}
-                      />
-                      <Route
                         path="stock-report"
                         element={<StockReportPage />}
-                      />
-                      <Route
-                        path="purchase-report"
-                        element={<PurchaseReportPage />}
-                      />
-                      <Route
-                        path="return-report"
-                        element={<PurchaseReturnReportPage />}
                       />
                       <Route
                         path="credit-report"
@@ -1032,10 +925,6 @@ function App() {
                       <Route
                         path="damage-report"
                         element={<DamageReportPage />}
-                      />
-                      <Route
-                        path="transfer-report"
-                        element={<StockTransferReportPage />}
                       />
                       <Route
                         path="consumption-report"

@@ -1,12 +1,8 @@
 import React from "react";
 import { useNavigate, useLocation, Outlet, useParams, Navigate } from "react-router-dom";
 import {
-  FileText,
-  RotateCcw,
   AlertTriangle,
   Package,
-  ClipboardList,
-  Truck,
   MinusCircle,
   ClipboardCheck,
   BarChart3,
@@ -35,30 +31,6 @@ const StockPage = () => {
       path: getDynamicPortalPath("/admin/stock/products"),
       reportPath: getDynamicPortalPath("/admin/reports/stock-report"),
       permission: "stock:products:view",
-    },
-    {
-      id: "purchase-order",
-      label: "Purchase Order",
-      icon: ClipboardList,
-      path: getDynamicPortalPath("/admin/stock/purchase-order"),
-      reportPath: getDynamicPortalPath("/admin/reports/purchase-report"),
-      permission: "stock:purchase_orders:view",
-    },
-    {
-      id: "purchase-invoice",
-      label: "Purchase Entry",
-      icon: FileText,
-      path: getDynamicPortalPath("/admin/stock/purchase-invoice"),
-      reportPath: getDynamicPortalPath("/admin/reports/purchase-report"),
-      permission: "stock:purchase_invoices:view",
-    },
-    {
-      id: "purchase-return",
-      label: "Purchase Return",
-      icon: RotateCcw,
-      path: getDynamicPortalPath("/admin/stock/purchase-return"),
-      reportPath: getDynamicPortalPath("/admin/reports/return-report"),
-      permission: "stock:purchase_returns:view",
     },
     {
       id: "stock-adjustment",

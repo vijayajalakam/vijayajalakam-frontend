@@ -1,13 +1,8 @@
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import {
-  FileText,
-  RotateCcw,
   AlertTriangle,
   Package,
-  ClipboardList,
-  Truck,
   MinusCircle,
-  Scissors,
   ClipboardCheck,
   BarChart3,
 } from "lucide-react";
@@ -36,39 +31,11 @@ const StockTopNav = () => {
       reportPath: getDynamicPortalPath("/admin/reports/stock-report"),
     },
     {
-      id: "purchase-order",
-      label: "Purchase Order",
-      icon: ClipboardList,
-      path: getDynamicPortalPath("/admin/stock/purchase-order"),
-      reportPath: getDynamicPortalPath("/admin/reports/purchase-order-report"),
-    },
-    {
-      id: "purchase-invoice",
-      label: "Purchase Entry",
-      icon: FileText,
-      path: getDynamicPortalPath("/admin/stock/purchase-invoice"),
-      reportPath: getDynamicPortalPath("/admin/reports/purchase-report"),
-    },
-    {
-      id: "purchase-return",
-      label: "Purchase Return",
-      icon: RotateCcw,
-      path: getDynamicPortalPath("/admin/stock/purchase-return"),
-      reportPath: getDynamicPortalPath("/admin/reports/purchase-return-report"),
-    },
-    {
       id: "stock-adjustment",
       label: "Stock Adjustment",
       icon: ClipboardCheck,
       path: getDynamicPortalPath("/admin/stock/stock-adjustment"),
-      reportPath: getDynamicPortalPath("/admin/reports/stock-adjustment-report"),
-    },
-    {
-      id: "stock-transfer",
-      label: "Stock Transfer",
-      icon: Truck,
-      path: getDynamicPortalPath("/admin/stock/stock-transfer"),
-      reportPath: getDynamicPortalPath("/admin/reports/stock-transfer-report"),
+      reportPath: getDynamicPortalPath("/admin/reports/stock-report"),
     },
     {
       id: "damage-entry",

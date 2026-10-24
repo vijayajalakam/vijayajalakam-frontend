@@ -9,7 +9,6 @@ import {
   Package,
   BarChart3,
   Truck,
-  RotateCcw,
   ClipboardList,
   AlertTriangle,
   Receipt,
@@ -278,27 +277,6 @@ const ReportsPage = () => {
           icon: BarChart3,
           path: getDynamicPortalPath("/admin/reports/stock-report"),
           permission: "reports:stock:stock_report"
-        },
-        {
-          id: "purchase",
-          label: "Purchase Report",
-          icon: Package,
-          path: getDynamicPortalPath("/admin/reports/purchase-report"),
-          permission: "reports:stock:purchase_report"
-        },
-        {
-          id: "purchase-tax",
-          label: "Purchase Tax Report",
-          icon: PieChart,
-          path: getDynamicPortalPath("/admin/reports/purchase-tax"),
-          permission: "reports:stock:purchase_tax_report"
-        },
-        {
-          id: "purchase-return",
-          label: "Purchase Return Report",
-          icon: RotateCcw,
-          path: getDynamicPortalPath("/admin/reports/return-report"),
-          permission: "reports:stock:purchase_return_report"
         },
         {
           id: "damage",
