@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../api/axiosInstance";
 import ReportLayout from "../../../components/shared/ReportLayout";
 import CustomTable from "../../../components/shared/CustomTable";
-import { ArrowDownCircle, Store } from "lucide-react";
+import { ArrowDownCircle } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 import { usePagination } from "../../../hooks/usePagination";
-import AccountingFilterModal from "../../../components/shared/AccountingFilterModal";
 
 const ReceiptReportPage = () => {
   const { currencySymbol, hasPermission } = useAuth();
@@ -17,11 +16,8 @@ const ReceiptReportPage = () => {
   const [filters, setFilters] = useState({
     startDate: today,
     endDate: today,
-    branches: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [shops, setShops] = useState([]);
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const { pagination, onPageChange, updatePagination, resetPagination } =
     usePagination({ initialLimit: 20 });
@@ -36,8 +32,6 @@ const ReceiptReportPage = () => {
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(
         `/account-transactions/receipt-report?${params}`,
@@ -65,12 +59,6 @@ const ReceiptReportPage = () => {
   }, [fetchData]);
 
   useEffect(() => {
-    api.get("/shops").then((r) => {
-      if (r.data.success) setShops(r.data.data);
-    });
-  }, []);
-
-  useEffect(() => {
     resetPagination();
   }, [filters, searchTerm, resetPagination]);
 
@@ -83,8 +71,6 @@ const ReceiptReportPage = () => {
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(
         `/account-transactions/receipt-report?${params}`,
@@ -203,12 +189,6 @@ const ReceiptReportPage = () => {
         endDate={filters.endDate}
         onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
         onEndDateChange={(val) => setFilters((prev) => ({ ...prev, endDate: val }))}
-        onFilterClick={() => setIsFilterModalOpen(true)}
-        filterCount={
-          Object.entries(filters).filter(([k, v]) =>
-            k !== "startDate" && k !== "endDate" && (Array.isArray(v) ? v.length > 0 : !!v),
-          ).length
-        }
         mobileMapper={{
           leading: () => (
             <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-400 border border-emerald-100 flex items-center justify-center font-bold">
@@ -234,13 +214,6 @@ const ReceiptReportPage = () => {
             </div>
           ),
         }}
-      />
-      <AccountingFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApply={setFilters}
-        branches={shops}
-        initialFilters={filters}
       />
     </ReportLayout>
   );

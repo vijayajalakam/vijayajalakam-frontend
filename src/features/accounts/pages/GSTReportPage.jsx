@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../api/axiosInstance";
 import CustomTable from "../../../components/shared/CustomTable";
-import { Landmark, Store } from "lucide-react";
+import { Landmark } from "lucide-react";
 import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { exportToCSV } from "../../../utils/exportUtils";
 import moment from "moment";
 import { usePagination } from "../../../hooks/usePagination";
-import AccountingFilterModal from "../../../components/shared/AccountingFilterModal";
 
 const GSTReportPage = () => {
   const { currencySymbol, country } = useAuth();
@@ -18,11 +17,8 @@ const GSTReportPage = () => {
   const [filters, setFilters] = useState({
     startDate: today,
     endDate: today,
-    branches: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [shops, setShops] = useState([]);
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const { pagination, onPageChange, updatePagination, resetPagination } =
     usePagination({ initialLimit: 20 });
@@ -47,8 +43,6 @@ const GSTReportPage = () => {
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(`/account-transactions/gst-report?${params}`);
       if (res.data.success) {
@@ -74,12 +68,6 @@ const GSTReportPage = () => {
   }, [fetchData]);
 
   useEffect(() => {
-    api.get("/shops").then((r) => {
-      if (r.data.success) setShops(r.data.data);
-    });
-  }, []);
-
-  useEffect(() => {
     resetPagination();
   }, [filters, searchTerm, resetPagination]);
 
@@ -92,8 +80,6 @@ const GSTReportPage = () => {
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(`/account-transactions/gst-report?${params}`);
       return res.data.success ? res.data.data : [];
@@ -255,12 +241,6 @@ const GSTReportPage = () => {
           onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
           onEndDateChange={(val) => setFilters((prev) => ({ ...prev, endDate: val }))}
           pagination={{ ...pagination, onPageChange }}
-          onFilterClick={() => setIsFilterModalOpen(true)}
-          filterCount={
-            Object.entries(filters).filter(([k, v]) =>
-              k !== "startDate" && k !== "endDate" && (Array.isArray(v) ? v.length > 0 : !!v),
-            ).length
-          }
           emptyMessage={`No ${taxLabel.toLowerCase()} records for this period.`}
           mobileMapper={{
             leading: (row) => (
@@ -310,13 +290,6 @@ const GSTReportPage = () => {
           }}
         />
       </div>
-      <AccountingFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApply={setFilters}
-        branches={shops}
-        initialFilters={filters}
-      />
     </>
   );
 };

@@ -25,10 +25,8 @@ const AdjustBooksPage = () => {
   const canAdd = isAdmin || hasPermission("stock:stock_adjustment:add");
 
   const [products, setProducts] = useState([]);
-  const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBranch, setSelectedBranch] = useState("");
   const [adjustments, setAdjustments] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,12 +36,8 @@ const AdjustBooksPage = () => {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const [prodRes, branchRes] = await Promise.all([
-        api.get("/products"),
-        api.get("/shops"),
-      ]);
+      const prodRes = await api.get("/products");
       if (prodRes.data.success) setProducts(prodRes.data.data);
-      if (branchRes.data.success) setBranches(branchRes.data.data);
     } catch (err) {
       console.error(err);
       showSnack("Error fetching products", "error");
@@ -55,15 +49,6 @@ const AdjustBooksPage = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  useEffect(() => {
-    if (user?.branchId) {
-      const bId = typeof user.branchId === "string" ? user.branchId : user.branchId._id;
-      setSelectedBranch(bId);
-    } else if (branches.length > 0) {
-      setSelectedBranch(branches[0]._id);
-    }
-  }, [user, branches]);
 
   const handleAdjustmentChange = (id, field, value) => {
     setAdjustments(prev => ({
@@ -111,7 +96,6 @@ const AdjustBooksPage = () => {
       setIsSubmitting(true);
       const res = await api.post("/stock-adjustments", {
         adjustments: activeAdjustments,
-        branchId: selectedBranch,
         reason: "Bulk Quick Adjustment"
       });
       
@@ -140,12 +124,8 @@ const AdjustBooksPage = () => {
 
   // Helper to get branch stock for a data source
   const getBranchStock = useCallback((dataSource) => {
-    if (!selectedBranch || !dataSource?.branchStock) return 0;
-    const bStock = dataSource.branchStock.find(b =>
-      String(b.branchId?._id || b.branchId) === String(selectedBranch)
-    );
-    return bStock ? bStock.currentStock : 0;
-  }, [selectedBranch]);
+    return dataSource?.currentStock || 0;
+  }, []);
 
   const filteredProducts = products.filter(p =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -296,8 +276,7 @@ const AdjustBooksPage = () => {
     ),
     trailing: (r) => {
       const dataSource = r.variant || r;
-      const stock = getBranchStock(dataSource);
-      const totalStock = dataSource.currentStock || 0;
+      const stock = dataSource.currentStock || 0;
       const adj = adjustments[r._rowId];
       const hasPending = adj && (Number(adj.quantity) > 0 || (adj.type === 'set' && adj.quantity !== '' && adj.quantity !== undefined));
       return (
@@ -305,9 +284,6 @@ const AdjustBooksPage = () => {
           <div className={`text-[15px] font-black leading-none ${stock <= 0 ? 'text-red-500 dark:text-red-400' : 'text-gray-800 dark:text-white'}`}>
             {stock}
             <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 ml-0.5 uppercase">{r.unit}</span>
-          </div>
-          <div className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase mt-0.5">
-            Total: {totalStock}
           </div>
           {hasPending && (
             <div className="mt-1 w-2 h-2 rounded-full bg-amber-400 ml-auto" title="Pending adjustment" />
@@ -371,15 +347,11 @@ const AdjustBooksPage = () => {
       header: "Current Stock",
       render: (r) => {
         const dataSource = r.variant || r;
-        const stock = getBranchStock(dataSource);
-        const totalStock = dataSource.currentStock || 0;
+        const stock = dataSource.currentStock || 0;
         return (
           <div className="flex flex-col">
             <span className={`text-sm font-black ${stock <= 0 ? 'text-red-500 dark:text-red-400' : 'text-gray-700 dark:text-gray-200'}`}>
               {stock} <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">{r.unit}</span>
-            </span>
-            <span className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">
-              Branch • Total: {totalStock}
             </span>
           </div>
         );
@@ -419,28 +391,13 @@ const AdjustBooksPage = () => {
             searchPlaceholder="Search by name, SKU, or variant..."
             emptyMessage="No products found matching your search."
             extraFilters={
-              <div className="flex items-center gap-2">
-                <div className="w-48 md:w-56 shrink-0">
-                  <CustomDropdown
-                    value={selectedBranch}
-                    onChange={(e) => setSelectedBranch(e.target.value)}
-                    options={branches.map(b => ({
-                      value: b._id,
-                      label: b.name,
-                      description: b.mapAddress ? ` ${b.mapAddress}` : undefined
-                    }))}
-                    variant="compact"
-                    buttonClassName="h-9 px-3 bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-xl text-[11px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-brand-primary/30 transition-all cursor-pointer w-full flex items-center justify-between"
-                  />
-                </div>
-                <button
-                  onClick={fetchData}
-                  className="h-9 w-9 flex items-center justify-center bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border text-gray-400 hover:text-brand-primary dark:text-blue-400 rounded-xl transition-all active:scale-95"
-                  title="Refresh"
-                >
-                  <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
-                </button>
-              </div>
+              <button
+                onClick={fetchData}
+                className="h-9 w-9 flex items-center justify-center bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border text-gray-400 hover:text-brand-primary dark:text-blue-400 rounded-xl transition-all active:scale-95"
+                title="Refresh"
+              >
+                <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
+              </button>
             }
             headerActions={
               canAdd ? (

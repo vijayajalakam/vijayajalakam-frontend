@@ -32,10 +32,6 @@ import Modal from "../../../components/shared/Modal";
 import {
   useGetAdminProfileQuery,
   useUpdateBusinessProfileWithImageMutation,
-  useGetShopsListQuery,
-  useCreateShopMutation,
-  useUpdateShopMutation,
-  useDeleteShopMutation,
 } from "../../../store/api/tenantCrudEndpoints";
 import CustomTextField from "../../../components/shared/CustomTextField";
 import { ProfileSkeleton } from "../../../components/shared/Skeleton";
@@ -138,11 +134,7 @@ const AdminProfile = () => {
     isAdmin,
   } = useAuth();
   const { data: profileData, isLoading: initialLoading } = useGetAdminProfileQuery();
-  const { data: shops = [], isLoading: branchLoading } = useGetShopsListQuery();
   const [updateBusinessProfile, { isLoading: loading }] = useUpdateBusinessProfileWithImageMutation();
-  const [createShop] = useCreateShopMutation();
-  const [updateShop] = useUpdateShopMutation();
-  const [deleteShop] = useDeleteShopMutation();
 
   const [formData, setFormData] = useState({
     shopName: "",
@@ -162,37 +154,11 @@ const AdminProfile = () => {
   const [snack, setSnack] = useState({ message: "", type: "success" });
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  // Branch States
-  const [isBranchModalOpen, setIsBranchModalOpen] = useState(false);
-  const [currentBranch, setCurrentBranch] = useState(null);
-  const [branchFormData, setBranchFormData] = useState({
-    name: "",
-    address: "",
-    phone: "",
-    gstNumber: "",
-    panNumber: "",
-    licenseNumber: "",
-    latitude: "",
-    longitude: "",
-    mapAddress: "",
-    image: null,
-  });
-  const [branchPreview, setBranchPreview] = useState(null);
-  const [branchDeleteModal, setBranchDeleteModal] = useState({
-    isOpen: false,
-    id: null,
-    name: "",
-  });
-
   const showSnack = (message, type = "success") => setSnack({ message, type });
 
   const isShopAdmin = isAdmin || authUser?.role === "SHOP_ADMIN";
   const canEditProfile =
     isShopAdmin || hasPermission("settings:profile:general:edit");
-  const canAddBranch = false;
-  const canEditBranch =
-    isShopAdmin || hasPermission("settings:profile:general:edit");
-  const canDeleteBranch = false;
 
   useEffect(() => {
     if (profileData) {
@@ -257,96 +223,6 @@ const AdminProfile = () => {
         err?.data?.message || err?.message || "Failed to update profile",
         "error"
       );
-    }
-  };
-
-  // Branch Logic
-  const handleEditBranch = (branch = null) => {
-    if (branch) {
-      setCurrentBranch(branch);
-      setBranchFormData({
-        name: branch.name,
-        address: branch.address,
-        phone: branch.phone,
-        gstNumber: branch.gstNumber || "",
-        panNumber: branch.panNumber || "",
-        licenseNumber: branch.licenseNumber || "",
-        latitude: branch.latitude || "",
-        longitude: branch.longitude || "",
-        mapAddress: branch.mapAddress || "",
-        image: null,
-      });
-      setBranchPreview(
-        branch.image?.url ||
-          (typeof branch.image === "string" ? branch.image : null),
-      );
-    } else {
-      setBranchFormData({
-        name: formData.shopName,
-        address: `${formData.area}, ${formData.state}, ${formData.country}`,
-        phone: formData.mobile,
-        gstNumber: "",
-        panNumber: "",
-        licenseNumber: "",
-        latitude: "",
-        longitude: "",
-        mapAddress: "",
-        image: null,
-      });
-      setBranchPreview(null);
-      setCurrentBranch(null);
-    }
-    setIsBranchModalOpen(true);
-  };
-
-  const handleBranchImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const validation = validateFileSize(file);
-      if (!validation.isValid) {
-        showSnack(validation.message, "error");
-        return;
-      }
-      setBranchFormData({ ...branchFormData, image: file });
-      setBranchPreview(URL.createObjectURL(file));
-    }
-  };
-
-  const handleSubmitBranch = async (e) => {
-    e.preventDefault();
-    try {
-      const data = new FormData();
-      Object.keys(branchFormData).forEach((key) => {
-        if (key === "image" && branchFormData[key])
-          data.append(key, branchFormData[key]);
-        else if (key !== "image") data.append(key, branchFormData[key]);
-      });
-
-      if (currentBranch) {
-        await updateShop({ id: currentBranch._id, formData: data }).unwrap();
-      } else {
-        await createShop(data).unwrap();
-      }
-      setIsBranchModalOpen(false);
-      showSnack(currentBranch ? "Branch updated" : "Branch created", "success");
-    } catch (err) {
-      showSnack(
-        err?.data?.message || err?.message || "Failed to save branch",
-        "error"
-      );
-    }
-  };
-
-  const confirmDeleteBranch = (id, name) =>
-    setBranchDeleteModal({ isOpen: true, id, name });
-
-  const handleConfirmDeleteBranch = async () => {
-    try {
-      await deleteShop(branchDeleteModal.id).unwrap();
-      setBranchDeleteModal({ isOpen: false, id: null, name: "" });
-      showSnack("Branch deleted", "success");
-    } catch (err) {
-      showSnack(err?.data?.message || err?.message || "Failed to delete branch", "error");
     }
   };
 
@@ -565,101 +441,7 @@ const AdminProfile = () => {
         </Section>
       </form>
 
-      {/* Location & Contact Section */}
-      <Section
-        title="Location & Contact"
-        icon={Store}
-        delay={0.3}
-        cols={0}
-        action={
-          canAddBranch && (
-            <button
-              onClick={() => handleEditBranch()}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary/10 text-brand-primary dark:text-blue-400 rounded-lg text-xs font-bold hover:bg-brand-primary hover:text-white transition-all"
-            >
-              <Plus size={14} /> Add Branch
-            </button>
-          )
-        }
-      >
-        {branchLoading ? (
-          <div className="py-10 text-center text-gray-400 dark:text-gray-500 text-sm italic">
-            Loading branches...
-          </div>
-        ) : shops.length === 0 ? (
-          <div className="py-10 text-center text-gray-400 dark:text-gray-500 text-sm border-2 border-dashed border-gray-100 dark:border-dark-border rounded-2xl">
-            No branches found. Start by adding one.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {shops.map((shop) => (
-              <div
-                key={shop._id}
-                className="bg-gray-50/50 dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-2xl group transition-all hover:border-brand-primary/30 hover:shadow-md overflow-hidden"
-              >
-                {/* Map Preview */}
-                {shop.latitude && shop.longitude && (
-                  <div className="w-full h-[120px] relative">
-                    <iframe
-                      title={`${shop.name} location`}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      loading="lazy"
-                      src={`https://www.google.com/maps?q=${shop.latitude},${shop.longitude}&z=15&output=embed`}
-                    ></iframe>
-                  </div>
-                )}
-                <div className="p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary dark:text-blue-400 overflow-hidden shrink-0">
-                      {shop.image?.url ? (
-                        <img
-                          src={shop.image.url}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Store size={20} />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                        {shop.name}
-                      </h4>
-                      <p className="text-[10px] text-brand-primary dark:text-blue-400 font-bold mt-1 flex items-center gap-1">
-                        <Phone size={10} /> {shop.phone}
-                      </p>
-                      {shop.mapAddress && (
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate flex items-center gap-1 mt-1">
-                          <MapPin size={10} /> {shop.mapAddress}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                      {canEditBranch && (
-                        <button
-                          onClick={() => handleEditBranch(shop)}
-                          className="p-1.5 bg-white dark:bg-dark-border text-gray-400 hover:text-brand-primary dark:text-blue-400 rounded-lg shadow-sm border border-gray-100 dark:border-dark-border"
-                        >
-                          <Edit2 size={12} />
-                        </button>
-                      )}
-                      {canDeleteBranch && (
-                        <button
-                          onClick={() => confirmDeleteBranch(shop._id, shop.name)}
-                          className="p-1.5 bg-white dark:bg-dark-border text-gray-400 dark:text-gray-500 hover:text-red-500 rounded-lg shadow-sm border border-gray-100 dark:border-dark-border"
-                        >
-                          <Trash2 size={12} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </Section>
+      
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -703,197 +485,9 @@ const AdminProfile = () => {
         </div>
       </motion.div>
 
-      {/* Branch Modal */}
-      <Modal
-        isOpen={isBranchModalOpen}
-        onClose={() => setIsBranchModalOpen(false)}
-        title={currentBranch ? "Edit Branch" : "Add Branch"}
-        footer={
-          <div className="flex gap-3">
-            <button
-              onClick={() => setIsBranchModalOpen(false)}
-              className="flex-1 h-11 bg-gray-100 dark:bg-dark-card text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-gray-200 dark:hover:bg-dark-border"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmitBranch}
-              className="flex-1 h-11 bg-brand-primary text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-lg shadow-brand-primary/20 hover:bg-brand-secondary"
-            >
-              Save Branch
-            </button>
-          </div>
-        }
-      >
-        <div className="space-y-4">
-          <CustomTextField
-            label="Branch Name"
-            icon={Store}
-            placeholder="e.g. Main Branch"
-            value={branchFormData.name}
-            onChange={(e) =>
-              setBranchFormData({ ...branchFormData, name: e.target.value })
-            }
-          />
-          <CustomTextField
-            label="Phone"
-            icon={Phone}
-            placeholder="Phone number"
-            value={branchFormData.phone}
-            onChange={(e) =>
-              setBranchFormData({ ...branchFormData, phone: e.target.value })
-            }
-          />
+      
 
-          <div className="grid grid-cols-2 gap-4">
-            <CustomTextField
-              label="GST Number"
-              value={branchFormData.gstNumber}
-              onChange={(e) =>
-                setBranchFormData({
-                  ...branchFormData,
-                  gstNumber: e.target.value,
-                })
-              }
-            />
-            <CustomTextField
-              label="PAN Number"
-              value={branchFormData.panNumber}
-              onChange={(e) =>
-                setBranchFormData({
-                  ...branchFormData,
-                  panNumber: e.target.value,
-                })
-              }
-            />
-          </div>
-
-          <CustomTextField
-            label="Licence Number"
-            value={branchFormData.licenseNumber}
-            onChange={(e) =>
-              setBranchFormData({
-                ...branchFormData,
-                licenseNumber: e.target.value,
-              })
-            }
-          />
-
-          {/* Google Map Location */}
-          <div className="pt-3 pb-1">
-            <div className="flex items-center gap-2 mb-3 text-brand-primary dark:text-blue-400">
-              <Navigation size={16} />
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400">
-                Map Location
-              </span>
-            </div>
-            <div className="p-3 bg-gray-50 dark:bg-dark-card/80 rounded-xl border border-gray-100 dark:border-dark-border space-y-3">
-              <p className="text-[11px] text-gray-400 dark:text-gray-500">
-                Add coordinates so customers can get directions. Right-click on{" "}
-                <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" className="text-brand-primary dark:text-blue-400 underline">Google Maps</a>{" "}
-                → copy coordinates.
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                <CustomTextField
-                  label="Latitude"
-                  placeholder="e.g. 13.0358"
-                  value={branchFormData.latitude}
-                  onChange={(e) =>
-                    setBranchFormData({ ...branchFormData, latitude: e.target.value })
-                  }
-                />
-                <CustomTextField
-                  label="Longitude"
-                  placeholder="e.g. 77.5970"
-                  value={branchFormData.longitude}
-                  onChange={(e) =>
-                    setBranchFormData({ ...branchFormData, longitude: e.target.value })
-                  }
-                />
-              </div>
-              {branchFormData.latitude && branchFormData.longitude && !branchFormData.mapAddress && (
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      const res = await fetch(
-                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${branchFormData.latitude}&lon=${branchFormData.longitude}&zoom=16&addressdetails=1`
-                      );
-                      const data = await res.json();
-                      if (data?.address) {
-                        const { road, suburb, city, town, village, state, country } = data.address;
-                        const parts = [road || suburb, city || town || village, state, country].filter(Boolean);
-                        setBranchFormData({ ...branchFormData, mapAddress: parts.join(", ") });
-                      }
-                    } catch (err) {
-                      console.error("Reverse geocoding failed:", err);
-                    }
-                  }}
-                  className="w-full py-2 text-xs font-bold text-brand-primary dark:text-blue-400 bg-brand-primary/5 border border-brand-primary/20 rounded-lg hover:bg-brand-primary/10 transition-all"
-                >
-                   Auto-detect address from coordinates
-                </button>
-              )}
-              <CustomTextField
-                label="Map Display Address"
-                icon={MapPin}
-                placeholder="e.g. Sahakar Nagar Main Road, Bengaluru"
-                value={branchFormData.mapAddress}
-                onChange={(e) =>
-                  setBranchFormData({ ...branchFormData, mapAddress: e.target.value })
-                }
-              />
-              {branchFormData.latitude && branchFormData.longitude && (
-                <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-dark-border mt-2">
-                  <iframe
-                    title="Branch Location Preview"
-                    width="100%"
-                    height="160"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                    src={`https://www.google.com/maps?q=${branchFormData.latitude},${branchFormData.longitude}&z=15&output=embed`}
-                  ></iframe>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase text-gray-400 dark:text-gray-500 tracking-widest">
-              Branch Photo
-            </label>
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gray-50 dark:bg-dark-card border-2 border-dashed border-gray-200 dark:border-dark-border flex items-center justify-center overflow-hidden">
-                {branchPreview ? (
-                  <img
-                    src={branchPreview}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <Camera size={20} className="text-gray-300" />
-                )}
-              </div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleBranchImageChange}
-                className="text-xs text-gray-500 dark:text-gray-400"
-              />
-            </div>
-          </div>
-        </div>
-      </Modal>
-
-      <ConfirmModal
-        isOpen={branchDeleteModal.isOpen}
-        onClose={() =>
-          setBranchDeleteModal({ isOpen: false, id: null, name: "" })
-        }
-        onConfirm={handleConfirmDeleteBranch}
-        title="Delete Branch"
-        message={`Are you sure you want to delete ${branchDeleteModal.name}? This action cannot be undone.`}
-        type="danger"
-      />
+      
 
       <ConfirmModal
         isOpen={showLogoutConfirm}

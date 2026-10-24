@@ -4,7 +4,6 @@ import {
   X,
   Calendar,
   User,
-  Store,
   Filter,
   Clock,
   CheckCircle,
@@ -16,7 +15,6 @@ const BookingFilterModal = ({
   isOpen,
   onClose,
   onApply,
-  branches = [],
   staff = [],
   initialFilters = {},
 }) => {
@@ -27,7 +25,6 @@ const BookingFilterModal = ({
       date: "",
       type: [],
       status: [],
-      branchId: [],
       staffId: [],
     },
   );
@@ -61,7 +58,6 @@ const BookingFilterModal = ({
     { id: "type", label: "Type", icon: Filter },
     { id: "status", label: "Status", icon: CheckCircle },
     { id: "staff", label: "Staff", icon: User },
-    { id: "branches", label: "Branches", icon: Store },
   ];
 
   const typeOptions = [
@@ -95,7 +91,6 @@ const BookingFilterModal = ({
       date: new Date().toISOString().split("T")[0],
       type: [],
       status: [],
-      branchId: [],
       staffId: [],
     });
   };
@@ -234,15 +229,13 @@ const BookingFilterModal = ({
                 </div>
               )}
 
-              {["type", "status", "branches", "staff"].includes(activeTab) && (
+              {["type", "status", "staff"].includes(activeTab) && (
                 <div className="grid grid-cols-1 gap-3">
                   {(activeTab === "type"
                     ? typeOptions
                     : activeTab === "status"
                     ? statusOptions
-                    : activeTab === "staff"
-                      ? staff
-                      : branches
+                    : staff
                   ).map((item) => {
                     const id =
                       typeof item === "string" ? item : item._id || item.id;
@@ -254,9 +247,7 @@ const BookingFilterModal = ({
                         ? "type"
                         : activeTab === "status"
                         ? "status"
-                        : activeTab === "branches"
-                          ? "branchId"
-                          : "staffId";
+                        : "staffId";
                     const isSelected = (filters[filterKey] || []).includes(id);
 
                     return (

@@ -5,10 +5,9 @@ import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { useCurrency } from "../../../hooks/useCurrency";
 
-import { ArrowDownCircle, ArrowUpCircle, Landmark, Store } from "lucide-react";
+import { ArrowDownCircle, ArrowUpCircle, Landmark } from "lucide-react";
 import InlineSearchSelect from "../../../components/shared/InlineSearchSelect";
 import { usePagination } from "../../../hooks/usePagination";
-import AccountingFilterModal from "../../../components/shared/AccountingFilterModal";
 import ReportLayout from "../../../components/shared/ReportLayout";
 
 const AccountStatementPage = () => {
@@ -23,12 +22,9 @@ const AccountStatementPage = () => {
   const [filters, setFilters] = useState({
     startDate: today,
     endDate: today,
-    branches: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [includeOpening, setIncludeOpening] = useState(false);
-  const [shops, setShops] = useState([]);
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const { pagination, onPageChange, updatePagination, resetPagination } =
     usePagination({ initialLimit: 20 });
@@ -37,14 +33,10 @@ const AccountStatementPage = () => {
     api.get("/chart-of-accounts").then((r) => {
       if (r.data.success) setAccounts(r.data.data);
     });
-    api.get("/shops").then((r) => {
-      if (r.data.success) setShops(r.data.data);
-    });
   }, []);
 
   const filterStart = filters.startDate;
   const filterEnd = filters.endDate;
-  const filterBranchesStr = (filters.branches || []).join(",");
 
   const fetchData = useCallback(async () => {
     if (!selectedAccount) {
@@ -59,8 +51,6 @@ const AccountStatementPage = () => {
         page: pagination.page,
         limit: pagination.limit,
       });
-      if (filterBranchesStr)
-        params.append("branchId", filterBranchesStr);
       if (filterStart) params.append("startDate", filterStart);
       if (filterEnd) params.append("endDate", filterEnd);
       if (searchTerm) params.append("search", searchTerm);
@@ -82,7 +72,6 @@ const AccountStatementPage = () => {
     selectedAccount,
     filterStart,
     filterEnd,
-    filterBranchesStr,
     searchTerm,
     pagination.page,
     pagination.limit,
@@ -95,7 +84,7 @@ const AccountStatementPage = () => {
 
   useEffect(() => {
     resetPagination();
-  }, [selectedAccount, filterStart, filterEnd, filterBranchesStr, searchTerm, resetPagination]);
+  }, [selectedAccount, filterStart, filterEnd, searchTerm, resetPagination]);
 
   const filteredData = useMemo(() => {
     let baseData = data;
@@ -122,7 +111,6 @@ const AccountStatementPage = () => {
         page: 1,
         limit: 100000,
       });
-      if (filterBranchesStr) params.append("branchId", filterBranchesStr);
       if (filterStart) params.append("startDate", filterStart);
       if (filterEnd) params.append("endDate", filterEnd);
       if (searchTerm) params.append("search", searchTerm);
@@ -301,12 +289,6 @@ const AccountStatementPage = () => {
         endDate={filters.endDate}
         onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
         onEndDateChange={(val) => setFilters((prev) => ({ ...prev, endDate: val }))}
-        onFilterClick={() => setIsFilterModalOpen(true)}
-        filterCount={
-          Object.entries(filters).filter(([k, v]) =>
-            k !== "startDate" && k !== "endDate" && (Array.isArray(v) ? v.length > 0 : !!v),
-          ).length
-        }
         emptyMessage={
           selectedAccount
             ? "No transactions found."
@@ -408,13 +390,6 @@ const AccountStatementPage = () => {
             </div>
           ),
         }}
-      />
-      <AccountingFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApply={setFilters}
-        branches={shops}
-        initialFilters={filters}
       />
     </ReportLayout>
   );

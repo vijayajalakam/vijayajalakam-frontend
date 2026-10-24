@@ -8,7 +8,6 @@ import {
   Search,
   CreditCard,
   Scissors,
-  Store,
 } from "lucide-react";
 import CustomDatePicker from "./CustomDatePicker";
 import { useAuth } from "../../features/auth/hooks/useAuth";
@@ -18,7 +17,6 @@ const LedgerFilterModal = ({
   onClose,
   onApply,
   customers = [],
-  shops = [],
   services = [],
   staff = [],
   paymentMethods = [],
@@ -34,7 +32,6 @@ const LedgerFilterModal = ({
     customers: [],
     paymentMethod: [],
     services: [],
-    shops: [],
     staff: [],
   });
 
@@ -66,7 +63,6 @@ const LedgerFilterModal = ({
     { id: "payment", label: "Payment", icon: CreditCard },
     { id: "services", label: "Services", icon: Scissors },
     { id: "staff", label: "Completed By", icon: User },
-    { id: "shops", label: "Shops", icon: Store },
     { id: "customers", label: "Select Customers", icon: User },
   ];
 
@@ -88,7 +84,6 @@ const LedgerFilterModal = ({
       customers: [],
       paymentMethod: [],
       services: [],
-      shops: [],
       staff: [],
     });
     setCustomerSearch("");
@@ -219,7 +214,7 @@ const LedgerFilterModal = ({
             {/* Options */}
             <div className="flex-1 overflow-y-auto p-5 custom-scrollbar pb-24 md:pb-5">
 
-              {["payment", "services", "shops", "staff"].includes(
+              {["payment", "services", "staff"].includes(
                 activeTab,
               ) && (
                 <div className="grid grid-cols-1 gap-3">
@@ -232,9 +227,7 @@ const LedgerFilterModal = ({
                       ]
                     : activeTab === "services"
                       ? services
-                      : activeTab === "staff"
-                        ? staff
-                        : shops
+                      : staff
                   ).map((item) => {
                     const id = typeof item === "string" ? item : item._id;
                     const label = typeof item === "string" ? item : item.name;

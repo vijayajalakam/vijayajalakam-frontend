@@ -51,7 +51,6 @@ const InvoiceReport = () => {
 
   const allServices = metaData?.services || [];
   const allProducts = metaData?.products || [];
-  const allBranches = metaData?.branches || [];
   const allCustomers = metaData?.customers || [];
   const paymentMethods = metaData?.paymentMethods || [];
 
@@ -80,7 +79,6 @@ const InvoiceReport = () => {
   const [filters, setFilters] = useState({
     services: [],
     products: [],
-    branches: [],
     staff: [],
     customers: [],
     paymentMethod: [],
@@ -125,8 +123,6 @@ const InvoiceReport = () => {
       params.append("services", filters.services.join(","));
     if (filters.products?.length > 0)
       params.append("products", filters.products.join(","));
-    if (filters.branches?.length > 0)
-      params.append("shops", filters.branches.join(","));
     if (filters.staff?.length > 0)
       params.append("staffId", filters.staff.join(","));
     if (filters.customers?.length > 0)
@@ -979,7 +975,6 @@ const InvoiceReport = () => {
         onApply={setFilters}
         services={allServices}
         products={allProducts}
-        branches={allBranches}
         staff={allStaff}
         customers={allCustomers}
         paymentMethods={paymentMethods}

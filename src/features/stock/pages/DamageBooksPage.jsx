@@ -34,7 +34,6 @@ const DamageBooksPage = () => {
   const canDelete = isAdmin || hasPermission("stock:damage_entry:delete");
   const [entries, setEntries] = useState([]);
   const [products, setProducts] = useState([]);
-  const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,7 +41,6 @@ const DamageBooksPage = () => {
     product: "",
     variantId: "",
     variantName: "",
-    branchId: "",
     quantity: 1,
     reason: "",
     date: new Date().toISOString().split("T")[0],
@@ -66,7 +64,6 @@ const DamageBooksPage = () => {
       product: entry.product?._id || entry.product || "",
       variantId: entry.variantId || "",
       variantName: entry.variantName || "",
-      branchId: entry.branchId?._id || entry.branchId || "",
       quantity: entry.quantity || 1,
       reason: entry.reason || "",
       date: entry.date
@@ -90,28 +87,18 @@ const DamageBooksPage = () => {
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
 
-      const [entRes, prodRes, branchRes] = await Promise.all([
+      const [entRes, prodRes] = await Promise.all([
         api.get(`/damages?${params.toString()}`),
         api.get("/products"),
-        api.get("/shops"),
       ]);
       if (entRes.data.success) setEntries(entRes.data.data);
       if (prodRes.data.success) setProducts(prodRes.data.data);
-      if (branchRes.data.success) setBranches(branchRes.data.data);
     } catch (_err) {
       console.error(_err);
     } finally {
       setLoading(false);
     }
   }, [filters]);
-
-  useEffect(() => {
-    if (user?.branchId && !editingId) {
-      const bId =
-        typeof user.branchId === "string" ? user.branchId : user.branchId._id;
-      setForm((prev) => ({ ...prev, branchId: bId }));
-    }
-  }, [user, editingId]);
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -130,7 +117,6 @@ const DamageBooksPage = () => {
         product: "",
         variantId: "",
         variantName: "",
-        branchId: "",
         quantity: 1,
         reason: "",
         date: new Date().toISOString().split("T")[0],
@@ -186,12 +172,7 @@ const DamageBooksPage = () => {
       selectedProduct.useVariants && selectedVariant
         ? selectedVariant
         : selectedProduct;
-    if (!form.branchId || !dataSource.branchStock)
-      return dataSource.currentStock || 0;
-    const bStock = dataSource.branchStock.find(
-      (b) => String(b.branchId?._id || b.branchId) === String(form.branchId),
-    );
-    return bStock ? bStock.currentStock : 0;
+    return dataSource.currentStock || 0;
   })();
 
   const estimatedLoss = selectedVariant
@@ -250,19 +231,6 @@ const DamageBooksPage = () => {
           {r.variantName && (
             <span className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider">
               {r.variantName}
-            </span>
-          )}
-        </div>
-      ),
-    },
-    {
-      header: "Branch",
-      render: (r) => (
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-900 dark:text-white">{r.branchId?.name || "N/A"}</span>
-          {r.branchId?.mapAddress && (
-            <span className="text-[11px] text-gray-500 max-w-[150px] truncate" title={r.branchId.mapAddress}>
-               {r.branchId.mapAddress}
             </span>
           )}
         </div>
@@ -407,14 +375,8 @@ const DamageBooksPage = () => {
                   <div className="flex flex-col mt-0.5">
                     <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 truncate">
                       {r.reason || "Inventory Damage"} •{" "}
-                      {r.branchId?.name || "N/A"} •{" "}
                       {new Date(r.date).toLocaleDateString()}
                     </p>
-                    {r.branchId?.mapAddress && (
-                      <p className="text-[10px] text-gray-500 truncate mt-0.5" title={r.branchId.mapAddress}>
-                         {r.branchId.mapAddress}
-                      </p>
-                    )}
                   </div>
                 ),
                 trailing: (r) => (
@@ -481,71 +443,32 @@ const DamageBooksPage = () => {
         size="lg"
       >
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <CustomDropdown
-              label="Branch"
-              icon={Store}
-              value={form.branchId}
-              onChange={(e) => setForm({ ...form, branchId: e.target.value })}
-              options={branches
-                .filter((b) => {
-                  if (user?.role !== "staff") return true;
-                  const userBranchId = user?.branchId?._id || user?.branchId;
-                  return b._id === userBranchId;
-                })
-                .map((b) => ({
-                  value: b._id,
-                  label: b.name,
-                  description: b.mapAddress ? ` ${b.mapAddress}` : undefined,
-                  searchLabel: b.name,
-                }))}
-              isSearchable={user?.role !== "staff"}
-              placeholder="Select Branch"
-              className={
-                user?.role === "staff" && branches.length === 1 ? "hidden" : ""
-              }
-              required
-            />
-
-            <CustomDropdown
-              label="Product"
-              icon={Package}
-              value={form.product}
-              onChange={(e) => {
-                const prodId = e.target.value;
-                setForm({
-                  ...form,
-                  product: prodId,
-                  variantId: "",
-                  variantName: "",
-                  quantity: 1,
-                });
-              }}
-              options={products.map((p) => {
-                let stockLabel = "(Select Branch First)";
-                if (form.branchId) {
-                  if (p.useVariants) {
-                    stockLabel = "(Handled in Variants)";
-                  } else {
-                    const bStock = p.branchStock?.find(
-                      (b) =>
-                        String(b.branchId?._id || b.branchId) ===
-                        String(form.branchId),
-                    );
-                    stockLabel = `(Stock: ${bStock ? bStock.currentStock : 0})`;
-                  }
-                }
-                return {
-                  value: p._id,
-                  label: `${p.name} ${stockLabel}`,
-                  searchLabel: p.name,
-                };
-              })}
-              placeholder="Select Product"
-              required
-              isSearchable
-            />
-          </div>
+          <CustomDropdown
+            label="Product"
+            icon={Package}
+            value={form.product}
+            onChange={(e) => {
+              const prodId = e.target.value;
+              setForm({
+                ...form,
+                product: prodId,
+                variantId: "",
+                variantName: "",
+                quantity: 1,
+              });
+            }}
+            options={products.map((p) => {
+              const stockLabel = `(Stock: ${p.currentStock || 0})`;
+              return {
+                value: p._id,
+                label: `${p.name} ${stockLabel}`,
+                searchLabel: p.name,
+              };
+            })}
+            placeholder="Select Product"
+            required
+            isSearchable
+          />
 
           {selectedProduct?.useVariants && (
             <CustomDropdown
@@ -568,18 +491,7 @@ const DamageBooksPage = () => {
               }}
               options={selectedProduct.variants.map((v) => ({
                 value: (v._id || v.variantId?._id || v.variantId).toString(),
-                label: `${v.variantName || v.variantId?.name || "Unnamed"}${
-                  form.branchId
-                    ? ` (Stock: ${(() => {
-                        const bStock = v.branchStock?.find(
-                          (b) =>
-                            String(b.branchId?._id || b.branchId) ===
-                            String(form.branchId),
-                        );
-                        return bStock ? bStock.currentStock : 0;
-                      })()})`
-                    : ` (Total: ${v.currentStock || 0})`
-                }`,
+                label: `${v.variantName || v.variantId?.name || "Unnamed"} (Stock: ${v.currentStock || 0})`,
                 searchLabel: v.variantName || v.variantId?.name,
               }))}
               placeholder="Select Variant"

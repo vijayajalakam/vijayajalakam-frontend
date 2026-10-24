@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Award, Store, Phone, Receipt, Users } from "lucide-react";
+import { Award, Phone, Receipt, Users } from "lucide-react";
 import api from "../../../api/axiosInstance";
 import CustomTable from "../../../components/shared/CustomTable";
 import LedgerFilterModal from "../../../components/shared/LedgerFilterModal";
@@ -14,7 +14,6 @@ import { getUnifiedInvoicePayableTotal } from "../../../utils/unifiedInvoiceTota
 const LoyaltyPointReport = () => {
   const { currencySymbol, hasPermission } = useAuth();
   const { formatDisplayNumber } = useCurrency();
-  const [shops, setShops] = useState([]);
   const [services, setServices] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [customers, setCustomers] = useState([]);
@@ -32,7 +31,6 @@ const LoyaltyPointReport = () => {
     startDate: today,
     endDate: today,
     customers: [],
-    shops: [],
     services: [],
     staff: [],
     paymentMethod: [],
@@ -40,16 +38,14 @@ const LoyaltyPointReport = () => {
 
   const loadInitialData = useCallback(async () => {
     try {
-      const [custRes, shopRes, servRes, staffRes, pmRes] = await Promise.all([
+      const [custRes, servRes, staffRes, pmRes] = await Promise.all([
         api.get("/admin/customers"),
-        api.get("/shops"),
         api.get("/admin/services"),
         api.get("/admin/staff"),
         api.get("/payment-methods"),
       ]);
 
       if (custRes.data.success) setCustomers(custRes.data.data);
-      if (shopRes.data.success) setShops(shopRes.data.data);
       if (servRes.data.success) setServices(servRes.data.data);
       if (staffRes.data.success) setStaffList(staffRes.data.data);
       if (pmRes.data.success) setPaymentMethods(pmRes.data.data);
@@ -75,8 +71,6 @@ const LoyaltyPointReport = () => {
       if (filters.endDate) params.append("endDate", filters.endDate);
       if (filters.customers?.length > 0)
         params.append("customerId", filters.customers.join(","));
-      if (filters.shops?.length > 0)
-        params.append("shops", filters.shops.join(","));
       if (filters.services?.length > 0)
         params.append("services", filters.services.join(","));
       if (filters.staff?.length > 0)
@@ -420,7 +414,6 @@ const LoyaltyPointReport = () => {
         onClose={() => setIsFilterModalOpen(false)}
         onApply={setFilters}
         customers={customers}
-        shops={shops}
         services={services}
         staff={staffList}
         paymentMethods={paymentMethods}

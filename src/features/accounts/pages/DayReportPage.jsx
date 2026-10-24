@@ -3,7 +3,6 @@ import api from "../../../api/axiosInstance";
 import ReportLayout from "../../../components/shared/ReportLayout";
 import CustomTable from "../../../components/shared/CustomTable";
 import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
-import AccountingFilterModal from "../../../components/shared/AccountingFilterModal";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { useCurrency } from "../../../hooks/useCurrency";
 import { exportToCSV } from "../../../utils/exportUtils";
@@ -16,7 +15,6 @@ import {
   Calendar,
   Layers,
   Search,
-  Store,
 } from "lucide-react";
 
 const DayReportPage = () => {
@@ -28,11 +26,8 @@ const DayReportPage = () => {
   const [filters, setFilters] = useState({
     startDate: new Date().toLocaleDateString("en-CA"),
     endDate: new Date().toLocaleDateString("en-CA"),
-    branches: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [shops, setShops] = useState([]);
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -40,8 +35,6 @@ const DayReportPage = () => {
       const params = new URLSearchParams();
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
       const res = await api.get(`/account-transactions/day-report?${params}`);
       if (res.data.success) {
         setData(res.data.data);
@@ -57,12 +50,6 @@ const DayReportPage = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  useEffect(() => {
-    api.get("/shops").then((r) => {
-      if (r.data.success) setShops(r.data.data);
-    });
-  }, []);
 
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
@@ -208,12 +195,6 @@ const DayReportPage = () => {
         endDate={filters.endDate}
         onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
         onEndDateChange={(val) => setFilters((prev) => ({ ...prev, endDate: val }))}
-        onFilterClick={() => setIsFilterModalOpen(true)}
-        filterCount={
-          Object.entries(filters).filter(([k, v]) =>
-            k !== "startDate" && k !== "endDate" && (Array.isArray(v) ? v.length > 0 : !!v),
-          ).length
-        }
         emptyMessage={`No transactions recorded for the selected period.`}
         mobileMapper={{
           leading: (row) => (
@@ -280,13 +261,6 @@ const DayReportPage = () => {
             </div>
           ),
         }}
-      />
-      <AccountingFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApply={setFilters}
-        branches={shops}
-        initialFilters={filters}
       />
     </ReportLayout>
   );

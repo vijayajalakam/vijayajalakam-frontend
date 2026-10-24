@@ -16,8 +16,6 @@ const StockReportPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("all");
-  const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
   const [stockStatus, setStockStatus] = useState("");
   
@@ -30,16 +28,6 @@ const StockReportPage = () => {
   const { pagination, onPageChange, updatePagination, resetPagination } =
     usePagination({ initialLimit: 20 });
 
-  // Fetch branches for filter
-  useEffect(() => {
-    api
-      .get("/shops")
-      .then((res) => {
-        if (res.data?.success) setBranches(res.data.data || []);
-      })
-      .catch(() => {});
-  }, []);
-
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -49,7 +37,6 @@ const StockReportPage = () => {
       if (startDate) params.append("startDate", startDate);
       if (endDate) params.append("endDate", endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (selectedBranch) params.append("branchId", selectedBranch);
       if (selectedSupplier) params.append("supplierId", selectedSupplier);
       if (stockStatus) params.append("stockStatus", stockStatus);
 
@@ -70,7 +57,6 @@ const StockReportPage = () => {
     searchTerm,
     startDate,
     endDate,
-    selectedBranch,
     selectedSupplier,
     stockStatus,
     updatePagination,
@@ -82,7 +68,7 @@ const StockReportPage = () => {
 
   useEffect(() => {
     resetPagination();
-  }, [searchTerm, startDate, endDate, selectedBranch, selectedSupplier, stockStatus, resetPagination]);
+  }, [searchTerm, startDate, endDate, selectedSupplier, stockStatus, resetPagination]);
 
   const summaryData = useMemo(() => {
     if (!summary) return null;
@@ -114,7 +100,6 @@ const StockReportPage = () => {
       if (startDate) params.append("startDate", startDate);
       if (endDate) params.append("endDate", endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (selectedBranch) params.append("branchId", selectedBranch);
       if (selectedSupplier) params.append("supplierId", selectedSupplier);
       if (stockStatus) params.append("stockStatus", stockStatus);
 
@@ -281,23 +266,6 @@ const StockReportPage = () => {
                 buttonClassName="h-9 text-[11px] font-bold border border-gray-100 dark:border-dark-border rounded-xl px-3 bg-white dark:bg-dark-card text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5 transition-all w-full flex items-center justify-between"
               />
             </div>
-            {branches.length > 0 && (
-              <div className="flex-1 min-w-[120px] sm:w-48 shrink-0">
-                <CustomDropdown
-                  value={selectedBranch}
-                  onChange={(e) => setSelectedBranch(e.target.value)}
-                  options={[
-                    { value: "", label: "All Branches" },
-                    ...branches.map((b) => ({
-                      value: b._id,
-                      label: `${b.name}${b.mapAddress || b.address ? ` - ${b.mapAddress || b.address}` : ""}`
-                    }))
-                  ]}
-                  variant="compact"
-                  buttonClassName="h-9 text-[11px] font-bold border border-gray-100 dark:border-dark-border rounded-xl px-3 bg-white dark:bg-dark-card text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5 transition-all w-full flex items-center justify-between"
-                />
-              </div>
-            )}
           </>
         }
         pagination={{ ...pagination, onPageChange }}

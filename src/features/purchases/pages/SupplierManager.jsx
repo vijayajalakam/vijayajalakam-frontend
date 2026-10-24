@@ -536,31 +536,7 @@ const SupplierManager = () => {
         position="right"
       >
         <form className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <CustomMultiSelect
-                label="Assign Branches"
-                icon={Building2}
-                placeholder="Select Branches"
-                value={formData.branches}
-                onChange={(e) =>
-                  setFormData({ ...formData, branches: e.target.value })
-                }
-                options={branches
-                  .filter((b) => {
-                    if (user?.role !== "staff") return true;
-                    const userBranchId = user?.branchId?._id || user?.branchId;
-                    return b._id === userBranchId;
-                  })
-                  .map((b) => ({
-                    value: b._id,
-                    label: b.name,
-                    description: b.mapAddress || b.address,
-                  }))}
-                isSearchable={user?.role !== "staff"}
-                showSelectAll={user?.role !== "staff"}
-              />
-            </div>
+          <div>
             <CustomTextField
               label="Company / Supplier Name"
               icon={Briefcase}

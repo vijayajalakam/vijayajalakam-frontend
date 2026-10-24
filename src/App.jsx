@@ -24,7 +24,6 @@ import BuyerManager, { CustomerManager } from "./features/buyer/pages/BuyerManag
 import BuyerPage, { CRMPage } from "./features/buyer/pages/BuyerPage";
 import BuyerGroupManager, { CustomerGroupManager } from "./features/buyer/pages/BuyerGroupManager";
 import LoyaltyPointsManager from "./features/buyer/pages/LoyaltyPointsManager";
-import ShopManager from "./features/settings/pages/ShopManager";
 import PrinterSettings from "./features/settings/pages/PrinterSettings";
 import DayClosingSettings from "./features/settings/pages/DayClosingSettings";
 import ConfigurationSettings from "./features/settings/pages/ConfigurationSettings";

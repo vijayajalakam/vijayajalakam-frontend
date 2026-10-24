@@ -31,7 +31,6 @@ const InvoicesPage = () => {
     endDate: "",
     paymentMethod: [],
     services: [],
-    branches: [],
     staff: [],
     customers: [],
   });
@@ -48,7 +47,6 @@ const InvoicesPage = () => {
     if (filters.endDate) p.append("endDate", filters.endDate);
     if (filters.paymentMethod.length) p.append("paymentMethod", filters.paymentMethod.join(","));
     if (filters.services.length) p.append("services", filters.services.join(","));
-    if (filters.branches.length) p.append("shops", filters.branches.join(","));
     if (filters.staff?.length) p.append("staffId", filters.staff.join(","));
     if (filters.customers?.length) p.append("customerId", filters.customers.join(","));
     return p.toString();
@@ -68,7 +66,6 @@ const InvoicesPage = () => {
   const { data: meta } = useGetInvoiceFilterMetaQuery();
 
   const allServices = meta?.services ?? [];
-  const allBranches = meta?.branches ?? [];
   const allCustomers = meta?.customers ?? [];
   const paymentMethods = meta?.paymentMethods ?? [];
   const allStaff = useMemo(() => {
@@ -471,7 +468,6 @@ const InvoicesPage = () => {
         onClose={() => setIsFilterModalOpen(false)}
         onApply={handleApplyFilters}
         services={allServices}
-        branches={allBranches}
         staff={allStaff}
         customers={allCustomers}
         paymentMethods={paymentMethods}

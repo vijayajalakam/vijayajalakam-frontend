@@ -6,7 +6,6 @@ import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { useCurrency } from "../../../hooks/useCurrency";
 import { usePagination } from "../../../hooks/usePagination";
-import CustomDropdown from "../../../components/shared/CustomDropdown";
 
 const ItemProfitReport = () => {
   const { hasPermission } = useAuth();
@@ -16,23 +15,12 @@ const ItemProfitReport = () => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState("");
 
   const { pagination, onPageChange, updatePagination, resetPagination } =
     usePagination({ initialLimit: 20 });
 
   const today = new Date().toLocaleDateString("en-CA");
   const [filters, setFilters] = useState({ startDate: today, endDate: today });
-
-  useEffect(() => {
-    api
-      .get("/shops")
-      .then((res) => {
-        if (res.data?.success) setBranches(res.data.data || []);
-      })
-      .catch(() => {});
-  }, []);
 
   const fetchReport = useCallback(async () => {
     try {
@@ -43,7 +31,6 @@ const ItemProfitReport = () => {
       if (searchTerm) params.append("search", searchTerm);
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
-      if (selectedBranch) params.append("branchId", selectedBranch);
 
       const res = await api.get(`/invoices/item-profit-report?${params.toString()}`);
       if (res.data.success) {
@@ -57,11 +44,11 @@ const ItemProfitReport = () => {
     } finally {
       setLoading(false);
     }
-  }, [filters, pagination.page, pagination.limit, searchTerm, selectedBranch, updatePagination]);
+  }, [filters, pagination.page, pagination.limit, searchTerm, updatePagination]);
 
   useEffect(() => {
     resetPagination();
-  }, [searchTerm, filters, selectedBranch, resetPagination]);
+  }, [searchTerm, filters, resetPagination]);
 
   useEffect(() => {
     fetchReport();
@@ -74,7 +61,6 @@ const ItemProfitReport = () => {
       params.append("limit", 100000);
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
-      if (selectedBranch) params.append("branchId", selectedBranch);
       const res = await api.get(`/invoices/item-profit-report?${params.toString()}`);
       return res.data.success ? res.data.data : [];
     } catch {

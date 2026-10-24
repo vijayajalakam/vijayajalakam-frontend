@@ -23,7 +23,6 @@ import CustomTextField from "../../../components/shared/CustomTextField";
 import CustomDropdown from "../../../components/shared/CustomDropdown";
 import SearchableSelect from "../../../components/shared/SearchableSelect";
 import Snackbar from "../../../components/shared/Snackbar";
-import AccountingFilterModal from "../../../components/shared/AccountingFilterModal";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
@@ -36,7 +35,6 @@ import {
   FileEdit,
   Plus,
   Loader2,
-  Store,
 } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import {
@@ -60,7 +58,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
   const [filters, setFilters] = useState({
     startDate: today,
     endDate: today,
-    branches: [],
   });
 
   const initialFormState = {
@@ -76,8 +73,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
   const [form, setForm] = useState(initialFormState);
 
   const params = new URLSearchParams({ type });
-  if (filters.branches?.length > 0)
-    params.append("branchId", filters.branches.join(","));
   if (filters.startDate) params.append("startDate", filters.startDate);
   if (filters.endDate) params.append("endDate", filters.endDate);
   const queryString = params.toString();
@@ -137,11 +132,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-
-    if (!form.shopId) {
-      showSnack("Branch selection is required", "error");
-      return;
-    }
 
     if (!form.debitAccount || !form.creditAccount || !form.amount) {
       showSnack("Please select both accounts and enter an amount", "error");
@@ -345,8 +335,8 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
       }));
   };
 
-  // Combined options (Accounts, Staff, Customers, Suppliers) for a branch
-  const getUnifiedOptionsWithBranch = (branchId) => {
+  // Combined options (Accounts, Staff, Customers, Suppliers)
+  const getUnifiedOptionsWithBranch = () => {
     return [
       ...accounts
         .filter(
@@ -357,13 +347,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
           label: `${a.code} - ${a.name}`,
         })),
       ...staff
-        .filter((s) => {
-          if (!branchId) return true;
-          return (
-            s.branchId === branchId ||
-            (s.branchId?._id || s.branchId) === branchId
-          );
-        })
         .map((s) => ({
           value: `staff-${s._id}`,
           label: `${s.name} (Staff)`,
@@ -385,12 +368,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
           entityType: "Customer",
         })),
       ...suppliers
-        .filter((s) => {
-          if (!branchId) return true;
-          return s.branches?.some(
-            (b) => (b._id || b) === branchId || b === branchId,
-          );
-        })
         .map((s) => ({
           value: `supp-${s._id}`,
           label: `${s.name} (Supplier)`,
@@ -643,12 +620,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
               endDate={filters.endDate}
               onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
               onEndDateChange={(val) => setFilters((prev) => ({ ...prev, endDate: val }))}
-              onFilterClick={() => setIsFilterModalOpen(true)}
-              filterCount={
-                Object.entries(filters).filter(([k, v]) =>
-                  k !== "startDate" && k !== "endDate" && (Array.isArray(v) ? v.length > 0 : !!v),
-                ).length
-              }
               headerActions={(() => {
                 const pType =
                   type === "receipt"
@@ -666,13 +637,10 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
                 return (
                   <button
                     onClick={() => {
-                      const userBranchId =
-                        user?.branchId?._id || user?.branchId;
-                      const isStaff = user?.role === "staff";
                       setEditingId(null);
                       setForm({
                         ...initialFormState,
-                        shopId: isStaff ? userBranchId : "",
+                        shopId: shops.length > 0 ? shops[0]._id : "",
                       });
                       setShowModal(true);
                     }}
@@ -751,17 +719,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
             />
           </>
         )}
-        <AccountingFilterModal
-          isOpen={isFilterModalOpen}
-          onClose={() => setIsFilterModalOpen(false)}
-          onApply={setFilters}
-          branches={shops.filter((s) => {
-            if (user?.role !== "staff") return true;
-            const userBranchId = user?.branchId?._id || user?.branchId;
-            return s._id === userBranchId;
-          })}
-          initialFilters={filters}
-        />
 
         <Modal
           isOpen={showModal}
@@ -776,26 +733,7 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
           position="right"
         >
           <form className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <SearchableSelect
-                label="Select Branch"
-                icon={Store}
-                value={form.shopId}
-                onChange={(val) => handleBranchChange(val)}
-                options={shops
-                  .filter((s) => {
-                    if (user?.role !== "staff") return true;
-                    const userBranchId = user?.branchId?._id || user?.branchId;
-                    return s._id === userBranchId;
-                  })
-                  .map((s) => ({
-                    value: s._id,
-                    label: s.name,
-                    description: s.mapAddress || s.address,
-                  }))}
-                placeholder="Select Branch"
-                required
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <CustomTextField
                 label="Transaction Date"
                 icon={Calendar}

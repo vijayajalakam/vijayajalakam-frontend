@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../api/axiosInstance";
 import ReportLayout from "../../../components/shared/ReportLayout";
 import CustomTable from "../../../components/shared/CustomTable";
-import { Landmark, Store } from "lucide-react";
+import { Landmark } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 import { usePagination } from "../../../hooks/usePagination";
-import AccountingFilterModal from "../../../components/shared/AccountingFilterModal";
 
 const BalanceSheetPage = () => {
   const { currencySymbol, hasPermission } = useAuth();
@@ -16,11 +15,8 @@ const BalanceSheetPage = () => {
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: new Date().toLocaleDateString("en-CA"),
-    branches: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [shops, setShops] = useState([]);
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const { pagination, onPageChange, updatePagination, resetPagination } =
     usePagination({ initialLimit: 50 });
@@ -34,8 +30,6 @@ const BalanceSheetPage = () => {
       });
       if (filters.endDate) params.append("asOfDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(
         `/account-transactions/balance-sheet?${params}`,
@@ -63,12 +57,6 @@ const BalanceSheetPage = () => {
   }, [fetchData]);
 
   useEffect(() => {
-    api.get("/shops").then((r) => {
-      if (r.data.success) setShops(r.data.data);
-    });
-  }, []);
-
-  useEffect(() => {
     resetPagination();
   }, [filters, searchTerm, resetPagination]);
 
@@ -80,8 +68,6 @@ const BalanceSheetPage = () => {
       });
       if (filters.endDate) params.append("asOfDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(
         `/account-transactions/balance-sheet?${params}`,
@@ -199,12 +185,6 @@ const BalanceSheetPage = () => {
           onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
           onEndDateChange={(val) => setFilters((prev) => ({ ...prev, endDate: val }))}
           pagination={{ ...pagination, onPageChange }}
-          onFilterClick={() => setIsFilterModalOpen(true)}
-          filterCount={
-            Object.entries(filters).filter(([k, v]) =>
-              k !== "startDate" && k !== "endDate" && (Array.isArray(v) ? v.length > 0 : !!v),
-            ).length
-          }
           emptyMessage="No financial data available."
           mobileMapper={{
             leading: (row) => (
@@ -233,13 +213,6 @@ const BalanceSheetPage = () => {
           }}
         />
       </div>
-      <AccountingFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApply={setFilters}
-        branches={shops}
-        initialFilters={filters}
-      />
     </ReportLayout>
   );
 };

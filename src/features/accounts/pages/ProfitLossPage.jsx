@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import api from "../../../api/axiosInstance";
 import ReportLayout from "../../../components/shared/ReportLayout";
 import CustomTable from "../../../components/shared/CustomTable";
-import { Landmark, Store } from "lucide-react";
+import { Landmark } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 import { usePagination } from "../../../hooks/usePagination";
-import AccountingFilterModal from "../../../components/shared/AccountingFilterModal";
 
 const ProfitLossPage = () => {
   const { currencySymbol, hasPermission } = useAuth();
@@ -17,11 +16,8 @@ const ProfitLossPage = () => {
   const [filters, setFilters] = useState({
     startDate: today,
     endDate: today,
-    branches: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [shops, setShops] = useState([]);
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const { pagination, onPageChange, updatePagination, resetPagination } =
     usePagination({ initialLimit: 50 });
@@ -36,8 +32,6 @@ const ProfitLossPage = () => {
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(`/account-transactions/profit-loss?${params}`);
       if (res.data.success) {
@@ -63,12 +57,6 @@ const ProfitLossPage = () => {
   }, [fetchData]);
 
   useEffect(() => {
-    api.get("/shops").then((r) => {
-      if (r.data.success) setShops(r.data.data);
-    });
-  }, []);
-
-  useEffect(() => {
     resetPagination();
   }, [filters, searchTerm, resetPagination]);
 
@@ -81,8 +69,6 @@ const ProfitLossPage = () => {
       if (filters.startDate) params.append("startDate", filters.startDate);
       if (filters.endDate) params.append("endDate", filters.endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (filters.branches?.length > 0)
-        params.append("branchId", filters.branches.join(","));
 
       const res = await api.get(`/account-transactions/profit-loss?${params}`);
       return res.data.success ? res.data.data : [];
@@ -224,12 +210,6 @@ const ProfitLossPage = () => {
           onStartDateChange={(val) => setFilters((prev) => ({ ...prev, startDate: val }))}
           onEndDateChange={(val) => setFilters((prev) => ({ ...prev, endDate: val }))}
           pagination={{ ...pagination, onPageChange }}
-          onFilterClick={() => setIsFilterModalOpen(true)}
-          filterCount={
-            Object.entries(filters).filter(([k, v]) =>
-              k !== "startDate" && k !== "endDate" && (Array.isArray(v) ? v.length > 0 : !!v),
-            ).length
-          }
           emptyMessage="No financial records for this period."
           mobileMapper={{
             leading: (row) => (
@@ -260,13 +240,6 @@ const ProfitLossPage = () => {
           }}
         />
       </div>
-      <AccountingFilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApply={setFilters}
-        branches={shops}
-        initialFilters={filters}
-      />
     </ReportLayout>
   );
 };

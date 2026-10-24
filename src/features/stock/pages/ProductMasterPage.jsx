@@ -9,7 +9,6 @@ import {
   useToggleProductSaleStatusMutation,
   useToggleProductFavouriteMutation
 } from "../../../store/api/stockEndpoints";
-import { useGetShopsQuery } from "../../../store/api/tenantEndpoints";
 import CustomTable from "../../../components/shared/CustomTable";
 import Modal from "../../../components/shared/Modal";
 import CustomTextField from "../../../components/shared/CustomTextField";
@@ -39,11 +38,7 @@ const ProductMasterPage = () => {
   const canChangeStatus = isAdmin || hasPermission("stock:products:status");
   const canChangeSale = isAdmin || hasPermission("stock:products:sale_status");
   const canGenerateImage = isAdmin || hasPermission("stock:products:image");
-
-  const { data: shopsRaw } = useGetShopsQuery("");
-
   const [products, setProducts] = useState([]);
-  const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,7 +53,6 @@ const ProductMasterPage = () => {
     sellingPrice: 0,
     currentStock: 0,
     isSale: true,
-    branches: [],
   });
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -70,11 +64,6 @@ const ProductMasterPage = () => {
   const [showBulkImageModal, setShowBulkImageModal] = useState(false);
   const [itemsToGenerate, setItemsToGenerate] = useState([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [selectedBranch] = useState(
-    user?.role === "staff" && user?.branchId
-      ? typeof user.branchId === "string" ? user.branchId : user.branchId._id
-      : ""
-  );
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -151,38 +140,12 @@ const ProductMasterPage = () => {
     </span>
   );
 
-  // Query Params for Products
-  const queryParams = React.useMemo(() => {
-    const params = new URLSearchParams();
-    if (user?.role === "staff") {
-      const id = typeof user.branchId === "string" ? user.branchId : user.branchId?._id;
-      if (id) params.append("branchId", id);
-    }
-    return params.toString();
-  }, [user]);
-
-  const { data: productsRaw, isLoading: loadingProducts, refetch: refetchProducts } = useGetProductsQuery(queryParams);
+  const { data: productsRaw, isLoading: loadingProducts, refetch: refetchProducts } = useGetProductsQuery("");
 
   useEffect(() => {
     if (productsRaw) setProducts(productsRaw);
     setLoading(loadingProducts);
   }, [productsRaw, loadingProducts]);
-
-  useEffect(() => {
-    if (shopsRaw && shopsRaw.length > 0) {
-      setShops(shopsRaw);
-      setForm((prev) => {
-        if (!editingId && (!prev.branches || prev.branches.length === 0)) {
-          if (user?.role === "staff") {
-            const id = typeof user.branchId === "string" ? user.branchId : user.branchId?._id;
-            if (id) return { ...prev, branches: [id] };
-          }
-          return { ...prev, branches: shopsRaw.map((s) => s._id) };
-        }
-        return prev;
-      });
-    }
-  }, [shopsRaw, editingId, user]);
 
   const resetForm = () => {
     setForm({
@@ -194,9 +157,6 @@ const ProductMasterPage = () => {
       sellingPrice: 0,
       currentStock: 0,
       isSale: true,
-      branches: user?.role === "staff"
-        ? [typeof user.branchId === "string" ? user.branchId : user.branchId?._id]
-        : shops.map((s) => s._id),
     });
     setEditingId(null);
     setSelectedImage(null);
@@ -204,7 +164,6 @@ const ProductMasterPage = () => {
   };
 
   const openEdit = (product) => {
-    const productBranchIds = product.branches?.map((b) => b._id || b) || [];
     setForm({
       name: product.name || "",
       description: product.description || "",
@@ -214,10 +173,6 @@ const ProductMasterPage = () => {
       hsnCode: product.hsnCode || "",
       currentStock: product.currentStock || 0,
       isSale: typeof product.isSale === "boolean" ? product.isSale : true,
-      branches: user?.role === "staff"
-        ? [typeof user.branchId === "string" ? user.branchId : user.branchId?._id]
-        : !product._id ? (shops.length > 0 ? shops.map((s) => s._id) : [])
-        : productBranchIds.length > 0 ? productBranchIds : (shops.length > 0 ? shops.map((s) => s._id) : []),
     });
     setEditingId(product._id);
     setImagePreview(product.image?.url || (typeof product.image === "string" ? product.image : null));
@@ -233,12 +188,9 @@ const ProductMasterPage = () => {
     if (isSubmitting) return;
     try {
       setIsSubmitting(true);
-      const defaultBranchId = shops.length > 0 ? shops[0]._id : (user?.branchId?._id || user?.branchId || null);
-      const branchesToSave = (form.branches && form.branches.length > 0) ? form.branches : (defaultBranchId ? [defaultBranchId] : []);
       const formData = new FormData();
       Object.keys(form).forEach((key) => {
-        if (key === "branches") formData.append(key, JSON.stringify(branchesToSave));
-        else formData.append(key, form[key]);
+        formData.append(key, form[key]);
       });
       if (selectedImage) formData.append("image", selectedImage);
       if (editingId) {
@@ -377,9 +329,7 @@ const ProductMasterPage = () => {
   };
 
   const filtered = products.filter((p) => {
-    const matchesSearch = !searchTerm || p.name?.toLowerCase().includes(searchTerm.toLowerCase()) || p.sku?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesBranch = !selectedBranch || p.branches?.some((b) => (b._id || b) === selectedBranch);
-    return matchesSearch && matchesBranch;
+    return !searchTerm || p.name?.toLowerCase().includes(searchTerm.toLowerCase()) || p.sku?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const columns = [
@@ -512,30 +462,17 @@ const ProductMasterPage = () => {
     </div>
   );
 
-  const uBranchId = typeof user?.branchId === "string" ? user?.branchId : user?.branchId?._id;
   const totalProducts = products.length;
   const totalStockValue = products.reduce((sum, p) => {
-    let stock = p.currentStock || 0;
-    if (user?.role === "staff") {
-      const bs = p.branchStock?.find((b) => (b.branchId?._id || b.branchId) === uBranchId);
-      stock = bs ? bs.currentStock : 0;
-    }
+    const stock = p.currentStock || 0;
     return sum + stock * (p.purchasePrice || 0);
   }, 0);
   const lowStockItems = products.filter((p) => {
-    let stock = p.currentStock || 0;
-    if (user?.role === "staff") {
-      const bs = p.branchStock?.find((b) => (b.branchId?._id || b.branchId) === uBranchId);
-      stock = bs ? bs.currentStock : 0;
-    }
+    const stock = p.currentStock || 0;
     return stock > 0 && stock < 5;
   }).length;
   const outOfStockItems = products.filter((p) => {
-    let stock = p.currentStock || 0;
-    if (user?.role === "staff") {
-      const bs = p.branchStock?.find((b) => (b.branchId?._id || b.branchId) === uBranchId);
-      stock = bs ? bs.currentStock : 0;
-    }
+    const stock = p.currentStock || 0;
     return stock <= 0;
   }).length;
 
@@ -637,11 +574,7 @@ const ProductMasterPage = () => {
                 <div className={`text-right ${!r.isActive ? "opacity-50" : ""}`}>
                   <p className="text-[8px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest leading-none mb-0.5">Stock</p>
                   <p className="text-[13px] font-black text-gray-900 dark:text-white">
-                    {(() => {
-                      if (user?.role !== "staff") return r.currentStock;
-                      const bs = r.branchStock?.find((b) => (b.branchId?._id || b.branchId) === uBranchId);
-                      return bs ? bs.currentStock : 0;
-                    })()}
+                    {r.currentStock || 0}
                   </p>
                 </div>
               ),
