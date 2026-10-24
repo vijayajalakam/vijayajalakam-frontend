@@ -1,9 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Modal from './Modal';
-import CustomTable from './CustomTable';
-import CustomTextField from './CustomTextField';
-import CustomDropdown from './CustomDropdown';
-import { UploadCloud, CheckCircle, Trash2, Edit3, Save, X, AlertTriangle } from 'lucide-react';
+import { UploadCloud, CheckCircle, Trash2, Edit3, Save, X } from 'lucide-react';
 import api from '../../api/axiosInstance';
 import { useAuth } from '../../features/auth/hooks/useAuth';
 import * as XLSX from 'xlsx';
@@ -21,14 +18,10 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
 
   const columns = [
     { key: "productName", label: "Product Name" },
-    { key: "categoryName", label: "Category" },
-    { key: "variantName", label: "Variant" },
-    { key: "unit", label: "Unit" },
     { key: "sku", label: "SKU/Barcode" },
     { key: "hsnCode", label: "HSN Code" },
     { key: "purchasePrice", label: `Purchase Price (${currencySymbol})` },
     { key: "sellingPrice", label: `Selling Price (${currencySymbol})` },
-    { key: "taxPercentage", label: "Tax %" },
     { key: "openingStock", label: "Opening Stock" },
   ];
 
@@ -38,7 +31,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
       const validation = validateFileSize(uploadedFile);
       if (!validation.isValid) {
         showSnack(validation.message, "error");
-        e.target.value = ""; // Reset the input
+        e.target.value = "";
         return;
       }
       setFile(uploadedFile);
@@ -68,27 +61,13 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
               return "";
           };
 
-          const variantName = String(getVal(['Variant Name', 'VariantName', 'Variant']) || '-').trim();
-          const taxPercentage = parseFloat(getVal(['Tax %', 'Tax Percentage', 'TaxPercentage', 'TaxRate', 'Tax Rate'])) || 0;
-
-          // Derive hasVariants from variant name: if variant name exists and is not "-" or empty, it has variants
-          const hasVariants = (variantName && variantName !== '-' && variantName !== '') ? 'Yes' : 'No';
-          // Derive taxEnabled from tax percentage: if tax% > 0 then tax is enabled
-          const taxEnabled = taxPercentage > 0 ? 'Yes' : 'No';
-
           return {
             id: index,
             productName: String(getVal(['Product Name', 'ProductName', 'Name', 'Product'])).trim(),
-            categoryName: String(getVal(['Category', 'CategoryName', 'Category Name'])).trim(),
-            hasVariants,
-            variantName,
-            unit: String(getVal(['Unit', 'Unit Name']) || 'Pcs').trim(),
             sku: String(getVal(['SKU/Barcode', 'SKU', 'Barcode', 'SKU / Barcode'])).trim(),
             hsnCode: String(getVal(['HSN Code', 'HSNCode', 'HSN'])).trim(),
             purchasePrice: parseFloat(getVal(['Purchase Price', 'PurchasePrice', 'Cost'])) || 0,
             sellingPrice: parseFloat(getVal(['Selling Price', 'SellingPrice', 'Price'])) || 0,
-            taxEnabled,
-            taxPercentage,
             openingStock: parseFloat(getVal(['Opening Stock', 'OpeningStock', 'Stock'])) || 0,
           };
         }).filter(item => item.productName);
@@ -153,17 +132,9 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
   const saveEdit = (index) => {
     const newData = [...data];
     const item = { ...editFormData };
-    
-    // Convert numerical values back
     item.purchasePrice = parseFloat(item.purchasePrice) || 0;
     item.sellingPrice = parseFloat(item.sellingPrice) || 0;
-    item.taxPercentage = parseFloat(item.taxPercentage) || 0;
     item.openingStock = parseFloat(item.openingStock) || 0;
-    
-    // Derive hasVariants and taxEnabled from the actual values
-    item.hasVariants = (item.variantName && item.variantName !== '-' && item.variantName !== '') ? 'Yes' : 'No';
-    item.taxEnabled = item.taxPercentage > 0 ? 'Yes' : 'No';
-    
     newData[index] = item;
     setData(newData);
     setEditingRowIndex(null);
@@ -173,7 +144,6 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
     setEditFormData(prev => ({ ...prev, [key]: value }));
   };
 
-  // Custom table body render for inline editing
   const renderTableRow = (row, index) => {
     const isEditing = editingRowIndex === index;
     
@@ -185,31 +155,6 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
               type="text" 
               value={editFormData.productName} 
               onChange={(e) => handleEditChange('productName', e.target.value)}
-              className="w-full text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
-            />
-          </td>
-          <td className="p-3">
-            <input 
-              type="text" 
-              value={editFormData.categoryName} 
-              onChange={(e) => handleEditChange('categoryName', e.target.value)}
-              className="w-full text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
-            />
-          </td>
-          <td className="p-3">
-            <input 
-              type="text" 
-              value={editFormData.variantName} 
-              onChange={(e) => handleEditChange('variantName', e.target.value)}
-              className="w-full text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
-              placeholder="Enter variant name or -"
-            />
-          </td>
-          <td className="p-3">
-            <input 
-              type="text" 
-              value={editFormData.unit} 
-              onChange={(e) => handleEditChange('unit', e.target.value)}
               className="w-full text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
             />
           </td>
@@ -234,7 +179,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
               type="number" 
               value={editFormData.purchasePrice} 
               onChange={(e) => handleEditChange('purchasePrice', e.target.value)}
-              className="w-20 text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
+              className="w-24 text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
             />
           </td>
           <td className="p-3 bg-green-50/50">
@@ -242,16 +187,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
               type="number" 
               value={editFormData.sellingPrice} 
               onChange={(e) => handleEditChange('sellingPrice', e.target.value)}
-              className="w-20 text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
-            />
-          </td>
-          <td className="p-3">
-            <input 
-              type="number" 
-              value={editFormData.taxPercentage} 
-              onChange={(e) => handleEditChange('taxPercentage', e.target.value)}
-              className="w-16 text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
-              placeholder="0"
+              className="w-24 text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
             />
           </td>
           <td className="p-3">
@@ -259,7 +195,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
               type="number" 
               value={editFormData.openingStock} 
               onChange={(e) => handleEditChange('openingStock', e.target.value)}
-              className="w-16 text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
+              className="w-20 text-xs p-1.5 border border-gray-300 dark:border-dark-border rounded"
             />
           </td>
           <td className="p-3 border-l border-gray-100 dark:border-dark-border">
@@ -273,7 +209,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
               </button>
               <button 
                 onClick={cancelEdit}
-                className="p-1.5 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark-card dark:bg-dark-card rounded-lg transition-colors"
+                className="p-1.5 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark-card rounded-lg transition-colors"
                 title="Cancel Edit"
               >
                 <X size={14} />
@@ -285,19 +221,15 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
     }
 
     return (
-      <tr key={index} className="hover:bg-gray-50 dark:hover:bg-dark-card dark:bg-dark-card border-b border-gray-100 dark:border-dark-border transition-colors">
+      <tr key={index} className="hover:bg-gray-50 dark:hover:bg-dark-card border-b border-gray-100 dark:border-dark-border transition-colors">
         <td className="p-3 text-xs font-medium text-gray-800 dark:text-gray-100">{row.productName}</td>
-        <td className="p-3 text-xs text-gray-600 dark:text-gray-400">{row.categoryName || '-'}</td>
-        <td className="p-3 text-xs text-gray-600 dark:text-gray-400">{row.variantName || '-'}</td>
-        <td className="p-3 text-xs text-gray-600 dark:text-gray-400">{row.unit}</td>
         <td className="p-3 text-xs text-gray-600 dark:text-gray-400">{row.sku || '-'}</td>
         <td className="p-3 text-xs text-gray-600 dark:text-gray-400">{row.hsnCode || '-'}</td>
         <td className="p-3 text-xs font-medium text-red-600 bg-red-50/20">{currencySymbol}{row.purchasePrice}</td>
         <td className="p-3 text-xs font-medium text-green-600 bg-green-50/20">{currencySymbol}{row.sellingPrice}</td>
-        <td className="p-3 text-xs text-brand-secondary">{row.taxPercentage > 0 ? `${row.taxPercentage}%` : '0'}</td>
         <td className="p-3 text-xs text-blue-600 font-bold">{row.openingStock}</td>
         <td className="p-3 border-l border-gray-100 dark:border-dark-border">
-          <div className="flex items-center gap-2">
+           <div className="flex items-center gap-2">
              <button 
                onClick={() => startEdit(index)}
                className="p-1 text-gray-400 hover:text-brand-primary dark:text-blue-400 transition-colors"
@@ -312,7 +244,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
              >
                <Trash2 size={14} />
              </button>
-          </div>
+           </div>
         </td>
       </tr>
     );
@@ -323,7 +255,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
       isOpen={isOpen}
       onClose={resetModal}
       title="Upload Products"
-      maxWidth="max-w-6xl"
+      maxWidth="max-w-5xl"
       footer={
         <div className="flex justify-between items-center w-full">
             <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -364,7 +296,6 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
       }
     >
       <div className="p-4 space-y-6">
-        
         {data.length === 0 ? (
           <div 
             className="border-2 border-dashed border-gray-300 dark:border-dark-border rounded-2xl p-10 flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-dark-card/50 hover:bg-brand-primary/5 hover:border-brand-primary/30 transition-all cursor-pointer group"
@@ -375,7 +306,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
              </div>
              <h3 className="text-sm font-bold text-gray-800 dark:text-gray-100 mb-1">Upload Product Inventory File</h3>
              <p className="text-xs text-gray-500 dark:text-gray-400 max-w-sm">
-               Drop your Excel (.xlsx) or CSV file here. Ensure it matches the template format exactly.
+               Drop your Excel (.xlsx) or CSV file here.
              </p>
              <p className="text-[10px] text-brand-primary dark:text-blue-400 font-bold mt-2 uppercase tracking-tight">
                {getFileSizeHint()}
@@ -413,7 +344,7 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
 
              <div className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl shadow-sm overflow-hidden">
                  <div className="overflow-x-auto">
-                     <table className="w-full text-left border-collapse min-w-[1200px]">
+                     <table className="w-full text-left border-collapse min-w-[700px]">
                          <thead>
                              <tr className="bg-gray-50 dark:bg-dark-card/80 border-b border-gray-200 dark:border-dark-border">
                                 {columns.map((col, i) => (
@@ -432,7 +363,6 @@ const UploadProductsModal = ({ isOpen, onClose, onUploadSuccess, showSnack }) =>
              </div>
           </div>
         )}
-
       </div>
     </Modal>
   );

@@ -170,10 +170,7 @@ export const {
     }),
 
     getTaxes: builder.query({
-      query: (q = "") => ({
-        url: q ? `/taxes?${q}` : "/taxes",
-      }),
-      transformResponse: asList,
+      queryFn: () => ({ data: [] }),
       providesTags: ["Tax"],
     }),
 

@@ -802,60 +802,6 @@ export const AVAILABLE_PERMISSIONS = [
                 label: 'Master Data (Manage)',
                 modules: [
                     {
-                        key: 'categories',
-                        label: 'Categories',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'add', label: 'Add' },
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'delete', label: 'Delete' },
-                            { key: 'toggle', label: 'Toggle Status' }
-                        ]
-                    },
-                    {
-                        key: 'departments',
-                        label: 'Departments',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'add', label: 'Add' },
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'delete', label: 'Delete' },
-                            { key: 'toggle', label: 'Toggle Status' }
-                        ]
-                    },
-                    {
-                        key: 'variants',
-                        label: 'Variants',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'add', label: 'Add' },
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'delete', label: 'Delete' },
-                            { key: 'toggle', label: 'Toggle Status' }
-                        ]
-                    },
-                    {
-                        key: 'units',
-                        label: 'Units',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'add', label: 'Add' },
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'delete', label: 'Delete' }
-                        ]
-                    },
-                    {
-                        key: 'taxes',
-                        label: 'Tax Rates',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'add', label: 'Add' },
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'delete', label: 'Delete' },
-                            { key: 'toggle', label: 'Toggle Status' }
-                        ]
-                    },
-                    {
                         key: 'payments',
                         label: 'Payment Methods',
                         actions: [
@@ -864,22 +810,6 @@ export const AVAILABLE_PERMISSIONS = [
                             { key: 'edit', label: 'Edit' },
                             { key: 'delete', label: 'Delete' },
                             { key: 'toggle', label: 'Toggle Status' }
-                        ]
-                    },
-                    {
-                        key: 'roundoff',
-                        label: 'Round-Off Settings',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'edit', label: 'Edit' }
-                        ]
-                    },
-                    {
-                        key: 'regional',
-                        label: 'Regional Settings',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'edit', label: 'Edit' }
                         ]
                     },
                     {

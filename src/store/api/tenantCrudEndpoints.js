@@ -96,32 +96,27 @@ export const {
   overrideExisting: false,
   endpoints: (builder) => ({
     getDepartmentsAll: builder.query({
-      query: () => ({ url: "/departments", params: { all: "true" } }),
-      transformResponse: asList,
+      queryFn: () => ({ data: [] }),
       providesTags: ["Department"],
     }),
 
     getServiceCategories: builder.query({
-      query: (slug) => ({ url: "/categories", params: { slug } }), // slug as cache key
-      transformResponse: asList,
+      queryFn: () => ({ data: [] }),
       providesTags: ["Category"],
     }),
 
     getProductCategoriesList: builder.query({
-      query: (slug) => ({ url: "/product-categories", params: { slug } }), // slug as cache key
-      transformResponse: asList,
+      queryFn: () => ({ data: [] }),
       providesTags: ["ProductCategory"],
     }),
 
     getUnitsList: builder.query({
-      query: () => ({ url: "/units" }),
-      transformResponse: asList,
+      queryFn: () => ({ data: [] }),
       providesTags: ["Unit"],
     }),
 
     getVariantsList: builder.query({
-      query: () => ({ url: "/variants" }),
-      transformResponse: asList,
+      queryFn: () => ({ data: [] }),
       providesTags: ["Variant"],
     }),
 
@@ -137,123 +132,24 @@ export const {
       providesTags: ["Profile", "BusinessProfile"],
     }),
 
-    createTax: builder.mutation({
-      query: (body) => ({ url: "/taxes", method: "POST", data: body }),
-      invalidatesTags: ["Tax"],
-    }),
-
-    updateTax: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/taxes/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["Tax"],
-    }),
-
-    deleteTax: builder.mutation({
-      query: (id) => ({ url: `/taxes/${id}`, method: "DELETE" }),
-      invalidatesTags: ["Tax"],
-    }),
-
-    createUnit: builder.mutation({
-      query: (body) => ({ url: "/units", method: "POST", data: body }),
-      invalidatesTags: ["Unit"],
-    }),
-
-    updateUnit: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/units/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["Unit"],
-    }),
-
-    deleteUnit: builder.mutation({
-      query: (id) => ({ url: `/units/${id}`, method: "DELETE" }),
-      invalidatesTags: ["Unit"],
-    }),
-
-    createVariant: builder.mutation({
-      query: (body) => ({ url: "/variants", method: "POST", data: body }),
-      invalidatesTags: ["Variant"],
-    }),
-
-    updateVariant: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/variants/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["Variant"],
-    }),
-
-    deleteVariant: builder.mutation({
-      query: (id) => ({ url: `/variants/${id}`, method: "DELETE" }),
-      invalidatesTags: ["Variant"],
-    }),
-
-    createDepartment: builder.mutation({
-      query: (body) => ({ url: "/departments", method: "POST", data: body }),
-      invalidatesTags: ["Department", "Service", "InvoiceMetadata"],
-    }),
-
-    updateDepartment: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/departments/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["Department", "Service", "InvoiceMetadata"],
-    }),
-
-    deleteDepartment: builder.mutation({
-      query: (id) => ({ url: `/departments/${id}`, method: "DELETE" }),
-      invalidatesTags: ["Department", "Service", "InvoiceMetadata"],
-    }),
-
-    createServiceCategory: builder.mutation({
-      query: (body) => ({ url: "/categories", method: "POST", data: body }),
-      invalidatesTags: ["Category", "Service", "InvoiceMetadata"],
-    }),
-
-    updateServiceCategory: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/categories/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["Category", "Service", "InvoiceMetadata"],
-    }),
-
-    deleteServiceCategory: builder.mutation({
-      query: (id) => ({ url: `/categories/${id}`, method: "DELETE" }),
-      invalidatesTags: ["Category", "Service", "InvoiceMetadata"],
-    }),
-
-    createProductCategory: builder.mutation({
-      query: (body) => ({
-        url: "/product-categories",
-        method: "POST",
-        data: body,
-      }),
-      invalidatesTags: ["ProductCategory", "Product", "InvoiceMetadata"],
-    }),
-
-    updateProductCategory: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/product-categories/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["ProductCategory", "Product", "InvoiceMetadata"],
-    }),
-
-    deleteProductCategory: builder.mutation({
-      query: (id) => ({ url: `/product-categories/${id}`, method: "DELETE" }),
-      invalidatesTags: ["ProductCategory", "Product", "InvoiceMetadata"],
-    }),
+    createTax: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    updateTax: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    deleteTax: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    createUnit: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    updateUnit: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    deleteUnit: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    createVariant: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    updateVariant: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    deleteVariant: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    createDepartment: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    updateDepartment: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    deleteDepartment: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    createServiceCategory: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    updateServiceCategory: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    deleteServiceCategory: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    createProductCategory: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    updateProductCategory: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
+    deleteProductCategory: builder.mutation({ queryFn: () => ({ data: { success: true } }) }),
 
     createPaymentMethod: builder.mutation({
       query: (body) => ({

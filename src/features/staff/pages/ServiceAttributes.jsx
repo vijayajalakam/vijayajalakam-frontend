@@ -1,37 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DepartmentsManager from "../../../components/admin/DepartmentsManager";
-import CategoriesManager from "../../../components/admin/CategoriesManager";
-import UnitsManager from "../../../components/admin/UnitsManager";
 import PaymentMethodsManager from "../../../components/admin/PaymentMethodsManager";
-import RegionalManager from "../../../components/admin/RegionalManager";
-import TaxManager from "../../../components/admin/TaxManager";
 import ThemeManager from "../../../components/admin/ThemeManager";
-import VariantManager from "../../../components/admin/VariantManager";
-import RoundOffManager from "../../../components/admin/RoundOffManager";
 import {
-  Layers,
-  Tags,
   Wallet,
-  Globe,
-  Percent,
   Palette,
-  ListTree,
-  Calculator,
 } from "lucide-react";
 
 import { useAuth } from "../../auth/hooks/useAuth";
 
 const ALL_TABS = [
-  { id: "categories",  label: "Categories",       icon: Tags,       permission: "settings:manage:categories" },
-  { id: "departments", label: "Department",        icon: Layers,     permission: "settings:manage:departments" },
-  { id: "variants",    label: "Variants",          icon: ListTree,   permission: "settings:manage:variants" },
-  { id: "units",       label: "Units",             icon: Layers,     permission: "settings:manage:units" },
-  { id: "taxes",       label: "Tax Rates",         icon: Percent,    permission: "settings:manage:taxes" },
-  { id: "payments",    label: "Payment Methods",   icon: Wallet,     permission: "settings:manage:payments" },
-  { id: "roundoff",    label: "Round-Off",         icon: Calculator, permission: "settings:manage:roundoff" },
-  { id: "regional",    label: "Regional Settings", icon: Globe,      permission: "settings:manage:regional" },
-  { id: "theme",       label: "Theme",             icon: Palette,    permission: "settings:manage:theme" },
+  { id: "payments", label: "Payment Methods", icon: Wallet, permission: "settings:manage:payments" },
+  { id: "theme",    label: "Theme",           icon: Palette, permission: "settings:manage:theme" },
 ];
 
 const ServiceAttributes = () => {
@@ -55,7 +35,7 @@ const ServiceAttributes = () => {
     if (hash && tabs.find((t) => t.id === hash)) {
       return hash;
     }
-    return tabs[0]?.id || "";
+    return tabs[0]?.id || "payments";
   });
 
   // Sync activeTab when tabs list changes or hash changes
@@ -110,15 +90,8 @@ const ServiceAttributes = () => {
       </div>
 
       <div className="w-full">
-        {activeTab === "categories"  && <CategoriesManager />}
-        {activeTab === "units"       && <UnitsManager />}
-        {activeTab === "departments" && <DepartmentsManager />}
-        {activeTab === "variants"    && <VariantManager />}
-        {activeTab === "taxes"       && <TaxManager />}
-        {activeTab === "payments"    && <PaymentMethodsManager />}
-        {activeTab === "roundoff"    && <RoundOffManager />}
-        {activeTab === "theme"       && <ThemeManager />}
-        {activeTab === "regional"    && <RegionalManager />}
+        {activeTab === "payments" && <PaymentMethodsManager />}
+        {activeTab === "theme"    && <ThemeManager />}
       </div>
     </div>
   );
