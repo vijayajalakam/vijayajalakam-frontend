@@ -29,13 +29,7 @@ const homeEndpoints = appApi.injectEndpoints({
       keepUnusedDataFor: 300,
     }),
 
-    // Fetch public shop categories
-    getPublicShopCategories: builder.query({
-      query: () => ({ url: "/public/shop-categories" }),
-      transformResponse: (res) => (res?.success ? res.data : []),
-      providesTags: [{ type: "Category", id: "PUBLIC_SHOP_CATS" }],
-      keepUnusedDataFor: 600, // 10 minutes cache — categories rarely change
-    }),
+
 
     // Fetch user's bookings for Upcoming + Book Again sections
     getUserHomeBookings: builder.query({
@@ -141,7 +135,6 @@ const homeEndpoints = appApi.injectEndpoints({
 export const {
   useGetPublicShopsQuery,
   useGetPublicBannersQuery,
-  useGetPublicShopCategoriesQuery,
   useGetUserHomeBookingsQuery,
   useGetUserFavoritesQuery,
   useGetShopReviewsQuery,

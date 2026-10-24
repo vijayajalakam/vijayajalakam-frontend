@@ -47,12 +47,6 @@ export const {
   useUploadCustomerStyleMutation,
   useUpdateCustomerStyleMutation,
   useDeleteCustomerStyleMutation,
-  useGetSuppliersQuery,
-  useLazyGetSuppliersQuery,
-  useCreateSupplierMutation,
-  useUpdateSupplierMutation,
-  useDeleteSupplierMutation,
-  useBulkDeleteSuppliersMutation,
   useGetAttendanceQuery,
   useGetStaffAttendanceQuery,
   useGetAttendanceReportQuery,
@@ -262,42 +256,7 @@ export const {
       invalidatesTags: ["Customer"],
     }),
 
-    /** SRM — suppliers */
-    getSuppliers: builder.query({
-      query: (queryString) => ({
-        url: queryString ? `/suppliers?${queryString}` : "/suppliers",
-      }),
-      transformResponse: asList,
-      providesTags: ["Supplier"],
-    }),
 
-    createSupplier: builder.mutation({
-      query: (body) => ({ url: "/suppliers", method: "POST", data: body }),
-      invalidatesTags: ["Supplier"],
-    }),
-
-    updateSupplier: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/suppliers/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["Supplier"],
-    }),
-
-    deleteSupplier: builder.mutation({
-      query: (id) => ({ url: `/suppliers/${id}`, method: "DELETE" }),
-      invalidatesTags: ["Supplier"],
-    }),
-
-    bulkDeleteSuppliers: builder.mutation({
-      query: (ids) => ({
-        url: `/suppliers/bulk`,
-        method: "DELETE",
-        data: { ids },
-      }),
-      invalidatesTags: ["Supplier"],
-    }),
 
     /** HRM — staff + shared lookups */
     getAttendance: builder.query({

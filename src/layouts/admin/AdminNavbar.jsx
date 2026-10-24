@@ -1,16 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Menu, ChevronRight, Bell, ArrowLeft, ArrowRight } from "lucide-react";
+import { Menu, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { useLocation, useParams, Link, useNavigate } from "react-router-dom";
 import { adminMenu } from "./adminMenu.config";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { getDynamicPortalPath } from "../../utils/portalUtils";
-import NotificationDropdown from "../../features/notifications/components/NotificationDropdown";
-import {
-  toggleDropdown,
-  closeDropdown,
-  selectNotificationState,
-} from "../../store/slices/notificationSlice";
 import DayCloseWidget from "../../features/settings/components/DayCloseWidget";
 
 const AdminNavbar = ({
@@ -26,8 +20,6 @@ const AdminNavbar = ({
   const { portalRole: authPortalRole } = useAuth();
   // Use the portalRole from the URL as ground truth (handles SHOP_ADMIN using /admin/ URLs)
   const portalRole = urlPortalRole || authPortalRole;
-  const { isDropdownOpen, unreadCount } = useSelector(selectNotificationState);
-
   // Derive title and breadcrumbs
   const path = location.pathname;
   const sortedMenu = [...menuItems].sort(
@@ -193,26 +185,6 @@ const AdminNavbar = ({
         <div className="flex items-center gap-4 md:gap-6 relative">
           <div className="hidden sm:block shrink-0">
             <DayCloseWidget />
-          </div>
-          <div className="relative">
-            <button
-              onClick={() => dispatch(toggleDropdown())}
-              className={`p-2.5 rounded-xl transition-all duration-300 relative group ${
-                isDropdownOpen
-                  ? "bg-blue-50 dark:bg-blue-900/20 text-brand-primary dark:text-blue-400"
-                  : "text-gray-400 hover:text-gray-900 dark:text-white border-2 border-transparent hover:border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-card dark:bg-dark-card"
-              }`}
-            >
-              <Bell size={20} className="group-hover:translate-y-[-1px] transition-transform" />
-              {unreadCount > 0 && (
-                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full animate-pulse" />
-              )}
-            </button>
-
-            <NotificationDropdown
-              isOpen={isDropdownOpen}
-              onClose={() => dispatch(closeDropdown())}
-            />
           </div>
         </div>
       </div>

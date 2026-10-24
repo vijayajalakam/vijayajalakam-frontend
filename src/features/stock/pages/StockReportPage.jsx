@@ -5,7 +5,6 @@ import CustomDropdown from "../../../components/shared/CustomDropdown";
 import { Package, Tag } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { usePagination } from "../../../hooks/usePagination";
-import { useGetSuppliersQuery } from "../../../store/api/tenantCrudEndpoints";
 import ReportLayout from "../../../components/shared/ReportLayout";
 import ReportSummaryCard from "../../../components/shared/ReportSummaryCard";
 
@@ -16,10 +15,7 @@ const StockReportPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("all");
-  const [selectedSupplier, setSelectedSupplier] = useState("");
   const [stockStatus, setStockStatus] = useState("");
-  
-  const { data: suppliers = [] } = useGetSuppliersQuery("");
 
   const today = new Date().toLocaleDateString("en-CA");
   const [startDate, setStartDate] = useState(today);
@@ -37,7 +33,6 @@ const StockReportPage = () => {
       if (startDate) params.append("startDate", startDate);
       if (endDate) params.append("endDate", endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (selectedSupplier) params.append("supplierId", selectedSupplier);
       if (stockStatus) params.append("stockStatus", stockStatus);
 
       const res = await api.get(`/products/stock-report?${params}`);
@@ -57,7 +52,6 @@ const StockReportPage = () => {
     searchTerm,
     startDate,
     endDate,
-    selectedSupplier,
     stockStatus,
     updatePagination,
   ]);
@@ -68,7 +62,7 @@ const StockReportPage = () => {
 
   useEffect(() => {
     resetPagination();
-  }, [searchTerm, startDate, endDate, selectedSupplier, stockStatus, resetPagination]);
+  }, [searchTerm, startDate, endDate, stockStatus, resetPagination]);
 
   const summaryData = useMemo(() => {
     if (!summary) return null;
@@ -100,7 +94,6 @@ const StockReportPage = () => {
       if (startDate) params.append("startDate", startDate);
       if (endDate) params.append("endDate", endDate);
       if (searchTerm) params.append("search", searchTerm);
-      if (selectedSupplier) params.append("supplierId", selectedSupplier);
       if (stockStatus) params.append("stockStatus", stockStatus);
 
       const res = await api.get(`/products/stock-report?${params.toString()}`);
@@ -246,21 +239,6 @@ const StockReportPage = () => {
                   { value: "in_stock", label: "In Stock" },
                   { value: "out_of_stock", label: "Out of Stock" },
                   { value: "low_stock", label: "Low Stock" },
-                ]}
-                variant="compact"
-                buttonClassName="h-9 text-[11px] font-bold border border-gray-100 dark:border-dark-border rounded-xl px-3 bg-white dark:bg-dark-card text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5 transition-all w-full flex items-center justify-between"
-              />
-            </div>
-            <div className="w-[calc(50%-4px)] sm:w-48 shrink-0">
-              <CustomDropdown
-                value={selectedSupplier}
-                onChange={(e) => setSelectedSupplier(e.target.value)}
-                options={[
-                  { value: "", label: "All Suppliers" },
-                  ...suppliers.map((s) => ({
-                    value: s._id,
-                    label: s.name,
-                  })),
                 ]}
                 variant="compact"
                 buttonClassName="h-9 text-[11px] font-bold border border-gray-100 dark:border-dark-border rounded-xl px-3 bg-white dark:bg-dark-card text-gray-700 dark:text-gray-300 focus:outline-none focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5 transition-all w-full flex items-center justify-between"

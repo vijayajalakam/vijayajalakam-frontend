@@ -4,7 +4,6 @@ import authReducer from './slices/authSlice';
 import permissionReducer from './slices/permissionSlice';
 import stockReducer from './slices/stockSlice';
 import invoiceReducer from './slices/invoiceSlice';
-import notificationReducer from './slices/notificationSlice';
 import userAppReducer from './slices/userAppSlice';
 import loyaltyReducer from './slices/loyaltySlice';
 import payoutReducer from './slices/payoutSlice';
@@ -14,7 +13,6 @@ import './api/tenantEndpoints';
 import './api/tenantCrudEndpoints';
 import './api/stockEndpoints';
 import './api/invoiceEndpoints';
-import './api/notificationEndpoints';
 import './api/integrationEndpoints';
 import './api/homeEndpoints';
 import './api/counterSessionEndpoints';
@@ -27,7 +25,6 @@ export const store = configureStore({
     permissions: permissionReducer,
     stock: stockReducer,
     invoice: invoiceReducer,
-    notification: notificationReducer,
     userApp: userAppReducer,
     loyalty: loyaltyReducer,
     payouts: payoutReducer,

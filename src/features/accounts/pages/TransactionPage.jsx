@@ -10,8 +10,7 @@ import {
 } from "../../../store/api/accountingEndpoints";
 import { 
   useGetAdminStaffQuery, 
-  useGetAdminCustomersQuery, 
-  useGetSuppliersQuery 
+  useGetAdminCustomersQuery 
 } from "../../../store/api/tenantCrudEndpoints";
 import { useGetShopsQuery } from "../../../store/api/tenantEndpoints";
 import { rtkErrorMessage } from "../../../store/api/rtkUtils";
@@ -81,7 +80,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
   const { data: accData, isLoading: accLoading } = useGetChartOfAccountsQuery();
   const { data: staffData, isLoading: staffLoading } = useGetAdminStaffQuery("skipStats=true");
   const { data: custData, isLoading: custLoading } = useGetAdminCustomersQuery("reconcile=false");
-  const { data: suppData, isLoading: suppLoading } = useGetSuppliersQuery();
   const { data: shopsData, isLoading: shopsLoading } = useGetShopsQuery();
 
   const [createTransaction] = useCreateAccountTransactionMutation();
@@ -93,10 +91,9 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
   const accounts = accData || [];
   const staff = staffData || [];
   const customers = custData || [];
-  const suppliers = suppData || [];
   const shops = shopsData || [];
 
-  const loading = txLoading || accLoading || staffLoading || custLoading || suppLoading || shopsLoading;
+  const loading = txLoading || accLoading || staffLoading || custLoading || shopsLoading;
 
   const fetchData = React.useCallback(() => {
     refetchTx();
@@ -176,17 +173,13 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
         ? staff.find((s) => s._id === txn.debitEntityId)
           ? "staff-"
           : "cust-"
-        : txn.debitEntityModel === "Supplier"
-          ? "supp-"
-          : "";
+        : "";
     const cPre =
       txn.creditEntityModel === "User"
         ? staff.find((s) => s._id === txn.creditEntityId)
           ? "staff-"
           : "cust-"
-        : txn.creditEntityModel === "Supplier"
-          ? "supp-"
-          : "";
+        : "";
 
     setForm({
       voucherType: txn.type,
@@ -367,16 +360,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
           entityName: c.name,
           entityType: "Customer",
         })),
-      ...suppliers
-        .map((s) => ({
-          value: `supp-${s._id}`,
-          label: `${s.name} (Supplier)`,
-          accountId: findSystemAccId(SYSTEM_ACCOUNTS.PAYABLE),
-          entityId: s._id,
-          entityModel: "Supplier",
-          entityName: s.name,
-          entityType: "Supplier",
-        })),
     ];
   };
 
@@ -407,7 +390,7 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
     const option = allAvailableOptions.find((opt) => opt.value === val);
     let newNarration = form.narration;
 
-    // Auto-update narration with entity tag if selecting Staff/Customer/Supplier
+    // Auto-update narration with entity tag if selecting Staff/Customer
     if (option && option.entityType) {
       const tag = `(${option.entityType}: ${option.entityName})`;
       if (!newNarration.includes(tag)) {

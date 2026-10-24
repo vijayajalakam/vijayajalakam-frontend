@@ -239,34 +239,6 @@ const ReportsPage = () => {
       ],
     },
     {
-      title: "Supplier Reports",
-      color: "indigo",
-      icon: Truck,
-      reports: [
-        {
-          id: "supplier-report",
-          label: "Supplier Report",
-          icon: Users,
-          path: getDynamicPortalPath("/admin/reports/supplier-report"),
-          permission: "reports:supplier:supplier_report"
-        },
-        {
-          id: "supplier-stmt",
-          label: "Supplier Statement",
-          icon: ClipboardList,
-          path: getDynamicPortalPath("/admin/reports/supplier-statement"),
-          permission: "reports:supplier:supplier_statement"
-        },
-        {
-          id: "supplier-credit-report",
-          label: "Supplier Credit Report",
-          icon: CreditCard,
-          path: getDynamicPortalPath("/admin/reports/supplier-credit-report"),
-          permission: "reports:supplier:supplier_credit_report"
-        },
-      ],
-    },
-    {
       title: "Stock Reports",
       color: "orange",
       icon: Package,

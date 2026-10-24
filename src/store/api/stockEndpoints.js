@@ -368,7 +368,6 @@ export const {
       invalidatesTags: [
         { type: "Purchase", id: "ENTRY_LIST" },
         { type: "Product", id: "LIST" },
-        "Supplier",
         "Dashboard",
       ],
     }),
@@ -383,7 +382,6 @@ export const {
         { type: "Purchase", id },
         { type: "Purchase", id: "ENTRY_LIST" },
         { type: "Product", id: "LIST" },
-        "Supplier",
       ],
     }),
 
@@ -395,7 +393,6 @@ export const {
       invalidatesTags: [
         { type: "Purchase", id: "ENTRY_LIST" },
         { type: "Product", id: "LIST" },
-        "Supplier",
       ],
     }),
 
@@ -408,7 +405,6 @@ export const {
       invalidatesTags: (result, error, { id }) => [
         { type: "Purchase", id },
         { type: "Purchase", id: "ENTRY_LIST" },
-        "Supplier",
         "AccountTransaction",
       ],
     }),
@@ -462,7 +458,6 @@ export const {
       invalidatesTags: [
         { type: "Purchase", id: "RETURN_LIST" },
         { type: "Product", id: "LIST" },
-        "Supplier",
       ],
     }),
 
@@ -476,7 +471,6 @@ export const {
         { type: "Purchase", id },
         { type: "Purchase", id: "RETURN_LIST" },
         { type: "Product", id: "LIST" },
-        "Supplier",
       ],
     }),
 
@@ -488,7 +482,6 @@ export const {
       invalidatesTags: [
         { type: "Purchase", id: "RETURN_LIST" },
         { type: "Product", id: "LIST" },
-        "Supplier",
       ],
     }),
 

@@ -54,7 +54,6 @@ import ValuableCustomerReportPage from "./features/reports/pages/ValuableCustome
 import RegularCustomerReportPage from "./features/reports/pages/RegularCustomerReportPage";
 import StaffStatementPage from "./features/reports/pages/StaffStatementPage";
 import StaffCreditReportPage from "./features/reports/pages/StaffCreditReportPage";
-import SupplierCreditReportPage from "./features/reports/pages/SupplierCreditReportPage";
 import TrashInvoiceReport from "./features/reports/pages/TrashInvoiceReport";
 import StaffSettlementReport from "./features/reports/pages/StaffSettlementReport";
 import MorePage from "./features/settings/pages/MorePage";
@@ -78,10 +77,7 @@ import DamageBooksPage from "./features/stock/pages/DamageBooksPage";
 import ConsumptionBooksPage from "./features/stock/pages/ConsumptionBooksPage";
 import AdjustBooksPage from "./features/stock/pages/AdjustBooksPage";
 import ProductMasterPage from "./features/stock/pages/ProductMasterPage";
-import SupplierManager from "./features/purchases/pages/SupplierManager";
 import StockReportPage from "./features/stock/pages/StockReportPage";
-import SupplierCreditReportPageLegacy from "./features/purchases/pages/SupplierCreditReportPage";
-import SupplierStatementPage from "./features/purchases/pages/SupplierStatementPage";
 import DamageBooksReportPage from "./features/stock/pages/DamageBooksReportPage";
 import ConsumptionBooksReportPage from "./features/stock/pages/ConsumptionBooksReportPage";
 import PurchaseVatReport from "./features/purchases/pages/PurchaseVatReport";
@@ -242,16 +238,7 @@ function App() {
                       />
                     </Route>
                   </Route>
-                  <Route element={<ProtectedRoute requiredPermission="srm" />}>
-                    <Route
-                      path=":portalRole/srm"
-                      element={
-                        <ProtectedRoute requiredPermission="srm:suppliers:view">
-                          <SupplierManager />
-                        </ProtectedRoute>
-                      }
-                    />
-                  </Route>
+
 
                   {/* Settings Routes */}
                   <Route
@@ -617,38 +604,7 @@ function App() {
                           </ProtectedRoute>
                         }
                       />
-                      <Route
-                        path="credit-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:supplier:supplier_report">
-                            <SupplierCreditReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="supplier-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:supplier:supplier_report">
-                            <SupplierCreditReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="supplier-credit-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:supplier:supplier_credit_report">
-                            <SupplierCreditReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="supplier-statement"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:supplier:supplier_statement">
-                            <SupplierStatementPage />
-                          </ProtectedRoute>
-                        }
-                      />
+
                       <Route
                         path="damage-report"
                         element={
@@ -810,14 +766,7 @@ function App() {
                         path="stock-report"
                         element={<StockReportPage />}
                       />
-                      <Route
-                        path="credit-report"
-                        element={<SupplierCreditReportPageLegacy />}
-                      />
-                      <Route
-                        path="supplier-statement"
-                        element={<SupplierStatementPage />}
-                      />
+
                       <Route
                         path="damage-report"
                         element={<DamageBooksReportPage />}

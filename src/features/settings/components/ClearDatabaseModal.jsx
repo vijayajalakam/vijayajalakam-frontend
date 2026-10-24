@@ -91,7 +91,7 @@ const ClearDatabaseModal = ({ isOpen, onClose }) => {
                 • Reports & Account Data
               </p>
               <p>
-                It will <strong>not</strong> delete Products, Services, Customers, Staff, or Suppliers. Invoice numbering will restart from 00001.
+                It will <strong>not</strong> delete Products, Customers, or Staff. Invoice numbering will restart from 00001.
               </p>
             </div>
           </div>

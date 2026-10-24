@@ -26,23 +26,6 @@ export const AVAILABLE_PERMISSIONS = [
         modules: [] // Flat
     },
     {
-        key: 'notifications',
-        label: 'Notifications',
-        icon: Bell,
-        description: 'Manage and track shop notifications',
-        modules: [
-            {
-                key: 'general',
-                label: 'General Notifications',
-                actions: [
-                    { key: 'view', label: 'View Notifications' },
-                    { key: 'delete', label: 'Delete Notification' },
-                    { key: 'cancel', label: 'Cancel Broadcast' }
-                ]
-            }
-        ]
-    },
-    {
         key: 'invoice',
         label: 'Invoice',
         icon: FileText,
@@ -491,38 +474,7 @@ export const AVAILABLE_PERMISSIONS = [
                         ]
                     }
                 ]
-            },
-            {
-                key: 'supplier',
-                label: 'Supplier Reports',
-                modules: [
-                    {
-                        key: 'supplier_report',
-                        label: 'Supplier Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' }
-                        ]
-                    },
-                    {
-                        key: 'supplier_statement',
-                        label: 'Supplier Statement',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' },
-                            { key: 'settle', label: 'Settle Payment' }
-                        ]
-                    },
-                    {
-                        key: 'supplier_credit_report',
-                        label: 'Supplier Credit Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' }
-                        ]
-                    }
-                ]
-            },
+    },
             {
                 key: 'stock',
                 label: 'Stock Reports',
