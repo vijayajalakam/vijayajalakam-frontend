@@ -27,7 +27,6 @@ import AccountingFilterModal from "../../../components/shared/AccountingFilterMo
 import {
   ArrowDownCircle,
   ArrowUpCircle,
-  CreditCard,
   FileText,
   DollarSign,
   Edit3,
@@ -267,8 +266,6 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
         return { debit: "Deposit To (To)", credit: "Received From (From)" };
       case "payment":
         return { debit: "Paid To (To)", credit: "Paid From (From)" };
-      case "contra":
-        return { debit: "Transfer To (To)", credit: "Transfer From (From)" };
       default:
         return { debit: "To Account (Debit)", credit: "From Account (Credit)" };
     }
@@ -408,7 +405,7 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
 
   // Debit options based on voucher type
   const getDebitOptions = (branchId = form.shopId) => {
-    if (type === "receipt" || type === "contra") {
+    if (type === "receipt") {
       return getCashAndBankOptions();
     }
     return getUnifiedOptionsWithBranch(branchId);
@@ -416,7 +413,7 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
 
   // Credit options based on voucher type (Payment vouchers pay FROM Cash or Bank only)
   const getCreditOptions = (branchId = form.shopId) => {
-    if (type === "payment" || type === "contra") {
+    if (type === "payment") {
       return getCashAndBankOptions();
     }
     return getUnifiedOptionsWithBranch(branchId);
@@ -543,11 +540,7 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
             ? "receipts"
             : type === "payment"
               ? "payments"
-              : type === "contra"
-                ? "contra"
-                : type === "journal"
-                  ? "journal"
-                  : type;
+              : type;
         const canEdit =
           isAdmin ||
           hasPermission(`accounts:${pType}:edit`) ||
@@ -662,11 +655,7 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
                     ? "receipts"
                     : type === "payment"
                       ? "payments"
-                      : type === "contra"
-                        ? "contra"
-                        : type === "journal"
-                          ? "journal"
-                          : type;
+                      : type;
                 const canAdd =
                   isAdmin ||
                   hasPermission(`accounts:${pType}:add`) ||
@@ -702,9 +691,7 @@ const TransactionPage = ({ type, title, icon: Icon }) => {
                       ? "bg-emerald-50 text-emerald-400 border-emerald-100"
                       : type === "payment"
                         ? "bg-red-50 text-red-400 border-red-100"
-                        : type === "contra"
-                          ? "bg-blue-50 text-blue-400 border-blue-100"
-                          : "bg-gray-50 dark:bg-dark-card text-gray-400 dark:text-gray-500 border-gray-100 dark:border-dark-border"
+                        : "bg-gray-50 dark:bg-dark-card text-gray-400 dark:text-gray-500 border-gray-100 dark:border-dark-border"
                       }`}
                   >
                     {Icon ? <Icon size={22} /> : <FileText size={22} />}
@@ -898,12 +885,6 @@ export const ReceiptPage = () => (
 );
 export const PaymentVoucherPage = () => (
   <TransactionPage type="payment" title="Payment" icon={ArrowUpCircle} />
-);
-export const ContraPage = () => (
-  <TransactionPage type="contra" title="Contra" icon={CreditCard} />
-);
-export const JournalPage = () => (
-  <TransactionPage type="journal" title="Journal" icon={FileText} />
 );
 
 export default TransactionPage;

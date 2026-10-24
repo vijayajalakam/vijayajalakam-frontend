@@ -110,8 +110,6 @@ import ChartOfAccountsPage from "./features/accounts/pages/ChartOfAccountsPage";
 import {
   ReceiptPage,
   PaymentVoucherPage,
-  ContraPage,
-  JournalPage,
 } from "./features/accounts/pages/TransactionPage";
 import AccountStatementPage from "./features/accounts/pages/AccountStatementPage";
 import TrialBalancePage from "./features/accounts/pages/TrialBalancePage";
@@ -119,8 +117,6 @@ import BalanceSheetPage from "./features/accounts/pages/BalanceSheetPage";
 import ProfitLossPage from "./features/accounts/pages/ProfitLossPage";
 import ReceiptReportPage from "./features/accounts/pages/ReceiptReportPage";
 import PaymentReportPage from "./features/accounts/pages/PaymentReportPage";
-import ContraReportPage from "./features/accounts/pages/ContraReportPage";
-import JournalReportPage from "./features/accounts/pages/JournalReportPage";
 import GSTReportPage from "./features/accounts/pages/GSTReportPage";
 import DayReportPage from "./features/accounts/pages/DayReportPage";
 
@@ -806,22 +802,7 @@ function App() {
                           </ProtectedRoute>
                         }
                       />
-                      <Route
-                        path="contra-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:accounts:contra_report">
-                            <ContraReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="journal-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:accounts:journal_report">
-                            <JournalReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
+
                       <Route
                         path="vat-in-report"
                         element={
@@ -990,22 +971,7 @@ function App() {
                           </ProtectedRoute>
                         }
                       />
-                      <Route
-                        path="contra"
-                        element={
-                          <ProtectedRoute requiredPermission="accounts:contra:view">
-                            <ContraPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="journal"
-                        element={
-                          <ProtectedRoute requiredPermission="accounts:journal:view">
-                            <JournalPage />
-                          </ProtectedRoute>
-                        }
-                      />
+
                       <Route
                         path="account-statement"
                         element={
@@ -1054,22 +1020,7 @@ function App() {
                           </ProtectedRoute>
                         }
                       />
-                      <Route
-                        path="contra-report"
-                        element={
-                          <ProtectedRoute requiredPermission="accounts:contra_report:view">
-                            <ContraReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="journal-report"
-                        element={
-                          <ProtectedRoute requiredPermission="accounts:journal_report:view">
-                            <JournalReportPage />
-                          </ProtectedRoute>
-                        }
-                      />
+
                       <Route
                         path="vat-in-report"
                         element={

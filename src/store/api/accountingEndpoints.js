@@ -20,10 +20,8 @@ export const {
   useGetTrialBalanceQuery,
   useGetBalanceSheetQuery,
   useGetAccountStatementQuery,
-  useGetContraReportQuery,
   useGetPaymentReportQuery,
   useGetReceiptReportQuery,
-  useGetJournalReportQuery,
 } = appApi.injectEndpoints({
   overrideExisting: false,
   endpoints: (builder) => ({
@@ -194,36 +192,9 @@ export const {
       keepUnusedDataFor: 60,
     }),
 
-    getContraReport: builder.query({
-      query: (params = "") => ({
-        url: `/account-transactions/contra-report?${params}`,
-      }),
-      transformResponse: passthrough,
-      providesTags: ["Report", { type: "AccountTransaction", id: "LIST" }],
-      keepUnusedDataFor: 60,
-    }),
-
-    getPaymentReport: builder.query({
-      query: (params = "") => ({
-        url: `/account-transactions/payment-report?${params}`,
-      }),
-      transformResponse: passthrough,
-      providesTags: ["Report", { type: "AccountTransaction", id: "LIST" }],
-      keepUnusedDataFor: 60,
-    }),
-
     getReceiptReport: builder.query({
       query: (params = "") => ({
         url: `/account-transactions/receipt-report?${params}`,
-      }),
-      transformResponse: passthrough,
-      providesTags: ["Report", { type: "AccountTransaction", id: "LIST" }],
-      keepUnusedDataFor: 60,
-    }),
-
-    getJournalReport: builder.query({
-      query: (params = "") => ({
-        url: `/account-transactions/journal-report?${params}`,
       }),
       transformResponse: passthrough,
       providesTags: ["Report", { type: "AccountTransaction", id: "LIST" }],

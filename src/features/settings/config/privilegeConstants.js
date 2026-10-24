@@ -273,27 +273,6 @@ export const AVAILABLE_PERMISSIONS = [
                     { key: 'delete', label: 'Delete Payment' },
                     { key: 'print', label: 'Print/Export' }
                 ]
-            },
-            {
-                key: 'contra',
-                label: 'Contra',
-                actions: [
-                    { key: 'view', label: 'View Contra' },
-                    { key: 'add', label: 'Add Contra' },
-                    { key: 'edit', label: 'Edit Contra' },
-                    { key: 'delete', label: 'Delete Contra' },
-                    { key: 'print', label: 'Print/Export' }
-                ]
-            },
-            {
-                key: 'journal',
-                label: 'Journal Entry',
-                actions: [
-                    { key: 'view', label: 'View Journal' },
-                    { key: 'add', label: 'Add Journal' },
-                    { key: 'edit', label: 'Edit Journal' },
-                    { key: 'delete', label: 'Delete Journal' }
-                ]
             }
         ]
     },
@@ -622,16 +601,6 @@ export const AVAILABLE_PERMISSIONS = [
                     {
                         key: 'payment_report',
                         label: 'Payment Report',
-                        actions: [{ key: 'view', label: 'View' }]
-                    },
-                    {
-                        key: 'contra_report',
-                        label: 'Contra Report',
-                        actions: [{ key: 'view', label: 'View' }]
-                    },
-                    {
-                        key: 'journal_report',
-                        label: 'Journal Report',
                         actions: [{ key: 'view', label: 'View' }]
                     },
                     {

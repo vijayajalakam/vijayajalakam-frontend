@@ -321,20 +321,6 @@ const ReportsPage = () => {
           permission: "reports:accounts:payment_report"
         },
         {
-          id: "contra-report",
-          label: "Contra Report",
-          icon: CreditCard,
-          path: getDynamicPortalPath("/admin/reports/contra-report"),
-          permission: "reports:accounts:contra_report"
-        },
-        {
-          id: "journal-report",
-          label: "Journal Report",
-          icon: FileText,
-          path: getDynamicPortalPath("/admin/reports/journal-report"),
-          permission: "reports:accounts:journal_report"
-        },
-        {
           id: "trial-balance",
           label: "Trial Balance",
           icon: Scale,

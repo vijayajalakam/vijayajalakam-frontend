@@ -8,8 +8,6 @@ import {
 } from "react-router-dom";
 import {
   BookOpen,
-  CreditCard,
-  FileText,
   ArrowDownCircle,
   ArrowUpCircle,
   BarChart3,
@@ -53,22 +51,6 @@ const AccountsPage = () => {
       path: getDynamicPortalPath("/admin/accounts/payment"),
       reportPath: getDynamicPortalPath("/admin/reports/ac-payment-report"),
       permission: "accounts:payments:view",
-    },
-    {
-      id: "contra",
-      label: "Contra",
-      icon: CreditCard,
-      path: getDynamicPortalPath("/admin/accounts/contra"),
-      reportPath: getDynamicPortalPath("/admin/reports/contra-report"),
-      permission: "accounts:contra:view",
-    },
-    {
-      id: "journal",
-      label: "Journal Entry",
-      icon: FileText,
-      path: getDynamicPortalPath("/admin/accounts/journal"),
-      reportPath: getDynamicPortalPath("/admin/reports/journal-report"),
-      permission: "accounts:journal:view",
     },
   ];
 
