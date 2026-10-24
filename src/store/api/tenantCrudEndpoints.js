@@ -360,9 +360,7 @@ export const {
     }),
 
     getAdminServices: builder.query({
-      query: () => ({ url: "/admin/services" }),
-      transformResponse: asList,
-      providesTags: ["Service"],
+      queryFn: () => ({ data: [] }),
     }),
 
     getPrivilegesList: builder.query({
@@ -399,59 +397,12 @@ export const {
       invalidatesTags: ["Staff", "Appointment", "Dashboard", "InvoiceMetadata"],
     }),
 
-    // Services CRUD (Query is in tenantEndpoints as getServices)
-    createService: builder.mutation({
-      query: (body) => ({
-        url: "/services",
-        method: "POST",
-        data: body,
-        // Using body as it might be FormData or JSON based on caller. 
-        // Axios instance inside axiosBaseQuery usually handles FormData nicely.
-      }),
-      invalidatesTags: ["Service"],
-    }),
-
-    updateService: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/services/${id}`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["Service", "InvoiceMetadata"],
-    }),
-
-    deleteService: builder.mutation({
-      query: (id) => ({ url: `/services/${id}`, method: "DELETE" }),
-      invalidatesTags: ["Service", "InvoiceMetadata"],
-    }),
-
-    bulkDeleteServices: builder.mutation({
-      query: (ids) => ({
-        url: `/services/bulk`,
-        method: "DELETE",
-        data: { ids },
-      }),
-      invalidatesTags: ["Service", "InvoiceMetadata"],
-    }),
-
-    // Slot Management
-    updateSlotSettings: builder.mutation({
-      query: (body) => ({
-        url: "/admin/slot-settings",
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: ["SlotSettings"],
-    }),
-
-    updateBlockSlots: builder.mutation({
-      query: (body) => ({
-        url: "/admin/block-slots",
-        method: "POST",
-        data: body,
-      }),
-      invalidatesTags: ["BlockSlots"],
-    }),
+    createService: builder.mutation({ queryFn: () => ({ data: {} }) }),
+    updateService: builder.mutation({ queryFn: () => ({ data: {} }) }),
+    deleteService: builder.mutation({ queryFn: () => ({ data: {} }) }),
+    bulkDeleteServices: builder.mutation({ queryFn: () => ({ data: {} }) }),
+    updateSlotSettings: builder.mutation({ queryFn: () => ({ data: {} }) }),
+    updateBlockSlots: builder.mutation({ queryFn: () => ({ data: {} }) }),
 
     // Designations (Staff Positions)
     getDesignations: builder.query({

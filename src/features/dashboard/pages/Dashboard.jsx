@@ -199,7 +199,7 @@ const Dashboard = () => {
   const [topCustomers, setTopCustomers] = useState([]);
   const [paymentMethodBreakdown, setPaymentMethodBreakdown] = useState([]);
   const [attendanceStats, setAttendanceStats] = useState([]);
-  const [activeTab, setActiveTab] = useState("upcoming");
+  const [activeTab, setActiveTab] = useState("recent");
 
   // Fetch WhatsApp status on mount and poll periodically
   useEffect(() => {
@@ -527,9 +527,9 @@ const Dashboard = () => {
             : "bg-indigo-50 text-indigo-600",
         },
         {
-          label: "Today's Appointments",
-          value: stats.totalAppointments || 0,
-          icon: Calendar,
+          label: "Low Stock Items",
+          value: stats.lowStockCount || 0,
+          icon: Box,
           color: isDark
             ? "bg-blue-500/10 text-blue-400"
             : "bg-blue-50 text-blue-600",
@@ -537,7 +537,7 @@ const Dashboard = () => {
         {
           label: "Active Staff",
           value: stats.totalStaff || 0,
-          icon: Scissors,
+          icon: Users,
           color: isDark
             ? "bg-purple-500/10 text-purple-400"
             : "bg-purple-50 text-purple-600",
@@ -809,7 +809,7 @@ const Dashboard = () => {
               
               <DashboardSection 
                 title="Operations & Activity" 
-                subtitle="Upcoming & Recent Jobs"
+                subtitle="Recent Invoices & Sales"
                 icon={Activity}
                 iconColor="bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
                 className="lg:col-span-1 h-[420px]"
@@ -818,16 +818,10 @@ const Dashboard = () => {
                 <div className="flex flex-col h-full overflow-hidden">
                   <div className="flex gap-4 border-b border-gray-100 dark:border-dark-border mb-4">
                     <button 
-                      onClick={() => setActiveTab('upcoming')}
-                      className={`text-sm font-bold pb-2 uppercase transition-colors ${activeTab === 'upcoming' ? 'text-gray-900 dark:text-white border-b-2 border-blue-500' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}
-                    >
-                      UPCOMING TODAY
-                    </button>
-                    <button 
                       onClick={() => setActiveTab('recent')}
-                      className={`text-sm font-bold pb-2 uppercase transition-colors ${activeTab === 'recent' ? 'text-gray-900 dark:text-white border-b-2 border-blue-500' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}
+                      className="text-sm font-bold pb-2 uppercase transition-colors text-gray-900 dark:text-white border-b-2 border-blue-500"
                     >
-                      RECENT COMPLETED
+                      RECENT COMPLETED SALES
                     </button>
                   </div>
                   <div className="flex-1 overflow-y-auto scrollbar-hide space-y-4 pr-1">
@@ -1033,10 +1027,10 @@ const Dashboard = () => {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    Services
+                    Products
                   </h3>
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    Top Categories
+                    Top Selling Categories
                   </p>
                 </div>
                 <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">

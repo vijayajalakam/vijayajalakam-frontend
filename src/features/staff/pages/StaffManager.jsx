@@ -7,7 +7,6 @@ import CustomTable from "../../../components/shared/CustomTable";
 import { useGetShopsQuery } from "../../../store/api/tenantEndpoints";
 import {
   useGetAdminStaffQuery,
-  useGetAdminServicesQuery,
   useGetPrivilegesListQuery,
   useGetNextEmployeeIdQuery,
   useCreateAdminStaffMutation,
@@ -66,7 +65,6 @@ import Snackbar from "../../../components/shared/Snackbar";
 import UploadStaffModal from "../../../components/shared/UploadStaffModal";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { validateFileSize, getFileSizeHint } from "../../../utils/fileUploadUtils";
-import StaffReviewsTab from "./StaffReviewsTab";
 import moment from "moment";
 import * as XLSX from "xlsx";
 
@@ -131,7 +129,6 @@ const StaffManager = () => {
   // API hooks - these come AFTER state declarations
   const { data: staff = [], isLoading: loading, refetch } = useGetAdminStaffQuery();
   const { data: shops = [] } = useGetShopsQuery(shopSlug);
-  const { data: services = [] } = useGetAdminServicesQuery();
   const { data: privileges = [] } = useGetPrivilegesListQuery();
   const { data: nextEmployeeIdData } = useGetNextEmployeeIdQuery(undefined, {
     skip: !isModalOpen || editingStaff !== null, // Only fetch when adding new staff
@@ -528,15 +525,8 @@ const StaffManager = () => {
     }
   };
 
-  // Calculate real stats
-  const activeServiceProviders =
-    staff?.filter((s) => s.services && s.services.length > 0).length || 0;
   const shopsCovered =
     new Set(staff?.map((s) => s.shop?._id).filter(Boolean)).size || 0;
-  const servicesOffered =
-    new Set(
-      staff?.flatMap((s) => s.services?.map((svc) => svc._id)).filter(Boolean),
-    ).size || 0;
 
   const stats = [
     {
@@ -546,23 +536,23 @@ const StaffManager = () => {
       color: "bg-blue-50 text-blue-600",
     },
     {
-      label: "Service Providers",
-      value: activeServiceProviders,
+      label: "Active Staff",
+      value: staff?.filter((s) => s.isActive !== false).length || 0,
       icon: UserCheck,
       color: "bg-emerald-50 text-emerald-600",
     },
     {
-      label: "Active Staff",
-      value: staff?.filter((s) => s.isActive !== false).length || 0,
+      label: "Branches",
+      value: shopsCovered,
       icon: Users,
       color: "bg-amber-50 text-amber-600",
     },
     {
-      label: "Services Offered",
-      value: servicesOffered,
+      label: "Designations",
+      value: (designations || []).length,
       icon: UserPlus,
       color: "bg-indigo-50 text-indigo-600",
-    }, // Replaced coverage
+    },
   ];
 
   const columns = [
@@ -886,7 +876,7 @@ const StaffManager = () => {
               subtitle: (s) => (
                 <div className="space-y-0.5">
                   <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 truncate">
-                    {s.shop?.name || "Independent"} • {s.services?.length || 0} Specialties
+                    {s.shop?.name || "Independent"} • {s.designation?.name || "Staff"}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {s.gender && (
@@ -1107,24 +1097,7 @@ const StaffManager = () => {
                       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary" />
                     )}
                   </button>
-                  {editingStaff && (
-                    <button
-                      onClick={() => setActiveTab("reviews")}
-                      className={`px-4 py-2.5 text-sm font-bold transition-all relative whitespace-nowrap ${
-                        activeTab === "reviews"
-                          ? "text-brand-primary"
-                          : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Star size={16} />
-                        <span>Reviews</span>
-                      </div>
-                      {activeTab === "reviews" && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary" />
-                      )}
-                    </button>
-                  )}
+
                 </div>
 
                 {/* Tab Content */}
@@ -1381,27 +1354,6 @@ const StaffManager = () => {
                         </h3>
 
 
-                        <CustomMultiSelect
-                          label="Assigned Services"
-                          icon={Briefcase}
-                          placeholder="Select Services"
-                          value={newStaff.services}
-                          onChange={(e) =>
-                            setNewStaff({ ...newStaff, services: e.target.value })
-                          }
-                          options={(Array.isArray(services) ? services : [])
-                            .filter(Boolean)
-                            .filter((s) => {
-                              if (!newStaff.shop) return true;
-                              if (!s.branches || s.branches.length === 0) return true;
-                              return s.branches.some(
-                                (b) => (b?._id || b) === newStaff.shop,
-                              );
-                            })
-                            .map((s) => ({ value: s._id, label: s.name || "Service" }))}
-                          isSearchable={true}
-                          showSelectAll={true}
-                        />
 
                         {/* Visibility Setting */}
                         <div className="bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-xl p-4 mt-4">
@@ -2282,11 +2234,7 @@ const StaffManager = () => {
                       </div>
                     </Motion.div>
                   )}
-                  
-                  {/* Reviews Tab */}
-                  {activeTab === "reviews" && editingStaff && (
-                    <StaffReviewsTab staffId={editingStaff._id} />
-                  )}
+
                 </form>
               </div>
 

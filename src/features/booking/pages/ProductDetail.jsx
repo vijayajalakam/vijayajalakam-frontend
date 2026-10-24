@@ -16,7 +16,6 @@ import { useAuth } from "../../auth/hooks/useAuth";
 import { useCurrency } from "../../../hooks/useCurrency";
 import { addToUserCart } from "../../../store/slices/userAppSlice";
 import Snackbar from "../../../components/shared/Snackbar";
-import ReviewSection from "../../../components/user/ReviewSection";
 
 /**
  * Premium Product Detail Page
@@ -280,7 +279,6 @@ const ProductDetail = () => {
                 </div>
             </div>
 
-            <ReviewSection itemType="Product" itemId={productId} />
 
             <Snackbar 
                 message={snack.message} 

@@ -48,7 +48,6 @@ const UserDesktopShell = ({ children, activeItem }) => {
 
   const sidebarItems = [
     { id: "profile", icon: User, label: "Profile", to: shopSlug ? `/${shopSlug}/user/profile` : "/user/profile" },
-    { id: "activity", icon: Calendar, label: "Bookings", to: shopSlug ? `/${shopSlug}/user/bookings` : "/user/bookings" },
     { id: "wallet", icon: Wallet, label: "Wallet", to: shopSlug ? `/${shopSlug}/user/profile` : "/user/profile", hash: "#wallet" },
     { id: "favorites", icon: Heart, label: "Favorites", to: shopSlug ? `/${shopSlug}/user/favourites` : "/user/favourites" },
   ];

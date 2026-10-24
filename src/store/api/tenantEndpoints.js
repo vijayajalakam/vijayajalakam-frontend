@@ -53,33 +53,11 @@ export const {
       providesTags: ["Dashboard"],
     }),
     getAppointments: builder.query({
-      query: (params) => {
-        if (params?.my) {
-          return { url: "/appointments/my" };
-        }
-        return { url: "/appointments" };
-      },
-      transformResponse: asList,
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ _id }) => ({ type: "Appointment", id: _id })),
-              { type: "Appointment", id: "LIST" },
-            ]
-          : [{ type: "Appointment", id: "LIST" }],
+      queryFn: () => ({ data: [] }),
     }),
 
-    // Global user bookings: aggregated across all shops the user has booked at
     getMyGlobalBookings: builder.query({
-      query: () => ({ url: "/appointments/my/global" }),
-      transformResponse: asList,
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ _id }) => ({ type: "Appointment", id: _id })),
-              { type: "Appointment", id: "GLOBAL_LIST" },
-            ]
-          : [{ type: "Appointment", id: "GLOBAL_LIST" }],
+      queryFn: () => ({ data: [] }),
     }),
 
     getInvoices: builder.query({
@@ -104,11 +82,7 @@ export const {
     }),
 
     getAppointmentSlots: builder.query({
-      query: ({ date, shopId, branchId, staffId }) => ({
-        url: "/appointments/slots",
-        params: { date, shopId, branchId, staffId },
-      }),
-      transformResponse: passthrough,
+      queryFn: () => ({ data: { slots: [] } }),
     }),
 
     getProducts: builder.query({
@@ -130,31 +104,15 @@ export const {
     }),
 
     getServices: builder.query({
-      query: (params) => {
-        const q = new URLSearchParams();
-        if (typeof params === "string") {
-          q.append("branchId", params);
-        } else if (params && typeof params === "object") {
-          if (params.shopId) q.append("shopId", params.shopId);
-          if (params.branchId) q.append("branchId", params.branchId);
-        }
-        const qs = q.toString();
-        return { url: qs ? `/services?${qs}` : "/services" };
-      },
-      transformResponse: asList,
-      providesTags: ["Service"],
+      queryFn: () => ({ data: [] }),
     }),
 
     getSlotSettings: builder.query({
-      query: (branchId) => ({ url: `/admin/slot-settings?branchId=${branchId}` }),
-      transformResponse: asData,
-      providesTags: ["SlotSettings"],
+      queryFn: () => ({ data: { operatingHours: [] } }),
     }),
 
     getBlockSlots: builder.query({
-      query: ({ date, branchId }) => ({ url: `/admin/block-slots?date=${date}&branchId=${branchId}` }),
-      transformResponse: asData,
-      providesTags: ["BlockSlots"],
+      queryFn: () => ({ data: {} }),
     }),
 
     getPublicStaff: builder.query({
@@ -264,49 +222,15 @@ export const {
     }),
 
     completeAppointment: builder.mutation({
-      query: ({ id, body }) => ({
-        url: `/appointments/${id}/complete`,
-        method: "PUT",
-        data: body,
-      }),
-      invalidatesTags: (result, error, { id }) => [
-        { type: "Appointment", id },
-        { type: "Appointment", id: "LIST" },
-        "Invoice",
-        "InvoiceMetadata",
-        "Product",
-        "Dashboard",
-        "Staff",
-        "CounterSession",
-      ],
+      queryFn: () => ({ data: {} }),
     }),
 
     createAppointment: builder.mutation({
-      query: (body) => ({ url: "/appointments", method: "POST", data: body }),
-      invalidatesTags: [
-        { type: "Appointment", id: "LIST" },
-        { type: "Appointment", id: "GLOBAL_LIST" },
-        "Invoice",
-        "InvoiceMetadata",
-        "Product",
-        "Dashboard",
-        "Staff",
-        "CounterSession",
-      ],
+      queryFn: () => ({ data: {} }),
     }),
 
     cancelAppointment: builder.mutation({
-      query: (id) => ({
-        url: `/appointments/my/${id}/cancel`,
-        method: "PUT",
-      }),
-      invalidatesTags: (result, error, id) => [
-        { type: "Appointment", id },
-        { type: "Appointment", id: "LIST" },
-        "Dashboard",
-        "Staff",
-        "CounterSession",
-      ],
+      queryFn: () => ({ data: {} }),
     }),
 
     createAdminCustomer: builder.mutation({

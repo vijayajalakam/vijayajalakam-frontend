@@ -1,14 +1,11 @@
 import React, { useMemo } from "react";
 import { NavLink, useLocation, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { adminMenu } from "./adminMenu.config";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { getDynamicPortalPath } from "../../utils/portalUtils";
-import { selectBookingBadgeCount } from "../../store/slices/bookingBadgeSlice";
 
 const AdminBottomNav = () => {
   const location = useLocation();
-  const badgeCount = useSelector(selectBookingBadgeCount);
   const { shopSlug, portalRole: urlPortalRole } = useParams();
   const { portalRole: authPortalRole, user, hasPermission } = useAuth();
   // Use the portalRole from the URL as ground truth (handles SHOP_ADMIN using /admin/ URLs)
@@ -84,11 +81,6 @@ const AdminBottomNav = () => {
             >
               <div className="relative">
                 <Icon className="w-6 h-6" />
-                {item.label === "Bookings" && badgeCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center shadow-md border border-white dark:border-dark-surface">
-                    {badgeCount}
-                  </span>
-                )}
               </div>
               <span className="text-[10px] font-medium">{item.label}</span>
             </NavLink>

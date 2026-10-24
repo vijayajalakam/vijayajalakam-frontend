@@ -6,11 +6,7 @@ import stockReducer from './slices/stockSlice';
 import invoiceReducer from './slices/invoiceSlice';
 import notificationReducer from './slices/notificationSlice';
 import userAppReducer from './slices/userAppSlice';
-import reviewReducer from './slices/reviewSlice';
-import bannerReducer from './slices/bannerSlice';
-import bookingFlowReducer from './slices/bookingFlowSlice';
 import loyaltyReducer from './slices/loyaltySlice';
-import bookingBadgeReducer from './slices/bookingBadgeSlice';
 import payoutReducer from './slices/payoutSlice';
 
 import { appApi } from './api/appApi';
@@ -33,11 +29,7 @@ export const store = configureStore({
     invoice: invoiceReducer,
     notification: notificationReducer,
     userApp: userAppReducer,
-    reviews: reviewReducer,
-    banners: bannerReducer,
-    bookingFlow: bookingFlowReducer,
     loyalty: loyaltyReducer,
-    bookingBadge: bookingBadgeReducer,
     payouts: payoutReducer,
 
     [appApi.reducerPath]: appApi.reducer,  //  ← RTK Query cache lives here

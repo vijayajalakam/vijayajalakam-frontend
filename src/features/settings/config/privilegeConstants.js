@@ -49,14 +49,6 @@ export const AVAILABLE_PERMISSIONS = [
         description: 'POS Management and Invoicing',
         modules: [
             {
-                key: 'services',
-                label: 'POS Services',
-                actions: [
-                    { key: 'view', label: 'View' },
-                    { key: 'add', label: 'Checkout' }
-                ]
-            },
-            {
                 key: 'products',
                 label: 'POS Products',
                 actions: [
@@ -349,14 +341,6 @@ export const AVAILABLE_PERMISSIONS = [
                             { key: 'export', label: 'Export' },
                             { key: 'download', label: 'Download PDF' },
                             { key: 'cancel', label: 'Cancel' }
-                        ]
-                    },
-                    {
-                        key: 'service_profit_report',
-                        label: 'Service Profit Report',
-                        actions: [
-                            { key: 'view', label: 'View' },
-                            { key: 'export', label: 'Export' }
                         ]
                     },
                     {
@@ -759,22 +743,6 @@ export const AVAILABLE_PERMISSIONS = [
                             { key: 'view', label: 'View QR Codes' },
                             { key: 'download', label: 'Download QR' },
                             { key: 'share', label: 'Share QR' }
-                        ]
-                    },
-                    {
-                        key: 'complaints',
-                        label: 'Complaint Registration',
-                        actions: [
-                            { key: 'view', label: 'View Complaints' },
-                            { key: 'add', label: 'Register Complaint' }
-                        ]
-                    },
-                    {
-                        key: 'reviews',
-                        label: 'Review Management',
-                        actions: [
-                            { key: 'view', label: 'View Reviews' },
-                            { key: 'reply', label: 'Reply to Reviews' }
                         ]
                     },
                     {

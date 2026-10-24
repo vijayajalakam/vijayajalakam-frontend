@@ -1,30 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Outlet, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import AdminSidebar from "./adminSidebar/AdminSidebar";
 import AdminNavbar from "./AdminNavbar";
 import AdminBottomNav from "./AdminBottomNav";
 import ChatAssistant from "../../components/shared/ChatAssistant";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useKeyboardShortcut } from "../../hooks/useKeyboardShortcut";
-import { useBookingAlert } from "../../hooks/useBookingAlert";
-import BookingAlertFooter from "../../components/shared/BookingAlertFooter";
-import { clearBadgeCount } from "../../store/slices/bookingBadgeSlice";
 
 const AdminLayout = () => {
   const { user, hasPermission, shopConfig, portalRole, sidebarDefaultExpanded } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const { shopSlug } = useParams();
-  const dispatch = useDispatch();
-
-  const isAdminBookings = location.pathname.includes("/bookings") && !location.pathname.includes("/user/");
-  
-  useEffect(() => {
-    if (isAdminBookings) {
-      dispatch(clearBadgeCount());
-    }
-  }, [isAdminBookings, dispatch]);
 
   // Shortcut: Ctrl+I to go to New Invoice
   useKeyboardShortcut(
@@ -63,14 +50,6 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(sidebarDefaultExpanded !== undefined ? sidebarDefaultExpanded : true);
   const [isMobile, setIsMobile] = useState(false);
 
-  const shopIdStr = shopConfig?.shopId || shopConfig?._id || (typeof user?.shopId === 'object' ? user?.shopId?._id : user?.shopId);
-  const isAlertEnabled = !!(user && shopIdStr);
-
-  const { alert: bookingAlert, dismiss: dismissBookingAlert } = useBookingAlert({
-    shopIdStr,
-    enabled: isAlertEnabled,
-    isAdminBookings,
-  });
 
   useEffect(() => {
     const checkMobile = () => {
@@ -159,12 +138,6 @@ const AdminLayout = () => {
       {isImmersive ? (
         <main className="flex-1 overflow-y-auto relative">
           <Outlet />
-          <BookingAlertFooter
-            alert={bookingAlert}
-            onDismiss={dismissBookingAlert}
-            currencySymbol={shopConfig?.currency?.symbol || "₹"}
-            isMobile={isMobile}
-          />
         </main>
       ) : (
         <>
@@ -195,12 +168,6 @@ const AdminLayout = () => {
 
             {isMobile && <AdminBottomNav />}
 
-            <BookingAlertFooter
-              alert={bookingAlert}
-              onDismiss={dismissBookingAlert}
-              currencySymbol={shopConfig?.currency?.symbol || "₹"}
-              isMobile={isMobile}
-            />
           </div>
         </>
       )}

@@ -19,10 +19,6 @@ import StaffManager from "./features/staff/pages/StaffManager";
 import StaffPage, { HRMPage } from "./features/staff/pages/StaffPage";
 import PayrollPage from "./features/staff/pages/PayrollPage";
 import AttendanceManager from "./features/staff/pages/AttendanceManager";
-import ServicesManager from "./features/staff/pages/ServicesManager";
-import BookingsPage from "./features/staff/pages/BookingsPage";
-import SlotManager from "./features/staff/pages/SlotManager";
-import ServicePage from "./features/staff/pages/ServicePage";
 import InvoicesPage from "./features/invoice/pages/InvoicesPage";
 import BuyerManager, { CustomerManager } from "./features/buyer/pages/BuyerManager";
 import BuyerPage, { CRMPage } from "./features/buyer/pages/BuyerPage";
@@ -37,13 +33,6 @@ import AdminProfile from "./features/auth/pages/AdminProfile";
 import EditProfile from "./features/booking/pages/EditProfile";
 import EditAddress from "./features/booking/pages/EditAddress";
 import EditProfileDetails from "./features/booking/pages/EditProfileDetails";
-import SelectServices from "./features/booking/pages/SelectServices";
-import SelectProfessional from "./features/booking/pages/SelectProfessional";
-import SelectDateTime from "./features/booking/pages/SelectDateTime";
-import ReviewBooking from "./features/booking/pages/ReviewBooking";
-import ConfirmAndPay from "./features/booking/pages/ConfirmAndPay";
-import AppointmentConfirmed from "./features/booking/pages/AppointmentConfirmed";
-import BookingDetails from "./features/booking/pages/BookingDetails";
 import ReportsPage from "./features/reports/pages/ReportsPage";
 import InvoiceReport from "./features/reports/pages/InvoiceReport";
 import SalesMarginReport from "./features/reports/pages/SalesMarginReport";
@@ -53,7 +42,6 @@ import CustomerInvoiceReport from "./features/reports/pages/CustomerInvoiceRepor
 import PendingInvoices from "./features/reports/pages/PendingInvoices";
 import ProfitLossReport from "./features/reports/pages/ProfitLossReport";
 import LoyaltyPointReport from "./features/reports/pages/LoyaltyPointReport";
-import CancellationReport from "./features/reports/pages/CancellationReport";
 import StaffReportPage from "./features/reports/pages/StaffReportPage";
 import StaffAttendanceReportPage from "./features/reports/pages/StaffAttendanceReportPage";
 import LeaveStatementReportPage from "./features/reports/pages/LeaveStatementReportPage";
@@ -69,21 +57,15 @@ import StaffCreditReportPage from "./features/reports/pages/StaffCreditReportPag
 import SupplierCreditReportPage from "./features/reports/pages/SupplierCreditReportPage";
 import TrashInvoiceReport from "./features/reports/pages/TrashInvoiceReport";
 import StaffSettlementReport from "./features/reports/pages/StaffSettlementReport";
-import ServiceAttributes from "./features/staff/pages/ServiceAttributes";
-import AppointmentAnalyticsReport from "./features/reports/pages/AppointmentAnalyticsReport";
 import MorePage from "./features/settings/pages/MorePage";
 import DocumentSettings from "./features/settings/pages/DocumentSettings";
 import PrivilegeManagement from "./features/settings/pages/PrivilegeManagement";
 import PrivilegeForm from "./features/settings/pages/PrivilegeForm";
-import BookingDisplayPage from "./features/settings/pages/BookingDisplayPage";
 import SalesTaxReport from "./features/reports/pages/SalesTaxReport";
 import SalesVatReport from "./features/reports/pages/SalesVatReport";
-import ServiceProfitReport from "./features/reports/pages/ServiceProfitReport";
 import ItemProfitReport from "./features/reports/pages/ItemProfitReport";
 import QrCodePage from "./features/settings/pages/QrCodePage";
-import ComplaintsPage from "./features/settings/pages/ComplaintsPage";
 import BusinessStatusReportPage from "./features/reports/pages/BusinessStatusReportPage";
-import ReviewSettingsPage from "./features/settings/pages/ReviewSettingsPage";
 import IntegrationsPage from "./features/settings/pages/IntegrationsPage";
 import WhatsAppSettings from "./features/settings/pages/WhatsAppSettings";
 import SmtpSettingsPage from "./features/settings/pages/SmtpSettingsPage";
@@ -120,15 +102,11 @@ import PaymentReportPage from "./features/accounts/pages/PaymentReportPage";
 import GSTReportPage from "./features/accounts/pages/GSTReportPage";
 import DayReportPage from "./features/accounts/pages/DayReportPage";
 
-import BookingsTimeline from "./features/staff/pages/Bookings";
 import UnifiedInvoiceEntry from "./features/invoice/pages/UnifiedInvoiceEntry";
-import BookAppointment from "./features/booking/pages/BookAppointment";
-import MyBookings from "./features/booking/pages/MyBookings";
 import UserHome from "./features/booking/pages/UserHome";
 import ShopGallery from "./features/booking/pages/ShopGallery";
 import UserProfile from "./features/booking/pages/UserProfile";
 import Favourites from "./features/booking/pages/Favourites";
-import BookingCheckout from "./features/booking/pages/BookingCheckout";
 import ProductCheckout from "./features/booking/pages/ProductCheckout";
 import CartCheckout from "./features/booking/pages/CartCheckout";
 import ProductDetail from "./features/booking/pages/ProductDetail";
@@ -151,7 +129,7 @@ const RootHome = () => {
   if (user) {
     const rolePrefix = getPortalRole(user.role);
     if (rolePrefix === "admin") return <Navigate to="/admin/dashboard" replace />;
-    if (rolePrefix === "staff") return <Navigate to="/staff/bookings" replace />;
+    if (rolePrefix === "staff") return <Navigate to="/staff/invoices" replace />;
   }
   return <UserHome />;
 };
@@ -187,7 +165,7 @@ function App() {
           <Routes>
             {/* Top-Level Redirects */}
             <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="/staff" element={<Navigate to="/staff/bookings" replace />} />
+            <Route path="/staff" element={<Navigate to="/staff/invoices" replace />} />
 
             {/* Admin & Staff Protected Routes with Sidebar Layout */}
             <Route
@@ -197,15 +175,6 @@ function App() {
                 />
               }
             >
-                {/* Standalone Full-Screen Routes */}
-                <Route
-                  path=":portalRole/settings/more/booking-display"
-                  element={
-                    <ProtectedRoute requiredPermission="settings:more:booking_display:view">
-                      <BookingDisplayPage />
-                    </ProtectedRoute>
-                  }
-                />
 
                 <Route element={<AdminLayout />}>
                   <Route path=":portalRole/dashboard" element={<Dashboard />} />
@@ -324,14 +293,6 @@ function App() {
                         }
                       />
                       <Route
-                        path="manage"
-                        element={
-                          <ProtectedRoute requiredPermission="settings:manage">
-                            <ServiceAttributes />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
                         path="more"
                         element={
                           <ProtectedRoute requiredPermission="settings:more">
@@ -360,38 +321,6 @@ function App() {
                         element={
                           <ProtectedRoute requiredPermission="settings:more:qr_codes:view">
                             <QrCodePage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="more/complaints"
-                        element={
-                          <ProtectedRoute requiredPermission="settings:more:complaints:view">
-                            <ComplaintsPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="more/service-reviews"
-                        element={
-                          <ProtectedRoute requiredPermission="settings:more:reviews:view">
-                            <ReviewSettingsPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="more/product-reviews"
-                        element={
-                          <ProtectedRoute requiredPermission="settings:more:reviews:view">
-                            <ReviewSettingsPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="more/reviews"
-                        element={
-                          <ProtectedRoute requiredPermission="settings:more:reviews:view">
-                            <ReviewSettingsPage />
                           </ProtectedRoute>
                         }
                       />
@@ -551,14 +480,6 @@ function App() {
                         }
                       />
                       <Route
-                        path="booking-cancellation"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:sales:cancellation_report">
-                            <CancellationReport />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
                         path="staff-report"
                         element={
                           <ProtectedRoute requiredPermission="reports:staff:staff_report">
@@ -631,34 +552,10 @@ function App() {
                         }
                       />
                       <Route
-                        path="bookings"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:sales:bookings_report">
-                            <BookingsPage />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="appointment-analytics"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:sales:appointment_analytics">
-                            <AppointmentAnalyticsReport />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
                         path="trash-invoices"
                         element={
                           <ProtectedRoute requiredPermission="reports:sales:trash_invoices">
                             <TrashInvoiceReport />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="service-profit-report"
-                        element={
-                          <ProtectedRoute requiredPermission="reports:sales:service_profit_report">
-                            <ServiceProfitReport />
                           </ProtectedRoute>
                         }
                       />
@@ -830,28 +727,6 @@ function App() {
                     </Route>
                   </Route>
 
-                  <Route
-                    element={<ProtectedRoute requiredPermission="services" />}
-                  >
-                    <Route path=":portalRole/services" element={<ServicePage />}>
-                      <Route
-                        path="list"
-                        element={
-                          <ProtectedRoute requiredPermission="services:general:view">
-                            <ServicesManager />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="slots"
-                        element={
-                          <ProtectedRoute requiredPermission="services:slots:general:view">
-                            <SlotManager />
-                          </ProtectedRoute>
-                        }
-                      />
-                    </Route>
-                  </Route>
 
                   {/* Stock Routes */}
                   <Route
@@ -1049,11 +924,6 @@ function App() {
                   </Route>
 
                   <Route
-                    element={<ProtectedRoute requiredPermission="bookings" />}
-                  >
-                    <Route path=":portalRole/bookings" element={<BookingsTimeline />} />
-                  </Route>
-                  <Route
                     element={<ProtectedRoute requiredPermission="invoice" />}
                   >
                     <Route
@@ -1071,14 +941,6 @@ function App() {
               <Route path="/user/gallery" element={<ShopGallery />} />
               <Route path="/user/search" element={<SearchScreen />} />
               <Route path="/user/location" element={<LocationPicker />} />
-              <Route path="/user/select-services" element={<SelectServices />} />
-              <Route path="/user/select-professional" element={<SelectProfessional />} />
-              <Route path="/user/select-datetime" element={<SelectDateTime />} />
-              <Route path="/user/review-booking" element={<ReviewBooking />} />
-              <Route path="/user/confirm-pay" element={<ConfirmAndPay />} />
-              <Route path="/user/appointment-confirmed" element={<AppointmentConfirmed />} />
-              <Route path="/user/booking/:appointmentId" element={<BookingDetails />} />
-              <Route path="/user/checkout/:serviceId" element={<BookingCheckout />} />
               <Route path="/user/product-checkout/:productId" element={<ProductCheckout />} />
               <Route path="/user/cart-checkout" element={<CartCheckout />} />
               <Route path="/user/product/:productId" element={<ProductDetail />} />
@@ -1096,21 +958,12 @@ function App() {
                 <Route path="/user/profile/edit" element={<EditProfile />} />
                 <Route path="/user/profile/address" element={<EditAddress />} />
                 <Route path="/user/profile/details" element={<EditProfileDetails />} />
-                <Route path="/user/bookings" element={<MyBookings />} />
                 <Route path="/user/favourites" element={<Favourites />} />
               </Route>
 
               {/* Legacy /:shopSlug/user/* routes compatibility */}
               <Route path="/:shopSlug/user/home" element={<UserHome />} />
               <Route path="/:shopSlug/user/gallery" element={<ShopGallery />} />
-              <Route path="/:shopSlug/user/select-services" element={<SelectServices />} />
-              <Route path="/:shopSlug/user/select-professional" element={<SelectProfessional />} />
-              <Route path="/:shopSlug/user/select-datetime" element={<SelectDateTime />} />
-              <Route path="/:shopSlug/user/review-booking" element={<ReviewBooking />} />
-              <Route path="/:shopSlug/user/confirm-pay" element={<ConfirmAndPay />} />
-              <Route path="/:shopSlug/user/appointment-confirmed" element={<AppointmentConfirmed />} />
-              <Route path="/:shopSlug/user/booking/:appointmentId" element={<BookingDetails />} />
-              <Route path="/:shopSlug/user/checkout/:serviceId" element={<BookingCheckout />} />
               <Route path="/:shopSlug/user/product-checkout/:productId" element={<ProductCheckout />} />
               <Route path="/:shopSlug/user/cart-checkout" element={<CartCheckout />} />
               <Route path="/:shopSlug/user/product/:productId" element={<ProductDetail />} />
@@ -1119,7 +972,6 @@ function App() {
               <Route path="/:shopSlug/user/profile/edit" element={<EditProfile />} />
               <Route path="/:shopSlug/user/profile/address" element={<EditAddress />} />
               <Route path="/:shopSlug/user/profile/details" element={<EditProfileDetails />} />
-              <Route path="/:shopSlug/user/bookings" element={<MyBookings />} />
               <Route path="/:shopSlug/user/favourites" element={<Favourites />} />
             </Route>
 

@@ -1,16 +1,12 @@
 import React, { useMemo } from "react";
 import { NavLink, useLocation, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import { adminMenu } from "../adminMenu.config";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { getDynamicPortalPath } from "../../../utils/portalUtils";
-import { selectBookingBadgeCount } from "../../../store/slices/bookingBadgeSlice";
-
 const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
   const { user, shopConfig, hasPermission, portalRole: authPortalRole, sidebarStyle, sidebarItemOrientation } = useAuth();
-  const badgeCount = useSelector(selectBookingBadgeCount);
   
   const location = useLocation();
   const { shopSlug, portalRole: urlPortalRole } = useParams();
@@ -225,11 +221,6 @@ const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
                             isColumn ? "w-6 h-6" : "w-5 h-5"
                           } ${getIconClasses(active)}`}
                         />
-                        {item.label === "Bookings" && badgeCount > 0 && (!isOpen || isColumn) && (
-                          <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-extrabold min-w-[15px] h-[15px] px-0.5 rounded-full flex items-center justify-center shadow-md border border-white dark:border-dark-surface">
-                            {badgeCount}
-                          </span>
-                        )}
                       </div>
                       <AnimatePresence>
                         {isOpen && (
@@ -245,11 +236,6 @@ const DesktopSidebar = ({ isOpen, setOpen, menuItems = adminMenu }) => {
                           </Motion.span>
                         )}
                       </AnimatePresence>
-                      {isOpen && !isColumn && item.label === "Bookings" && badgeCount > 0 && (
-                        <span className="ml-auto bg-red-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
-                          {badgeCount}
-                        </span>
-                      )}
                       {active && (sidebarStyle === 'classic' || sidebarStyle === 'dark') && (
                         <Motion.div
                           layoutId="active-pill"

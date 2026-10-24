@@ -1,16 +1,12 @@
 import React, { useMemo } from "react";
 import { NavLink, useLocation, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import { adminMenu } from "../adminMenu.config";
 import { X } from "lucide-react";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { getDynamicPortalPath } from "../../../utils/portalUtils";
-import { selectBookingBadgeCount } from "../../../store/slices/bookingBadgeSlice";
-
 const MobileSidebar = ({ isOpen, onClose, menuItems = adminMenu }) => {
   const { user, shopConfig, hasPermission, portalRole: authPortalRole, sidebarStyle } = useAuth();
-  const badgeCount = useSelector(selectBookingBadgeCount);
   const { shopSlug, portalRole: urlPortalRole } = useParams();
   const portalRole = urlPortalRole || authPortalRole;
   const location = useLocation();
@@ -196,11 +192,6 @@ const MobileSidebar = ({ isOpen, onClose, menuItems = adminMenu }) => {
                           <span className={`text-sm font-bold tracking-tight ${active && (sidebarStyle === 'dark' || sidebarStyle === 'gradient' || sidebarStyle === 'solid' || sidebarStyle === 'navy') ? 'text-white' : ''}`}>
                             {item.label}
                           </span>
-                          {item.label === "Bookings" && badgeCount > 0 && (
-                            <span className="ml-auto bg-red-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center">
-                              {badgeCount}
-                            </span>
-                          )}
                           {active && (sidebarStyle === 'classic' || sidebarStyle === 'dark') && (
                             <Motion.div
                               layoutId="mobile-active-pill"

@@ -76,7 +76,6 @@ const UserProfile = () => {
     { icon: User, label: "Profile", to: shopSlug ? `/${shopSlug}/user/profile/edit` : "/user/profile/edit" },
     { icon: MapPin, label: "My addresses", to: shopSlug ? `/${shopSlug}/user/profile/address` : "/user/profile/address" },
     { icon: Heart, label: "Favourites", to: shopSlug ? `/${shopSlug}/user/favourites` : "/user/favourites" },
-    { icon: Calendar, label: "My appointments", to: shopSlug ? `/${shopSlug}/user/bookings` : "/user/bookings" },
     { icon: Settings, label: "Settings" },
   ];
 
