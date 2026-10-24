@@ -28,6 +28,7 @@ import PrinterSettings from "./features/settings/pages/PrinterSettings";
 import DayClosingSettings from "./features/settings/pages/DayClosingSettings";
 import ConfigurationSettings from "./features/settings/pages/ConfigurationSettings";
 import SettingsPage from "./features/settings/pages/SettingsPage";
+import ManageSettingsPage from "./features/settings/pages/ManageSettingsPage";
 import AdminProfile from "./features/auth/pages/AdminProfile";
 import EditProfile from "./features/booking/pages/EditProfile";
 import EditAddress from "./features/booking/pages/EditAddress";
@@ -280,6 +281,22 @@ function App() {
                         element={
                           <ProtectedRoute requiredPermission="settings:day_closing:general:view">
                             <DayClosingSettings />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="manage"
+                        element={
+                          <ProtectedRoute requiredPermission="settings:manage">
+                            <ManageSettingsPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="manage/:subTab"
+                        element={
+                          <ProtectedRoute requiredPermission="settings:manage">
+                            <ManageSettingsPage />
                           </ProtectedRoute>
                         }
                       />

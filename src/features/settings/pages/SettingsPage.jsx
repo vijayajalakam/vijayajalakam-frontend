@@ -12,7 +12,8 @@ import {
   Building,
   Printer,
   LayoutGrid,
-  CalendarDays
+  CalendarDays,
+  Layers,
 } from "lucide-react";
 
 import { useAuth } from "../../auth/hooks/useAuth";
@@ -52,6 +53,13 @@ const SettingsPage = () => {
       icon: CalendarDays,
       path: getDynamicPortalPath("/admin/settings/day-closing"),
       permission: "settings:day_closing:general:view",
+    },
+    {
+      id: "manage",
+      label: "Manage",
+      icon: Layers,
+      path: getDynamicPortalPath("/admin/settings/manage"),
+      permission: "settings:manage",
     },
     {
       id: "more",
