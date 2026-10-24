@@ -38,7 +38,7 @@ const DayCloseWidget = ({ fullWidth = false }) => {
   const showSnack = useCallback((message, type = "success") => setSnack({ message, type }), []);
 
   const { data: adminProfileData, isLoading: profileLoading } = useGetAdminProfileQuery();
-  const isDayClosingEnabled = adminProfileData ? (adminProfileData.salon?.isDayClosingEnabled || false) : null;
+  const isDayClosingEnabled = adminProfileData ? (adminProfileData.businessProfile?.isDayClosingEnabled || adminProfileData.business?.isDayClosingEnabled || false) : null;
 
   const handleOpenCounter = async () => {
     try {

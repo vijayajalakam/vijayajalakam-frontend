@@ -55,7 +55,9 @@ const DocumentSettings = () => {
     try {
       const res = await api.get("/admin/profile");
       if (res.data.success) {
-        const { salon, shopCreatedYear: year, currentNumbers: backendCurrentNumbers } = res.data.data;
+        const bData = res.data.data;
+        const business = bData?.businessProfile || bData?.business;
+        const { shopCreatedYear: year, currentNumbers: backendCurrentNumbers } = res.data.data;
         
         const data = {};
         const original = {};
@@ -66,10 +68,10 @@ const DocumentSettings = () => {
           const lengthKey = `${doc.key}Length`;
           const nextNumberKey = `${doc.key}NextNumber`;
           
-          data[prefixKey] = salon[prefixKey] || doc.prefix;
-          data[suffixKey] = salon[suffixKey] || (year ? `/${year}` : "");
-          data[lengthKey] = salon[lengthKey] || doc.length;
-          data[nextNumberKey] = salon[nextNumberKey] || doc.nextNumber;
+          data[prefixKey] = business[prefixKey] || doc.prefix;
+          data[suffixKey] = business[suffixKey] || (year ? `/${year}` : "");
+          data[lengthKey] = business[lengthKey] || doc.length;
+          data[nextNumberKey] = business[nextNumberKey] || doc.nextNumber;
           
           original[prefixKey] = data[prefixKey];
           original[suffixKey] = data[suffixKey];

@@ -23,9 +23,10 @@ const DayClosingSettings = () => {
   const showSnack = useCallback((message, type = "success") => setSnack({ message, type }), []);
 
   useEffect(() => {
-    if (profileData?.salon) {
-      setIsDayClosingEnabled(profileData.salon.isDayClosingEnabled || false);
-      setDayClosingIncludeTax(profileData.salon.dayClosingIncludeTax !== false);
+    const business = profileData?.businessProfile || profileData?.business;
+    if (business) {
+      setIsDayClosingEnabled(business.isDayClosingEnabled || false);
+      setDayClosingIncludeTax(business.dayClosingIncludeTax !== false);
     }
   }, [profileData]);
 

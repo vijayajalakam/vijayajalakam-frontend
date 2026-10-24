@@ -70,7 +70,8 @@ const PrinterSettings = () => {
   const settingsKey = `printerSettings_${userId}`;
 
   const { data: profileData, isLoading } = useGetAdminProfileQuery();
-  const profile = profileData?.salon ? profileData : null;
+  const business = profileData?.businessProfile || profileData?.business;
+  const profile = business ? { business } : null;
   const [updateReceiptSettings] = useUpdateReceiptSettingsMutation();
   const [printers, setPrinters] = useState(() => {
     const savedPrinters = localStorage.getItem(printersKey);
@@ -161,17 +162,17 @@ const PrinterSettings = () => {
   // Mock data for preview
   const previewData = {
     shopInfo: {
-      name: profile?.salon?.shopName || "TONEY",
-      address: profile?.salon?.area
-        ? `${profile.salon.area}, ${profile.salon.state || ""}`
+      name: profile?.business?.businessName || profile?.business?.shopName || "Vijayajalakam",
+      address: profile?.business?.area
+        ? `${profile.business.area}, ${profile.business.state || ""}`
         : "Kozhikode, Kerala",
       phone: profile?.user?.phone || "1234567890",
-      gstin: profile?.salon?.gstin || "32AAAAA0000A1Z5",
+      gstin: profile?.business?.gstin || "32AAAAA0000A1Z5",
     },
-    staffName: profile?.salon?.ownerName || "Fazil Admin",
+    staffName: profile?.business?.ownerName || "Vijayajalakam Admin",
     invoiceNumber: "INV-1772898412676",
     cart: [
-      { name: "Hair Cut", quantity: 1, price: "200.00", tax: 20.0, taxRate: 5, taxName: "GST", discount: 10, total: "210.00", hsnCode: "99011" },
+      { name: "Educational Book Vol. 1", quantity: 1, price: "200.00", tax: 20.0, taxRate: 5, taxName: "GST", discount: 10, total: "210.00", hsnCode: "4901" },
       { name: "Facial", quantity: 1, price: "150.00", tax: 7.5, taxRate: 15, taxName: "VAT", discount: 0, total: "157.50", hsnCode: "99012" },
     ],
     customerName: "LOCAL CUSTOMER",

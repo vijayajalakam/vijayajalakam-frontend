@@ -100,7 +100,7 @@ const Dashboard = () => {
 
   // Day Closing counter session
   const { data: adminProfileData } = useGetAdminProfileQuery();
-  const isDayClosingEnabled = adminProfileData?.salon?.isDayClosingEnabled || false;
+  const isDayClosingEnabled = adminProfileData?.businessProfile?.isDayClosingEnabled || adminProfileData?.business?.isDayClosingEnabled || false;
   const { data: sessionRes } = useGetCurrentSessionQuery(undefined, {
     skip: !isDayClosingEnabled,
     pollingInterval: 60000,

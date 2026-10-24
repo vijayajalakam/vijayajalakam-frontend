@@ -126,20 +126,20 @@ const ConfigurationSettings = () => {
   const showSnack = useCallback((message, type = "success") => setSnack({ message, type }), []);
 
   useEffect(() => {
-    if (profileData?.salon) {
-      const { salon } = profileData;
+    const business = profileData?.businessProfile || profileData?.business;
+    if (business) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
-        showServices: salon.showServices !== undefined ? salon.showServices : true,
-        showProducts: salon.showProducts !== undefined ? salon.showProducts : true,
-        duplicateItemAction: salon.duplicateItemAction || 'unselect',
-        showItemStaff: salon.showItemStaff !== undefined ? salon.showItemStaff : false,
-        showItemDiscount: salon.showItemDiscount !== undefined ? salon.showItemDiscount : false,
-        showStaffCommission: salon.showStaffCommission !== undefined ? salon.showStaffCommission : false,
-        showGlobalStaffSelection: salon.showGlobalStaffSelection !== undefined ? salon.showGlobalStaffSelection : true,
-        showServicesToUser: salon.showServicesToUser !== undefined ? salon.showServicesToUser : true,
-        showProductsToUser: salon.showProductsToUser !== undefined ? salon.showProductsToUser : true,
-        additionalInfo: salon.additionalInfo || ["Instant confirmation", "Pay by app", "Parking available"],
+        showServices: business.showServices !== undefined ? business.showServices : true,
+        showProducts: business.showProducts !== undefined ? business.showProducts : true,
+        duplicateItemAction: business.duplicateItemAction || 'unselect',
+        showItemStaff: business.showItemStaff !== undefined ? business.showItemStaff : false,
+        showItemDiscount: business.showItemDiscount !== undefined ? business.showItemDiscount : false,
+        showStaffCommission: business.showStaffCommission !== undefined ? business.showStaffCommission : false,
+        showGlobalStaffSelection: business.showGlobalStaffSelection !== undefined ? business.showGlobalStaffSelection : true,
+        showServicesToUser: business.showServicesToUser !== undefined ? business.showServicesToUser : true,
+        showProductsToUser: business.showProductsToUser !== undefined ? business.showProductsToUser : true,
+        additionalInfo: business.additionalInfo || ["Instant confirmation", "Pay by app", "Parking available"],
       });
     }
   }, [profileData]);

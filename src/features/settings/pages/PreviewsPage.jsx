@@ -74,7 +74,7 @@ const GalleryManager = () => {
       setLoading(true);
       const res = await api.get("/admin/profile");
       if (res.data.success) {
-        setGalleryImages(res.data.data?.salon?.galleryImages || []);
+        setGalleryImages(res.data.data?.businessProfile?.galleryImages || res.data.data?.business?.galleryImages || []);
       }
     } catch (err) {
       console.error("Failed to fetch gallery:", err);
@@ -362,7 +362,7 @@ const PortfolioManager = () => {
       setLoading(true);
       const res = await api.get("/admin/profile");
       if (res.data.success) {
-        const raw = res.data.data?.salon?.portfolioImages || [];
+        const raw = res.data.data?.businessProfile?.portfolioImages || res.data.data?.business?.portfolioImages || [];
         setPortfolioImages(
           raw.map(img => (typeof img === "string" ? img : img?.url || "")).filter(Boolean)
         );

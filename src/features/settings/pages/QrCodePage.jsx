@@ -46,8 +46,8 @@ const QrCodePage = () => {
   // Google Review / Map Link state
   const storageKey = `google_review_url_${shopSlug}`;
   const savedUrl =
-    profileData?.salon?.googleReviewUrl ||
-    profileData?.data?.salon?.googleReviewUrl ||
+    profileData?.businessProfile?.googleReviewUrl ||
+    profileData?.business?.googleReviewUrl ||
     (typeof window !== "undefined"
       ? localStorage.getItem(storageKey) || ""
       : "");

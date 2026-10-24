@@ -196,20 +196,21 @@ const AdminProfile = () => {
 
   useEffect(() => {
     if (profileData) {
-      const { user, salon, logo } = profileData;
+      const { user, logo } = profileData;
+    const business = profileData?.businessProfile || profileData?.business;
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
-        shopName: salon?.shopName || "",
-        ownerName: salon?.ownerName || "",
-        country: salon?.country || "",
-        state: salon?.state || "",
-        area: salon?.area || "",
-        zipCode: salon?.zipCode || "",
+        shopName: business?.shopName || business?.businessName || "",
+        ownerName: business?.ownerName || "",
+        country: business?.country || "",
+        state: business?.state || "",
+        area: business?.area || "",
+        zipCode: business?.zipCode || "",
         mobile: user?.phone || "",
-        whatsapp: salon?.whatsapp || "",
-        ownerWhatsappNumbers: salon?.ownerWhatsappNumbers || [],
+        whatsapp: business?.whatsapp || "",
+        ownerWhatsappNumbers: business?.ownerWhatsappNumbers || [],
         email: user?.email || "",
-        aboutText: salon?.aboutText || "",
+        aboutText: business?.aboutText || "",
       });
       if (logo) setPreviewImage(logo);
     }

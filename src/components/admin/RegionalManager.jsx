@@ -79,14 +79,14 @@ const RegionalManager = () => {
   ];
 
   useEffect(() => {
-    if (!profile?.salon) return;
-    const { salon } = profile;
+    const business = profile?.businessProfile || profile?.business;
+    if (!business) return;
     setFormData({
-      country: salon.country || "India",
-      language: salon.language || "English",
-      currencySymbol: salon.currencySymbol || "₹",
+      country: business.country || "India",
+      language: business.language || "English",
+      currencySymbol: business.currencySymbol || "₹",
       decimalPrecision:
-        salon.decimalPrecision !== undefined ? salon.decimalPrecision : 2,
+        business.decimalPrecision !== undefined ? business.decimalPrecision : 2,
     });
   }, [profile]);
 

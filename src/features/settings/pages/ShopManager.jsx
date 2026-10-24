@@ -154,19 +154,20 @@ const ShopManager = () => {
     } else {
       resetForm();
       if (adminProfile) {
-        const { salon, user: authUser } = adminProfile;
+        const business = adminProfile?.businessProfile || adminProfile?.business;
+        const { user: authUser } = adminProfile;
         const fullAddress = [
-          salon?.area,
-          salon?.state,
-          salon?.country,
-          salon?.zipCode,
+          business?.area,
+          business?.state,
+          business?.country,
+          business?.zipCode,
         ]
           .filter(Boolean)
           .join(", ");
 
         setFormData((prev) => ({
           ...prev,
-          name: salon?.shopName || "",
+          name: business?.shopName || business?.businessName || "",
           address: fullAddress || "",
           phone: authUser?.phone || "",
         }));

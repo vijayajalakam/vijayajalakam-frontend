@@ -287,7 +287,7 @@ const BookingDetails = () => {
         try {
           const profileRes = await api.get("/admin/profile");
           if (profileRes.data.success) {
-            const galleryImages = profileRes.data.data?.salon?.galleryImages;
+            const galleryImages = profileRes.data.data?.businessProfile?.galleryImages || profileRes.data.data?.business?.galleryImages;
             if (galleryImages && galleryImages.length > 0) {
               const primary = galleryImages.find(img => img.isPrimary);
               const cover = primary || galleryImages[0];
