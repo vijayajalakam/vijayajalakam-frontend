@@ -10,7 +10,6 @@ import {
   Store,
   Clock,
   Building,
-  Layers,
   Printer,
   LayoutGrid,
   CalendarDays
@@ -53,14 +52,6 @@ const SettingsPage = () => {
       icon: CalendarDays,
       path: getDynamicPortalPath("/admin/settings/day-closing"),
       permission: "settings:day_closing:general:view",
-    },
-
-    {
-      id: "attributes",
-      label: "Manage",
-      icon: Layers,
-      path: getDynamicPortalPath("/admin/settings/manage"),
-      permission: "settings:manage",
     },
     {
       id: "more",
